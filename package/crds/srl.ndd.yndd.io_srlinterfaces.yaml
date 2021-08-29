@@ -1,0 +1,405 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.4.1
+  creationTimestamp: null
+  name: srlinterfaces.srl.ndd.yndd.io
+spec:
+  group: srl.ndd.yndd.io
+  names:
+    categories:
+    - ndd
+    - srl
+    kind: SrlInterface
+    listKind: SrlInterfaceList
+    plural: srlinterfaces
+    singular: srlinterface
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.kind=='TargetFound')].status
+      name: TARGET
+      type: string
+    - jsonPath: .status.conditions[?(@.kind=='Ready')].status
+      name: STATUS
+      type: string
+    - jsonPath: .status.conditions[?(@.kind=='Synced')].status
+      name: SYNC
+      type: string
+    - jsonPath: .status.conditions[?(@.kind=='InternalLeafrefValidationSuccess')].status
+      name: LOCALLEAFREF
+      type: string
+    - jsonPath: .status.conditions[?(@.kind=='ExternalLeafrefValidationSuccess')].status
+      name: EXTLEAFREF
+      type: string
+    - jsonPath: .status.conditions[?(@.kind=='ParentValidationSuccess')].status
+      name: PARENTDEP
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: SrlInterface is the Schema for the Interface API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: A InterfaceSpec defines the desired state of a Interface.
+            properties:
+              active:
+                default: true
+                description: Active specifies if the managed resource is active or
+                  not
+                type: boolean
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forNetworkNode:
+                description: InterfaceSpec struct
+                properties:
+                  interface:
+                    description: Interface struct
+                    properties:
+                      admin-state:
+                        default: enable
+                        enum:
+                        - disable
+                        - enable
+                        type: string
+                      description:
+                        description: kubebuilder:validation:MinLength=1 kubebuilder:validation:MaxLength=255
+                        pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
+                        type: string
+                      ethernet:
+                        description: InterfaceEthernet struct
+                        properties:
+                          aggregate-id:
+                            type: string
+                          auto-negotiate:
+                            type: boolean
+                          duplex-mode:
+                            enum:
+                            - full
+                            - half
+                            type: string
+                          flow-control:
+                            description: InterfaceEthernetFlowControl struct
+                            properties:
+                              receive:
+                                type: boolean
+                              transmit:
+                                type: boolean
+                            type: object
+                          lacp-port-priority:
+                            description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=65535
+                            type: integer
+                          port-speed:
+                            enum:
+                            - 100G
+                            - 100M
+                            - 10G
+                            - 10M
+                            - 1G
+                            - 1T
+                            - 200G
+                            - 25G
+                            - 400G
+                            - 40G
+                            - 50G
+                            type: string
+                        type: object
+                      lag:
+                        description: InterfaceLag struct
+                        properties:
+                          lacp:
+                            description: InterfaceLagLacp struct
+                            properties:
+                              admin-key:
+                                description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=65535
+                                type: integer
+                              interval:
+                                default: SLOW
+                                enum:
+                                - FAST
+                                - SLOW
+                                type: string
+                              lacp-mode:
+                                default: ACTIVE
+                                enum:
+                                - ACTIVE
+                                - PASSIVE
+                                type: string
+                              system-id-mac:
+                                pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                                type: string
+                              system-priority:
+                                description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=65535
+                                type: integer
+                            type: object
+                          lacp-fallback-mode:
+                            enum:
+                            - static
+                            type: string
+                          lacp-fallback-timeout:
+                            description: kubebuilder:validation:Minimum=4 kubebuilder:validation:Maximum=3600
+                            type: integer
+                          lag-type:
+                            default: static
+                            enum:
+                            - lacp
+                            - static
+                            type: string
+                          member-speed:
+                            enum:
+                            - 100G
+                            - 100M
+                            - 10G
+                            - 10M
+                            - 1G
+                            - 25G
+                            - 400G
+                            - 40G
+                            type: string
+                          min-links:
+                            default: 1
+                            description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
+                            type: integer
+                        type: object
+                      loopback-mode:
+                        type: boolean
+                      mtu:
+                        description: kubebuilder:validation:Minimum=1500 kubebuilder:validation:Maximum=9500
+                        type: integer
+                      name:
+                        description: kubebuilder:validation:MinLength=3 kubebuilder:validation:MaxLength=20
+                        pattern: (mgmt0|mgmt0-standby|system0|lo(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])|ethernet-([1-9](\d){0,1}(/[abcd])?(/[1-9](\d){0,1})?/(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))|irb(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])|lag(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))
+                        type: string
+                      qos:
+                        description: InterfaceQos struct
+                        properties:
+                          output:
+                            description: InterfaceQosOutput struct
+                            properties:
+                              multicast-queue:
+                                items:
+                                  description: InterfaceQosOutputMulticastQueue struct
+                                  properties:
+                                    queue-id:
+                                      description: kubebuilder:validation:Minimum=0
+                                        kubebuilder:validation:Maximum=7
+                                      type: integer
+                                    scheduling:
+                                      description: InterfaceQosOutputMulticastQueueScheduling
+                                        struct
+                                      properties:
+                                        peak-rate-percent:
+                                          default: 100
+                                          description: kubebuilder:validation:Minimum=1
+                                            kubebuilder:validation:Maximum=100
+                                          type: integer
+                                      type: object
+                                    template:
+                                      type: string
+                                  type: object
+                                type: array
+                              scheduler:
+                                description: InterfaceQosOutputScheduler struct
+                                properties:
+                                  tier:
+                                    items:
+                                      description: InterfaceQosOutputSchedulerTier
+                                        struct
+                                      properties:
+                                        level:
+                                          description: kubebuilder:validation:Minimum=1
+                                            kubebuilder:validation:Maximum=4
+                                          type: integer
+                                        node:
+                                          items:
+                                            description: InterfaceQosOutputSchedulerTierNode
+                                              struct
+                                            properties:
+                                              node-number:
+                                                description: kubebuilder:validation:Minimum=0
+                                                  kubebuilder:validation:Maximum=11
+                                                type: integer
+                                              strict-priority:
+                                                type: boolean
+                                              weight:
+                                                default: 1
+                                                description: kubebuilder:validation:Minimum=1
+                                                  kubebuilder:validation:Maximum=127
+                                                type: integer
+                                            type: object
+                                          type: array
+                                      type: object
+                                    type: array
+                                type: object
+                              unicast-queue:
+                                items:
+                                  description: InterfaceQosOutputUnicastQueue struct
+                                  properties:
+                                    queue-id:
+                                      description: kubebuilder:validation:Minimum=0
+                                        kubebuilder:validation:Maximum=7
+                                      type: integer
+                                    scheduling:
+                                      description: InterfaceQosOutputUnicastQueueScheduling
+                                        struct
+                                      properties:
+                                        peak-rate-percent:
+                                          default: 100
+                                          description: kubebuilder:validation:Minimum=1
+                                            kubebuilder:validation:Maximum=100
+                                          type: integer
+                                        strict-priority:
+                                          default: true
+                                          type: boolean
+                                        weight:
+                                          default: 1
+                                          description: kubebuilder:validation:Minimum=1
+                                            kubebuilder:validation:Maximum=255
+                                          type: integer
+                                      type: object
+                                    template:
+                                      type: string
+                                    voq-template:
+                                      type: string
+                                  type: object
+                                type: array
+                            type: object
+                        type: object
+                      sflow:
+                        description: InterfaceSflow struct
+                        properties:
+                          admin-state:
+                            enum:
+                            - disable
+                            - enable
+                            type: string
+                        type: object
+                      transceiver:
+                        description: InterfaceTransceiver struct
+                        properties:
+                          ddm-events:
+                            type: boolean
+                          forward-error-correction:
+                            default: disabled
+                            enum:
+                            - base-r
+                            - disabled
+                            - rs-108
+                            - rs-528
+                            - rs-544
+                            type: string
+                          tx-laser:
+                            type: boolean
+                        type: object
+                      vlan-tagging:
+                        type: boolean
+                    type: object
+                type: object
+              networkNodeRef:
+                default:
+                  name: default
+                description: NetworkNodeReference specifies which network node will
+                  be used to create, observe, update, and delete this managed resource
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - forNetworkNode
+            type: object
+          status:
+            description: A InterfaceStatus represents the observed state of a Interface.
+            properties:
+              atNetworkNode:
+                description: InterfaceStatus struct
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource
+                  properties:
+                    kind:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                  required:
+                  - kind
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  type: object
+                type: array
+              externalLeafRefs:
+                description: ExternalLeafRefs tracks the external resources this resource
+                  is dependent upon
+                items:
+                  type: string
+                type: array
+              resourceIndexes:
+                additionalProperties:
+                  type: string
+                description: ResourceIndexes tracks the indexes that or used by the
+                  resource
+                type: object
+              target:
+                description: Target used by the resource
+                items:
+                  type: string
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

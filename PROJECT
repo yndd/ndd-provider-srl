@@ -1,0 +1,23 @@
+version: "1"
+domain: ndd.yndd.io
+repository: github.com/netw-device-driver/ndd-provider-srl
+name: ndd-provider-srl
+resources:
+- gvk:
+    group: srl
+    domain: ndd.yndd.io
+    version: v1
+    kind: Registration
+  plural: ""
+  path: github.com/netw-device-driver/ndd-provider-srl/apis/srl/v1
+  api:
+    crdversion: v1
+    namespaced: false
+  controller: true
+  yang:
+    fullname: ""
+    lastelement: ""
+    containers: []
+    helements: []
+    localleafrefs: []
+    externalleafrefs: []

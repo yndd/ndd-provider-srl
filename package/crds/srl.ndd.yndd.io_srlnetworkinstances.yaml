@@ -1,0 +1,718 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.4.1
+  creationTimestamp: null
+  name: srlnetworkinstances.srl.ndd.yndd.io
+spec:
+  group: srl.ndd.yndd.io
+  names:
+    categories:
+    - ndd
+    - srl
+    kind: SrlNetworkinstance
+    listKind: SrlNetworkinstanceList
+    plural: srlnetworkinstances
+    singular: srlnetworkinstance
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.kind=='TargetFound')].status
+      name: TARGET
+      type: string
+    - jsonPath: .status.conditions[?(@.kind=='Ready')].status
+      name: STATUS
+      type: string
+    - jsonPath: .status.conditions[?(@.kind=='Synced')].status
+      name: SYNC
+      type: string
+    - jsonPath: .status.conditions[?(@.kind=='InternalLeafrefValidationSuccess')].status
+      name: LOCALLEAFREF
+      type: string
+    - jsonPath: .status.conditions[?(@.kind=='ExternalLeafrefValidationSuccess')].status
+      name: EXTLEAFREF
+      type: string
+    - jsonPath: .status.conditions[?(@.kind=='ParentValidationSuccess')].status
+      name: PARENTDEP
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: SrlNetworkinstance is the Schema for the Networkinstance API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: A NetworkinstanceSpec defines the desired state of a Networkinstance.
+            properties:
+              active:
+                default: true
+                description: Active specifies if the managed resource is active or
+                  not
+                type: boolean
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forNetworkNode:
+                description: NetworkinstanceSpec struct
+                properties:
+                  network-instance:
+                    description: Networkinstance struct
+                    properties:
+                      admin-state:
+                        default: enable
+                        enum:
+                        - disable
+                        - enable
+                        type: string
+                      bridge-table:
+                        description: NetworkinstanceBridgeTable struct
+                        properties:
+                          discard-unknown-dest-mac:
+                            default: false
+                            type: boolean
+                          mac-duplication:
+                            description: NetworkinstanceBridgeTableMacDuplication
+                              struct
+                            properties:
+                              action:
+                                default: stop-learning
+                                enum:
+                                - blackhole
+                                - oper-down
+                                - stop-learning
+                                type: string
+                              admin-state:
+                                default: enable
+                                enum:
+                                - disable
+                                - enable
+                                type: string
+                              hold-down-time:
+                                default: 9
+                                format: int32
+                                type: integer
+                              monitoring-window:
+                                default: 3
+                                description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=15
+                                format: int32
+                                type: integer
+                              num-moves:
+                                default: 5
+                                description: kubebuilder:validation:Minimum=3 kubebuilder:validation:Maximum=10
+                                format: int32
+                                type: integer
+                            type: object
+                          mac-learning:
+                            description: NetworkinstanceBridgeTableMacLearning struct
+                            properties:
+                              admin-state:
+                                default: enable
+                                enum:
+                                - disable
+                                - enable
+                                type: string
+                              aging:
+                                description: NetworkinstanceBridgeTableMacLearningAging
+                                  struct
+                                properties:
+                                  admin-state:
+                                    default: enable
+                                    enum:
+                                    - disable
+                                    - enable
+                                    type: string
+                                  age-time:
+                                    default: 300
+                                    description: kubebuilder:validation:Minimum=60
+                                      kubebuilder:validation:Maximum=86400
+                                    format: int32
+                                    type: integer
+                                type: object
+                            type: object
+                          mac-limit:
+                            description: NetworkinstanceBridgeTableMacLimit struct
+                            properties:
+                              maximum-entries:
+                                default: 250
+                                description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=8192
+                                format: int32
+                                type: integer
+                              warning-threshold-pct:
+                                default: 95
+                                description: kubebuilder:validation:Minimum=6 kubebuilder:validation:Maximum=100
+                                format: int32
+                                type: integer
+                            type: object
+                          protect-anycast-gw-mac:
+                            default: false
+                            type: boolean
+                          static-mac:
+                            description: NetworkinstanceBridgeTableStaticMac struct
+                            properties:
+                              mac:
+                                items:
+                                  description: NetworkinstanceBridgeTableStaticMacMac
+                                    struct
+                                  properties:
+                                    address:
+                                      pattern: '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}'
+                                      type: string
+                                    destination:
+                                      type: string
+                                  required:
+                                  - destination
+                                  type: object
+                                type: array
+                            type: object
+                        type: object
+                      description:
+                        description: kubebuilder:validation:MinLength=1 kubebuilder:validation:MaxLength=255
+                        pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
+                        type: string
+                      interface:
+                        items:
+                          description: NetworkinstanceInterface struct
+                          properties:
+                            name:
+                              description: kubebuilder:validation:MinLength=5 kubebuilder:validation:MaxLength=25
+                              pattern: (mgmt0\.0|system0\.0|lo(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|ethernet-([1-9](\d){0,1}(/[abcd])?(/[1-9](\d){0,1})?/(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))\.([0]|[1-9](\d){0,3})|irb(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|lag(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8]))\.(0|[1-9](\d){0,3}))
+                              type: string
+                          type: object
+                        type: array
+                      ip-forwarding:
+                        description: NetworkinstanceIpForwarding struct
+                        properties:
+                          receive-ipv4-check:
+                            type: boolean
+                          receive-ipv6-check:
+                            type: boolean
+                        type: object
+                      ip-load-balancing:
+                        description: NetworkinstanceIpLoadBalancing struct
+                        properties:
+                          resilient-hash-prefix:
+                            items:
+                              description: NetworkinstanceIpLoadBalancingResilientHashPrefix
+                                struct
+                              properties:
+                                hash-buckets-per-path:
+                                  default: 1
+                                  description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=32
+                                  type: integer
+                                ip-prefix:
+                                  pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))
+                                  type: string
+                                max-paths:
+                                  default: 1
+                                  description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
+                                  type: integer
+                              type: object
+                            type: array
+                        type: object
+                      mpls:
+                        description: NetworkinstanceMpls struct
+                        properties:
+                          admin-state:
+                            default: disable
+                            enum:
+                            - disable
+                            - enable
+                            type: string
+                          static-mpls-entry:
+                            items:
+                              description: NetworkinstanceMplsStaticMplsEntry struct
+                              properties:
+                                collect-stats:
+                                  default: false
+                                  type: boolean
+                                next-hop-group:
+                                  type: string
+                                operation:
+                                  default: swap
+                                  enum:
+                                  - pop
+                                  - swap
+                                  type: string
+                                preference:
+                                  default: 5
+                                  description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=255
+                                  type: integer
+                                top-label:
+                                  type: string
+                              type: object
+                            type: array
+                          ttl-propagation:
+                            default: false
+                            type: boolean
+                        type: object
+                      mtu:
+                        description: NetworkinstanceMtu struct
+                        properties:
+                          path-mtu-discovery:
+                            type: boolean
+                        type: object
+                      name:
+                        description: kubebuilder:validation:MinLength=1 kubebuilder:validation:MaxLength=255
+                        pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
+                        type: string
+                      protocols:
+                        description: NetworkinstanceProtocols struct
+                        properties:
+                          directly-connected:
+                            description: NetworkinstanceProtocolsDirectlyConnected
+                              struct
+                            properties:
+                              te-database-install:
+                                description: NetworkinstanceProtocolsDirectlyConnectedTeDatabaseInstall
+                                  struct
+                                properties:
+                                  bgp-ls:
+                                    description: NetworkinstanceProtocolsDirectlyConnectedTeDatabaseInstallBgpLs
+                                      struct
+                                    properties:
+                                      bgp-ls-identifier:
+                                        description: kubebuilder:validation:Minimum=0
+                                          kubebuilder:validation:Maximum=4294967295
+                                        format: int32
+                                        type: integer
+                                      igp-identifier:
+                                        description: kubebuilder:validation:Minimum=0
+                                          kubebuilder:validation:Maximum=-1
+                                        format: int64
+                                        type: integer
+                                    type: object
+                                type: object
+                            type: object
+                          ldp:
+                            description: NetworkinstanceProtocolsLdp struct
+                            properties:
+                              admin-state:
+                                default: disable
+                                enum:
+                                - disable
+                                - enable
+                                type: string
+                              discovery:
+                                description: NetworkinstanceProtocolsLdpDiscovery
+                                  struct
+                                properties:
+                                  interfaces:
+                                    description: NetworkinstanceProtocolsLdpDiscoveryInterfaces
+                                      struct
+                                    properties:
+                                      hello-holdtime:
+                                        default: 15
+                                        description: kubebuilder:validation:Minimum=15
+                                          kubebuilder:validation:Maximum=3600
+                                        type: integer
+                                      hello-interval:
+                                        default: 5
+                                        description: kubebuilder:validation:Minimum=5
+                                          kubebuilder:validation:Maximum=1200
+                                        type: integer
+                                      interface:
+                                        items:
+                                          description: NetworkinstanceProtocolsLdpDiscoveryInterfacesInterface
+                                            struct
+                                          properties:
+                                            admin-state:
+                                              enum:
+                                              - disable
+                                              - enable
+                                              type: string
+                                            hello-holdtime:
+                                              default: 15
+                                              description: kubebuilder:validation:Minimum=15
+                                                kubebuilder:validation:Maximum=3600
+                                              type: integer
+                                            hello-interval:
+                                              default: 5
+                                              description: kubebuilder:validation:Minimum=5
+                                                kubebuilder:validation:Maximum=1200
+                                              type: integer
+                                            ipv4:
+                                              description: NetworkinstanceProtocolsLdpDiscoveryInterfacesInterfaceIpv4
+                                                struct
+                                              properties:
+                                                admin-state:
+                                                  default: enable
+                                                  enum:
+                                                  - disable
+                                                  - enable
+                                                  type: string
+                                              type: object
+                                            name:
+                                              description: kubebuilder:validation:MinLength=5
+                                                kubebuilder:validation:MaxLength=25
+                                              pattern: (mgmt0\.0|system0\.0|lo(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|ethernet-([1-9](\d){0,1}(/[abcd])?(/[1-9](\d){0,1})?/(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))\.([0]|[1-9](\d){0,3})|irb(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|lag(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8]))\.(0|[1-9](\d){0,3}))
+                                              type: string
+                                          type: object
+                                        type: array
+                                    type: object
+                                type: object
+                              dynamic-label-block:
+                                type: string
+                              graceful-restart:
+                                description: NetworkinstanceProtocolsLdpGracefulRestart
+                                  struct
+                                properties:
+                                  helper-enable:
+                                    default: false
+                                    type: boolean
+                                  max-reconnect-time:
+                                    default: 120
+                                    description: kubebuilder:validation:Minimum=10
+                                      kubebuilder:validation:Maximum=1800
+                                    type: integer
+                                  max-recovery-time:
+                                    default: 120
+                                    description: kubebuilder:validation:Minimum=30
+                                      kubebuilder:validation:Maximum=3600
+                                    type: integer
+                                type: object
+                              ipv4:
+                                description: NetworkinstanceProtocolsLdpIpv4 struct
+                                properties:
+                                  fec-resolution:
+                                    description: NetworkinstanceProtocolsLdpIpv4FecResolution
+                                      struct
+                                    properties:
+                                      longest-prefix:
+                                        default: false
+                                        type: boolean
+                                    type: object
+                                type: object
+                              multipath:
+                                description: NetworkinstanceProtocolsLdpMultipath
+                                  struct
+                                properties:
+                                  max-paths:
+                                    description: kubebuilder:validation:Minimum=1
+                                      kubebuilder:validation:Maximum=64
+                                    type: integer
+                                type: object
+                              peers:
+                                description: NetworkinstanceProtocolsLdpPeers struct
+                                properties:
+                                  peer:
+                                    items:
+                                      description: NetworkinstanceProtocolsLdpPeersPeer
+                                        struct
+                                      properties:
+                                        ipv4:
+                                          description: NetworkinstanceProtocolsLdpPeersPeerIpv4
+                                            struct
+                                          properties:
+                                            fec-limit:
+                                              description: kubebuilder:validation:Minimum=0
+                                                kubebuilder:validation:Maximum=4294967295
+                                              format: int32
+                                              type: integer
+                                          type: object
+                                        label-space-id:
+                                          description: kubebuilder:validation:Minimum=0
+                                            kubebuilder:validation:Maximum=65535
+                                          type: integer
+                                        lsr-id:
+                                          pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])
+                                          type: string
+                                        tcp-transport:
+                                          description: NetworkinstanceProtocolsLdpPeersPeerTcpTransport
+                                            struct
+                                          properties:
+                                            authentication:
+                                              description: NetworkinstanceProtocolsLdpPeersPeerTcpTransportAuthentication
+                                                struct
+                                              properties:
+                                                keychain:
+                                                  type: string
+                                              type: object
+                                          type: object
+                                      type: object
+                                    type: array
+                                  session-keepalive-holdtime:
+                                    default: 180
+                                    description: kubebuilder:validation:Minimum=45
+                                      kubebuilder:validation:Maximum=3600
+                                    type: integer
+                                  session-keepalive-interval:
+                                    default: 60
+                                    description: kubebuilder:validation:Minimum=15
+                                      kubebuilder:validation:Maximum=1200
+                                    type: integer
+                                  tcp-transport:
+                                    description: NetworkinstanceProtocolsLdpPeersTcpTransport
+                                      struct
+                                    properties:
+                                      authentication:
+                                        description: NetworkinstanceProtocolsLdpPeersTcpTransportAuthentication
+                                          struct
+                                        properties:
+                                          keychain:
+                                            type: string
+                                        type: object
+                                    type: object
+                                type: object
+                              trace-options:
+                                description: NetworkinstanceProtocolsLdpTraceOptions
+                                  struct
+                                properties:
+                                  interface:
+                                    items:
+                                      description: NetworkinstanceProtocolsLdpTraceOptionsInterface
+                                        struct
+                                      properties:
+                                        name:
+                                          description: kubebuilder:validation:MinLength=5
+                                            kubebuilder:validation:MaxLength=25
+                                          pattern: (mgmt0\.0|system0\.0|lo(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|ethernet-([1-9](\d){0,1}(/[abcd])?(/[1-9](\d){0,1})?/(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))\.([0]|[1-9](\d){0,3})|irb(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|lag(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8]))\.(0|[1-9](\d){0,3}))
+                                          type: string
+                                      type: object
+                                    type: array
+                                  peer:
+                                    items:
+                                      description: NetworkinstanceProtocolsLdpTraceOptionsPeer
+                                        struct
+                                      properties:
+                                        label-space-id:
+                                          description: kubebuilder:validation:Minimum=0
+                                            kubebuilder:validation:Maximum=65535
+                                          type: integer
+                                        lsr-id:
+                                          pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])
+                                          type: string
+                                      type: object
+                                    type: array
+                                type: object
+                            required:
+                            - dynamic-label-block
+                            type: object
+                        type: object
+                      router-id:
+                        pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])
+                        type: string
+                      traffic-engineering:
+                        description: NetworkinstanceTrafficEngineering struct
+                        properties:
+                          admin-groups:
+                            description: NetworkinstanceTrafficEngineeringAdminGroups
+                              struct
+                            properties:
+                              group:
+                                items:
+                                  description: NetworkinstanceTrafficEngineeringAdminGroupsGroup
+                                    struct
+                                  properties:
+                                    bit-position:
+                                      description: kubebuilder:validation:Minimum=0
+                                        kubebuilder:validation:Maximum=31
+                                      format: int32
+                                      type: integer
+                                    name:
+                                      description: kubebuilder:validation:MinLength=1
+                                        kubebuilder:validation:MaxLength=255
+                                      pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
+                                      type: string
+                                  type: object
+                                type: array
+                            type: object
+                          autonomous-system:
+                            description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=4294967295
+                            format: int32
+                            type: integer
+                          interface:
+                            items:
+                              description: NetworkinstanceTrafficEngineeringInterface
+                                struct
+                              properties:
+                                admin-group:
+                                  type: string
+                                delay:
+                                  description: NetworkinstanceTrafficEngineeringInterfaceDelay
+                                    struct
+                                  properties:
+                                    static:
+                                      description: kubebuilder:validation:Minimum=0
+                                        kubebuilder:validation:Maximum=4294967295
+                                      format: int32
+                                      type: integer
+                                  type: object
+                                interface-name:
+                                  type: string
+                                srlg-membership:
+                                  type: string
+                                te-metric:
+                                  description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=16777215
+                                  format: int32
+                                  type: integer
+                              type: object
+                            type: array
+                          ipv4-te-router-id:
+                            pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])
+                            type: string
+                          ipv6-te-router-id:
+                            pattern: ((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                            type: string
+                          shared-risk-link-groups:
+                            description: NetworkinstanceTrafficEngineeringSharedRiskLinkGroups
+                              struct
+                            properties:
+                              group:
+                                items:
+                                  description: NetworkinstanceTrafficEngineeringSharedRiskLinkGroupsGroup
+                                    struct
+                                  properties:
+                                    cost:
+                                      description: kubebuilder:validation:Minimum=0
+                                        kubebuilder:validation:Maximum=4294967295
+                                      format: int32
+                                      type: integer
+                                    name:
+                                      description: kubebuilder:validation:MinLength=1
+                                        kubebuilder:validation:MaxLength=255
+                                      pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
+                                      type: string
+                                    static-member:
+                                      items:
+                                        description: NetworkinstanceTrafficEngineeringSharedRiskLinkGroupsGroupStaticMember
+                                          struct
+                                        properties:
+                                          from-address:
+                                            pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                            type: string
+                                          to-address:
+                                            pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                            type: string
+                                        type: object
+                                      type: array
+                                    value:
+                                      description: kubebuilder:validation:Minimum=0
+                                        kubebuilder:validation:Maximum=4294967295
+                                      format: int32
+                                      type: integer
+                                  type: object
+                                type: array
+                            type: object
+                        type: object
+                      type:
+                        default: default
+                        type: string
+                      vxlan-interface:
+                        items:
+                          description: NetworkinstanceVxlanInterface struct
+                          properties:
+                            name:
+                              description: kubebuilder:validation:MinLength=8 kubebuilder:validation:MaxLength=17
+                              pattern: (vxlan(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,8}))
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                type: object
+              networkNodeRef:
+                default:
+                  name: default
+                description: NetworkNodeReference specifies which network node will
+                  be used to create, observe, update, and delete this managed resource
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - forNetworkNode
+            type: object
+          status:
+            description: A NetworkinstanceStatus represents the observed state of
+              a Networkinstance.
+            properties:
+              atNetworkNode:
+                description: NetworkinstanceStatus struct
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource
+                  properties:
+                    kind:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                  required:
+                  - kind
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  type: object
+                type: array
+              externalLeafRefs:
+                description: ExternalLeafRefs tracks the external resources this resource
+                  is dependent upon
+                items:
+                  type: string
+                type: array
+              resourceIndexes:
+                additionalProperties:
+                  type: string
+                description: ResourceIndexes tracks the indexes that or used by the
+                  resource
+                type: object
+              target:
+                description: Target used by the resource
+                items:
+                  type: string
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

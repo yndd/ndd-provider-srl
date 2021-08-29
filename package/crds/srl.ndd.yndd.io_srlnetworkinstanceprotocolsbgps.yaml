@@ -1,0 +1,1084 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.4.1
+  creationTimestamp: null
+  name: srlnetworkinstanceprotocolsbgps.srl.ndd.yndd.io
+spec:
+  group: srl.ndd.yndd.io
+  names:
+    categories:
+    - ndd
+    - srl
+    kind: SrlNetworkinstanceProtocolsBgp
+    listKind: SrlNetworkinstanceProtocolsBgpList
+    plural: srlnetworkinstanceprotocolsbgps
+    singular: srlnetworkinstanceprotocolsbgp
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.kind=='TargetFound')].status
+      name: TARGET
+      type: string
+    - jsonPath: .status.conditions[?(@.kind=='Ready')].status
+      name: STATUS
+      type: string
+    - jsonPath: .status.conditions[?(@.kind=='Synced')].status
+      name: SYNC
+      type: string
+    - jsonPath: .status.conditions[?(@.kind=='InternalLeafrefValidationSuccess')].status
+      name: LOCALLEAFREF
+      type: string
+    - jsonPath: .status.conditions[?(@.kind=='ExternalLeafrefValidationSuccess')].status
+      name: EXTLEAFREF
+      type: string
+    - jsonPath: .status.conditions[?(@.kind=='ParentValidationSuccess')].status
+      name: PARENTDEP
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: SrlNetworkinstanceProtocolsBgp is the Schema for the NetworkinstanceProtocolsBgp
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: A NetworkinstanceProtocolsBgpSpec defines the desired state
+              of a NetworkinstanceProtocolsBgp.
+            properties:
+              active:
+                default: true
+                description: Active specifies if the managed resource is active or
+                  not
+                type: boolean
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forNetworkNode:
+                description: NetworkinstanceProtocolsBgpSpec struct
+                properties:
+                  bgp:
+                    description: NetworkinstanceProtocolsBgp struct
+                    properties:
+                      admin-state:
+                        default: enable
+                        enum:
+                        - disable
+                        - enable
+                        type: string
+                      as-path-options:
+                        description: NetworkinstanceProtocolsBgpAsPathOptions struct
+                        properties:
+                          allow-own-as:
+                            default: 0
+                            description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=255
+                            type: integer
+                          remove-private-as:
+                            description: NetworkinstanceProtocolsBgpAsPathOptionsRemovePrivateAs
+                              struct
+                            properties:
+                              ignore-peer-as:
+                                default: false
+                                type: boolean
+                              leading-only:
+                                default: false
+                                type: boolean
+                              mode:
+                                default: disabled
+                                enum:
+                                - delete
+                                - disabled
+                                - replace
+                                type: string
+                            type: object
+                        type: object
+                      authentication:
+                        description: NetworkinstanceProtocolsBgpAuthentication struct
+                        properties:
+                          keychain:
+                            type: string
+                        type: object
+                      autonomous-system:
+                        description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=4294967295
+                        format: int32
+                        type: integer
+                      convergence:
+                        description: NetworkinstanceProtocolsBgpConvergence struct
+                        properties:
+                          min-wait-to-advertise:
+                            default: 0
+                            description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=3600
+                            type: integer
+                        type: object
+                      dynamic-neighbors:
+                        description: NetworkinstanceProtocolsBgpDynamicNeighbors struct
+                        properties:
+                          accept:
+                            description: NetworkinstanceProtocolsBgpDynamicNeighborsAccept
+                              struct
+                            properties:
+                              match:
+                                items:
+                                  description: NetworkinstanceProtocolsBgpDynamicNeighborsAcceptMatch
+                                    struct
+                                  properties:
+                                    allowed-peer-as:
+                                      pattern: ([1-9][0-9]*)|([1-9][0-9]*)\.\.([1-9][0-9]*)
+                                      type: string
+                                    peer-group:
+                                      type: string
+                                    prefix:
+                                      pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))
+                                      type: string
+                                  required:
+                                  - peer-group
+                                  type: object
+                                type: array
+                              max-sessions:
+                                default: 0
+                                description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=65535
+                                type: integer
+                            type: object
+                        type: object
+                      ebgp-default-policy:
+                        description: NetworkinstanceProtocolsBgpEbgpDefaultPolicy
+                          struct
+                        properties:
+                          export-reject-all:
+                            default: true
+                            type: boolean
+                          import-reject-all:
+                            default: true
+                            type: boolean
+                        type: object
+                      evpn:
+                        description: NetworkinstanceProtocolsBgpEvpn struct
+                        properties:
+                          admin-state:
+                            default: disable
+                            enum:
+                            - disable
+                            - enable
+                            type: string
+                          advertise-ipv6-next-hops:
+                            default: false
+                            type: boolean
+                          keep-all-routes:
+                            type: boolean
+                          multipath:
+                            description: NetworkinstanceProtocolsBgpEvpnMultipath
+                              struct
+                            properties:
+                              allow-multiple-as:
+                                default: true
+                                type: boolean
+                              max-paths-level-1:
+                                default: 1
+                                description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
+                                format: int32
+                                type: integer
+                              max-paths-level-2:
+                                default: 1
+                                description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
+                                format: int32
+                                type: integer
+                            type: object
+                          rapid-update:
+                            default: false
+                            type: boolean
+                        type: object
+                      export-policy:
+                        type: string
+                      failure-detection:
+                        description: NetworkinstanceProtocolsBgpFailureDetection struct
+                        properties:
+                          enable-bfd:
+                            default: false
+                            type: boolean
+                          fast-failover:
+                            default: true
+                            type: boolean
+                        type: object
+                      graceful-restart:
+                        description: NetworkinstanceProtocolsBgpGracefulRestart struct
+                        properties:
+                          admin-state:
+                            default: disable
+                            enum:
+                            - disable
+                            - enable
+                            type: string
+                          stale-routes-time:
+                            default: 360
+                            description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=3600
+                            type: integer
+                        type: object
+                      group:
+                        items:
+                          description: NetworkinstanceProtocolsBgpGroup struct
+                          properties:
+                            admin-state:
+                              default: enable
+                              enum:
+                              - disable
+                              - enable
+                              type: string
+                            as-path-options:
+                              description: NetworkinstanceProtocolsBgpGroupAsPathOptions
+                                struct
+                              properties:
+                                allow-own-as:
+                                  description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=255
+                                  type: integer
+                                remove-private-as:
+                                  description: NetworkinstanceProtocolsBgpGroupAsPathOptionsRemovePrivateAs
+                                    struct
+                                  properties:
+                                    ignore-peer-as:
+                                      default: false
+                                      type: boolean
+                                    leading-only:
+                                      default: false
+                                      type: boolean
+                                    mode:
+                                      enum:
+                                      - delete
+                                      - disabled
+                                      - replace
+                                      type: string
+                                  required:
+                                  - mode
+                                  type: object
+                                replace-peer-as:
+                                  type: boolean
+                              type: object
+                            authentication:
+                              description: NetworkinstanceProtocolsBgpGroupAuthentication
+                                struct
+                              properties:
+                                keychain:
+                                  type: string
+                              type: object
+                            description:
+                              description: kubebuilder:validation:MinLength=1 kubebuilder:validation:MaxLength=255
+                              pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
+                              type: string
+                            evpn:
+                              description: NetworkinstanceProtocolsBgpGroupEvpn struct
+                              properties:
+                                admin-state:
+                                  enum:
+                                  - disable
+                                  - enable
+                                  type: string
+                                advertise-ipv6-next-hops:
+                                  type: boolean
+                                prefix-limit:
+                                  description: NetworkinstanceProtocolsBgpGroupEvpnPrefixLimit
+                                    struct
+                                  properties:
+                                    max-received-routes:
+                                      default: 4294967295
+                                      description: kubebuilder:validation:Minimum=1
+                                        kubebuilder:validation:Maximum=4294967295
+                                      format: int32
+                                      type: integer
+                                    warning-threshold-pct:
+                                      default: 90
+                                      description: kubebuilder:validation:Minimum=0
+                                        kubebuilder:validation:Maximum=100
+                                      type: integer
+                                  type: object
+                              type: object
+                            export-policy:
+                              type: string
+                            failure-detection:
+                              description: NetworkinstanceProtocolsBgpGroupFailureDetection
+                                struct
+                              properties:
+                                enable-bfd:
+                                  type: boolean
+                                fast-failover:
+                                  type: boolean
+                              type: object
+                            graceful-restart:
+                              description: NetworkinstanceProtocolsBgpGroupGracefulRestart
+                                struct
+                              properties:
+                                admin-state:
+                                  enum:
+                                  - disable
+                                  - enable
+                                  type: string
+                                stale-routes-time:
+                                  description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=3600
+                                  type: integer
+                              type: object
+                            group-name:
+                              description: kubebuilder:validation:MinLength=1 kubebuilder:validation:MaxLength=255
+                              pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
+                              type: string
+                            import-policy:
+                              type: string
+                            ipv4-unicast:
+                              description: NetworkinstanceProtocolsBgpGroupIpv4Unicast
+                                struct
+                              properties:
+                                admin-state:
+                                  enum:
+                                  - disable
+                                  - enable
+                                  type: string
+                                advertise-ipv6-next-hops:
+                                  type: boolean
+                                prefix-limit:
+                                  description: NetworkinstanceProtocolsBgpGroupIpv4UnicastPrefixLimit
+                                    struct
+                                  properties:
+                                    max-received-routes:
+                                      default: 4294967295
+                                      description: kubebuilder:validation:Minimum=1
+                                        kubebuilder:validation:Maximum=4294967295
+                                      format: int32
+                                      type: integer
+                                    warning-threshold-pct:
+                                      default: 90
+                                      description: kubebuilder:validation:Minimum=0
+                                        kubebuilder:validation:Maximum=100
+                                      type: integer
+                                  type: object
+                                receive-ipv6-next-hops:
+                                  type: boolean
+                              type: object
+                            ipv6-unicast:
+                              description: NetworkinstanceProtocolsBgpGroupIpv6Unicast
+                                struct
+                              properties:
+                                admin-state:
+                                  enum:
+                                  - disable
+                                  - enable
+                                  type: string
+                                prefix-limit:
+                                  description: NetworkinstanceProtocolsBgpGroupIpv6UnicastPrefixLimit
+                                    struct
+                                  properties:
+                                    max-received-routes:
+                                      default: 4294967295
+                                      description: kubebuilder:validation:Minimum=1
+                                        kubebuilder:validation:Maximum=4294967295
+                                      format: int32
+                                      type: integer
+                                    warning-threshold-pct:
+                                      default: 90
+                                      description: kubebuilder:validation:Minimum=0
+                                        kubebuilder:validation:Maximum=100
+                                      type: integer
+                                  type: object
+                              type: object
+                            local-as:
+                              items:
+                                description: NetworkinstanceProtocolsBgpGroupLocalAs
+                                  struct
+                                properties:
+                                  as-number:
+                                    description: kubebuilder:validation:Minimum=1
+                                      kubebuilder:validation:Maximum=4294967295
+                                    format: int32
+                                    type: integer
+                                  prepend-global-as:
+                                    default: true
+                                    type: boolean
+                                  prepend-local-as:
+                                    default: true
+                                    type: boolean
+                                type: object
+                              type: array
+                            local-preference:
+                              description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=4294967295
+                              format: int32
+                              type: integer
+                            next-hop-self:
+                              default: false
+                              type: boolean
+                            peer-as:
+                              description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=4294967295
+                              format: int32
+                              type: integer
+                            route-reflector:
+                              description: NetworkinstanceProtocolsBgpGroupRouteReflector
+                                struct
+                              properties:
+                                client:
+                                  type: boolean
+                                cluster-id:
+                                  pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])
+                                  type: string
+                              type: object
+                            send-community:
+                              description: NetworkinstanceProtocolsBgpGroupSendCommunity
+                                struct
+                              properties:
+                                large:
+                                  type: boolean
+                                standard:
+                                  type: boolean
+                              type: object
+                            send-default-route:
+                              description: NetworkinstanceProtocolsBgpGroupSendDefaultRoute
+                                struct
+                              properties:
+                                export-policy:
+                                  type: string
+                                ipv4-unicast:
+                                  default: false
+                                  type: boolean
+                                ipv6-unicast:
+                                  default: false
+                                  type: boolean
+                              type: object
+                            timers:
+                              description: NetworkinstanceProtocolsBgpGroupTimers
+                                struct
+                              properties:
+                                connect-retry:
+                                  default: 120
+                                  description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=65535
+                                  type: integer
+                                hold-time:
+                                  default: 90
+                                  description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=0
+                                  type: integer
+                                keepalive-interval:
+                                  description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=21845
+                                  type: integer
+                                minimum-advertisement-interval:
+                                  default: 5
+                                  description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=255
+                                  type: integer
+                              type: object
+                            trace-options:
+                              description: NetworkinstanceProtocolsBgpGroupTraceOptions
+                                struct
+                              properties:
+                                flag:
+                                  items:
+                                    description: NetworkinstanceProtocolsBgpGroupTraceOptionsFlag
+                                      struct
+                                    properties:
+                                      modifier:
+                                        enum:
+                                        - detail
+                                        - receive
+                                        - send
+                                        type: string
+                                      name:
+                                        enum:
+                                        - events
+                                        - graceful-restart
+                                        - keepalive
+                                        - notification
+                                        - open
+                                        - packets
+                                        - route
+                                        - socket
+                                        - timers
+                                        - update
+                                        type: string
+                                    type: object
+                                  type: array
+                              type: object
+                            transport:
+                              description: NetworkinstanceProtocolsBgpGroupTransport
+                                struct
+                              properties:
+                                local-address:
+                                  pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                  type: string
+                                passive-mode:
+                                  default: false
+                                  type: boolean
+                                tcp-mss:
+                                  description: kubebuilder:validation:Minimum=536
+                                    kubebuilder:validation:Maximum=9446
+                                  type: integer
+                              type: object
+                          type: object
+                        type: array
+                      import-policy:
+                        type: string
+                      ipv4-unicast:
+                        description: NetworkinstanceProtocolsBgpIpv4Unicast struct
+                        properties:
+                          admin-state:
+                            default: enable
+                            enum:
+                            - disable
+                            - enable
+                            type: string
+                          advertise-ipv6-next-hops:
+                            default: false
+                            type: boolean
+                          convergence:
+                            description: NetworkinstanceProtocolsBgpIpv4UnicastConvergence
+                              struct
+                            properties:
+                              max-wait-to-advertise:
+                                default: 0
+                                description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=3600
+                                type: integer
+                            type: object
+                          multipath:
+                            description: NetworkinstanceProtocolsBgpIpv4UnicastMultipath
+                              struct
+                            properties:
+                              allow-multiple-as:
+                                default: true
+                                type: boolean
+                              max-paths-level-1:
+                                default: 1
+                                description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
+                                format: int32
+                                type: integer
+                              max-paths-level-2:
+                                default: 1
+                                description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
+                                format: int32
+                                type: integer
+                            type: object
+                          receive-ipv6-next-hops:
+                            default: false
+                            type: boolean
+                        type: object
+                      ipv6-unicast:
+                        description: NetworkinstanceProtocolsBgpIpv6Unicast struct
+                        properties:
+                          admin-state:
+                            default: disable
+                            enum:
+                            - disable
+                            - enable
+                            type: string
+                          convergence:
+                            description: NetworkinstanceProtocolsBgpIpv6UnicastConvergence
+                              struct
+                            properties:
+                              max-wait-to-advertise:
+                                default: 0
+                                description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=3600
+                                type: integer
+                            type: object
+                          multipath:
+                            description: NetworkinstanceProtocolsBgpIpv6UnicastMultipath
+                              struct
+                            properties:
+                              allow-multiple-as:
+                                default: true
+                                type: boolean
+                              max-paths-level-1:
+                                default: 1
+                                description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
+                                format: int32
+                                type: integer
+                              max-paths-level-2:
+                                default: 1
+                                description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
+                                format: int32
+                                type: integer
+                            type: object
+                        type: object
+                      local-preference:
+                        default: 100
+                        description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=4294967295
+                        format: int32
+                        type: integer
+                      neighbor:
+                        items:
+                          description: NetworkinstanceProtocolsBgpNeighbor struct
+                          properties:
+                            admin-state:
+                              default: enable
+                              enum:
+                              - disable
+                              - enable
+                              type: string
+                            as-path-options:
+                              description: NetworkinstanceProtocolsBgpNeighborAsPathOptions
+                                struct
+                              properties:
+                                allow-own-as:
+                                  description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=255
+                                  type: integer
+                                remove-private-as:
+                                  description: NetworkinstanceProtocolsBgpNeighborAsPathOptionsRemovePrivateAs
+                                    struct
+                                  properties:
+                                    ignore-peer-as:
+                                      default: false
+                                      type: boolean
+                                    leading-only:
+                                      default: false
+                                      type: boolean
+                                    mode:
+                                      enum:
+                                      - delete
+                                      - disabled
+                                      - replace
+                                      type: string
+                                  required:
+                                  - mode
+                                  type: object
+                                replace-peer-as:
+                                  type: boolean
+                              type: object
+                            authentication:
+                              description: NetworkinstanceProtocolsBgpNeighborAuthentication
+                                struct
+                              properties:
+                                keychain:
+                                  type: string
+                              type: object
+                            description:
+                              description: kubebuilder:validation:MinLength=1 kubebuilder:validation:MaxLength=255
+                              pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
+                              type: string
+                            evpn:
+                              description: NetworkinstanceProtocolsBgpNeighborEvpn
+                                struct
+                              properties:
+                                admin-state:
+                                  enum:
+                                  - disable
+                                  - enable
+                                  type: string
+                                advertise-ipv6-next-hops:
+                                  type: boolean
+                                prefix-limit:
+                                  description: NetworkinstanceProtocolsBgpNeighborEvpnPrefixLimit
+                                    struct
+                                  properties:
+                                    max-received-routes:
+                                      description: kubebuilder:validation:Minimum=1
+                                        kubebuilder:validation:Maximum=4294967295
+                                      format: int32
+                                      type: integer
+                                    warning-threshold-pct:
+                                      description: kubebuilder:validation:Minimum=0
+                                        kubebuilder:validation:Maximum=100
+                                      type: integer
+                                  type: object
+                              type: object
+                            export-policy:
+                              type: string
+                            failure-detection:
+                              description: NetworkinstanceProtocolsBgpNeighborFailureDetection
+                                struct
+                              properties:
+                                enable-bfd:
+                                  type: boolean
+                                fast-failover:
+                                  type: boolean
+                              type: object
+                            graceful-restart:
+                              description: NetworkinstanceProtocolsBgpNeighborGracefulRestart
+                                struct
+                              properties:
+                                admin-state:
+                                  enum:
+                                  - disable
+                                  - enable
+                                  type: string
+                                stale-routes-time:
+                                  description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=3600
+                                  type: integer
+                                warm-restart:
+                                  description: NetworkinstanceProtocolsBgpNeighborGracefulRestartWarmRestart
+                                    struct
+                                  properties:
+                                    admin-state:
+                                      enum:
+                                      - disable
+                                      - enable
+                                      type: string
+                                  type: object
+                              type: object
+                            import-policy:
+                              type: string
+                            ipv4-unicast:
+                              description: NetworkinstanceProtocolsBgpNeighborIpv4Unicast
+                                struct
+                              properties:
+                                admin-state:
+                                  enum:
+                                  - disable
+                                  - enable
+                                  type: string
+                                advertise-ipv6-next-hops:
+                                  type: boolean
+                                prefix-limit:
+                                  description: NetworkinstanceProtocolsBgpNeighborIpv4UnicastPrefixLimit
+                                    struct
+                                  properties:
+                                    max-received-routes:
+                                      description: kubebuilder:validation:Minimum=1
+                                        kubebuilder:validation:Maximum=4294967295
+                                      format: int32
+                                      type: integer
+                                    warning-threshold-pct:
+                                      description: kubebuilder:validation:Minimum=0
+                                        kubebuilder:validation:Maximum=100
+                                      type: integer
+                                  type: object
+                                receive-ipv6-next-hops:
+                                  type: boolean
+                              type: object
+                            ipv6-unicast:
+                              description: NetworkinstanceProtocolsBgpNeighborIpv6Unicast
+                                struct
+                              properties:
+                                admin-state:
+                                  enum:
+                                  - disable
+                                  - enable
+                                  type: string
+                                prefix-limit:
+                                  description: NetworkinstanceProtocolsBgpNeighborIpv6UnicastPrefixLimit
+                                    struct
+                                  properties:
+                                    max-received-routes:
+                                      description: kubebuilder:validation:Minimum=1
+                                        kubebuilder:validation:Maximum=4294967295
+                                      format: int32
+                                      type: integer
+                                    warning-threshold-pct:
+                                      description: kubebuilder:validation:Minimum=0
+                                        kubebuilder:validation:Maximum=100
+                                      type: integer
+                                  type: object
+                              type: object
+                            local-as:
+                              items:
+                                description: NetworkinstanceProtocolsBgpNeighborLocalAs
+                                  struct
+                                properties:
+                                  as-number:
+                                    description: kubebuilder:validation:Minimum=1
+                                      kubebuilder:validation:Maximum=4294967295
+                                    format: int32
+                                    type: integer
+                                  prepend-global-as:
+                                    type: boolean
+                                  prepend-local-as:
+                                    type: boolean
+                                type: object
+                              type: array
+                            local-preference:
+                              description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=4294967295
+                              format: int32
+                              type: integer
+                            next-hop-self:
+                              type: boolean
+                            peer-address:
+                              pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                              type: string
+                            peer-as:
+                              description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=4294967295
+                              format: int32
+                              type: integer
+                            peer-group:
+                              type: string
+                            route-reflector:
+                              description: NetworkinstanceProtocolsBgpNeighborRouteReflector
+                                struct
+                              properties:
+                                client:
+                                  type: boolean
+                                cluster-id:
+                                  pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])
+                                  type: string
+                              type: object
+                            send-community:
+                              description: NetworkinstanceProtocolsBgpNeighborSendCommunity
+                                struct
+                              properties:
+                                large:
+                                  type: boolean
+                                standard:
+                                  type: boolean
+                              type: object
+                            send-default-route:
+                              description: NetworkinstanceProtocolsBgpNeighborSendDefaultRoute
+                                struct
+                              properties:
+                                export-policy:
+                                  type: string
+                                ipv4-unicast:
+                                  type: boolean
+                                ipv6-unicast:
+                                  type: boolean
+                              type: object
+                            timers:
+                              description: NetworkinstanceProtocolsBgpNeighborTimers
+                                struct
+                              properties:
+                                connect-retry:
+                                  description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=65535
+                                  type: integer
+                                hold-time:
+                                  description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=0
+                                  type: integer
+                                keepalive-interval:
+                                  description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=21845
+                                  type: integer
+                                minimum-advertisement-interval:
+                                  description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=255
+                                  type: integer
+                              type: object
+                            trace-options:
+                              description: NetworkinstanceProtocolsBgpNeighborTraceOptions
+                                struct
+                              properties:
+                                flag:
+                                  items:
+                                    description: NetworkinstanceProtocolsBgpNeighborTraceOptionsFlag
+                                      struct
+                                    properties:
+                                      modifier:
+                                        enum:
+                                        - detail
+                                        - receive
+                                        - send
+                                        type: string
+                                      name:
+                                        enum:
+                                        - events
+                                        - graceful-restart
+                                        - keepalive
+                                        - notification
+                                        - open
+                                        - packets
+                                        - route
+                                        - socket
+                                        - timers
+                                        - update
+                                        type: string
+                                    type: object
+                                  type: array
+                              type: object
+                            transport:
+                              description: NetworkinstanceProtocolsBgpNeighborTransport
+                                struct
+                              properties:
+                                local-address:
+                                  pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                                  type: string
+                                passive-mode:
+                                  type: boolean
+                                tcp-mss:
+                                  description: kubebuilder:validation:Minimum=536
+                                    kubebuilder:validation:Maximum=9446
+                                  type: integer
+                              type: object
+                          required:
+                          - peer-group
+                          type: object
+                        type: array
+                      preference:
+                        description: NetworkinstanceProtocolsBgpPreference struct
+                        properties:
+                          ebgp:
+                            default: 170
+                            description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=255
+                            type: integer
+                          ibgp:
+                            default: 170
+                            description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=255
+                            type: integer
+                        type: object
+                      route-advertisement:
+                        description: NetworkinstanceProtocolsBgpRouteAdvertisement
+                          struct
+                        properties:
+                          rapid-withdrawal:
+                            default: false
+                            type: boolean
+                          wait-for-fib-install:
+                            default: true
+                            type: boolean
+                        type: object
+                      route-reflector:
+                        description: NetworkinstanceProtocolsBgpRouteReflector struct
+                        properties:
+                          client:
+                            default: false
+                            type: boolean
+                          cluster-id:
+                            pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])
+                            type: string
+                        type: object
+                      router-id:
+                        pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
+                        type: string
+                      send-community:
+                        description: NetworkinstanceProtocolsBgpSendCommunity struct
+                        properties:
+                          large:
+                            default: true
+                            type: boolean
+                          standard:
+                            default: true
+                            type: boolean
+                        type: object
+                      trace-options:
+                        description: NetworkinstanceProtocolsBgpTraceOptions struct
+                        properties:
+                          flag:
+                            items:
+                              description: NetworkinstanceProtocolsBgpTraceOptionsFlag
+                                struct
+                              properties:
+                                modifier:
+                                  enum:
+                                  - detail
+                                  - receive
+                                  - send
+                                  type: string
+                                name:
+                                  enum:
+                                  - events
+                                  - graceful-restart
+                                  - keepalive
+                                  - notification
+                                  - open
+                                  - packets
+                                  - route
+                                  - socket
+                                  - timers
+                                  - update
+                                  type: string
+                              type: object
+                            type: array
+                        type: object
+                      transport:
+                        description: NetworkinstanceProtocolsBgpTransport struct
+                        properties:
+                          tcp-mss:
+                            default: 1024
+                            description: kubebuilder:validation:Minimum=536 kubebuilder:validation:Maximum=9446
+                            type: integer
+                        type: object
+                    required:
+                    - autonomous-system
+                    type: object
+                  network-instance-name:
+                    type: string
+                required:
+                - network-instance-name
+                type: object
+              networkNodeRef:
+                default:
+                  name: default
+                description: NetworkNodeReference specifies which network node will
+                  be used to create, observe, update, and delete this managed resource
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - forNetworkNode
+            type: object
+          status:
+            description: A NetworkinstanceProtocolsBgpStatus represents the observed
+              state of a NetworkinstanceProtocolsBgp.
+            properties:
+              atNetworkNode:
+                description: NetworkinstanceProtocolsBgpStatus struct
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource
+                  properties:
+                    kind:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                  required:
+                  - kind
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  type: object
+                type: array
+              externalLeafRefs:
+                description: ExternalLeafRefs tracks the external resources this resource
+                  is dependent upon
+                items:
+                  type: string
+                type: array
+              resourceIndexes:
+                additionalProperties:
+                  type: string
+                description: ResourceIndexes tracks the indexes that or used by the
+                  resource
+                type: object
+              target:
+                description: Target used by the resource
+                items:
+                  type: string
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
