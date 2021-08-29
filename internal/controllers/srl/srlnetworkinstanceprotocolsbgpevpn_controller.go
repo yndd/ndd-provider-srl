@@ -42,7 +42,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
-	srlv1 "github.com/netw-device-driver/ndd-provider-srl/apis/srl/v1"
+	srlv1 "github.com/yndd/ndd-provider-srl/apis/srl/v1"
 )
 
 const (

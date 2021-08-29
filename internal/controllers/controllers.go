@@ -25,8 +25,8 @@ import (
 
 	"github.com/netw-device-driver/ndd-runtime/pkg/logging"
 
-	"github.com/netw-device-driver/ndd-provider-srl/internal/controllers/srl"
-	"github.com/netw-device-driver/ndd-provider-srl/internal/subscription"
+	"github.com/yndd/ndd-provider-srl/internal/controllers/srl"
+	"github.com/yndd/ndd-provider-srl/internal/subscription"
 )
 
 // Setup package controllers.

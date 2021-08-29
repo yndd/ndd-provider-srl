@@ -38,8 +38,8 @@ import (
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
 
-	srlv1 "github.com/netw-device-driver/ndd-provider-srl/apis/srl/v1"
-	"github.com/netw-device-driver/ndd-provider-srl/internal/subscription"
+	srlv1 "github.com/yndd/ndd-provider-srl/apis/srl/v1"
+	"github.com/yndd/ndd-provider-srl/internal/subscription"
 )
 
 const (

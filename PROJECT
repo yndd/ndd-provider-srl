@@ -1,6 +1,6 @@
 version: "1"
 domain: ndd.yndd.io
-repository: github.com/netw-device-driver/ndd-provider-srl
+repository: github.com/yndd/ndd-provider-srl
 name: ndd-provider-srl
 resources:
 - gvk:
@@ -9,7 +9,7 @@ resources:
     version: v1
     kind: Registration
   plural: ""
-  path: github.com/netw-device-driver/ndd-provider-srl/apis/srl/v1
+  path: github.com/yndd/ndd-provider-srl/apis/srl/v1
   api:
     crdversion: v1
     namespaced: false

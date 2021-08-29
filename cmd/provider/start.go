@@ -31,8 +31,8 @@ import (
 	"github.com/netw-device-driver/ndd-runtime/pkg/logging"
 	"github.com/netw-device-driver/ndd-runtime/pkg/ratelimiter"
 
-	"github.com/netw-device-driver/ndd-provider-srl/internal/controllers"
-	"github.com/netw-device-driver/ndd-provider-srl/internal/subscription"
+	"github.com/yndd/ndd-provider-srl/internal/controllers"
+	"github.com/yndd/ndd-provider-srl/internal/subscription"
 	//+kubebuilder:scaffold:imports
 )
 

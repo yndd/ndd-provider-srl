@@ -36,8 +36,8 @@ import (
 	"github.com/netw-device-driver/ndd-runtime/pkg/logging"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 
-	srlv1 "github.com/netw-device-driver/ndd-provider-srl/apis/srl/v1"
-	"github.com/netw-device-driver/ndd-provider-srl/internal/initializer"
+	srlv1 "github.com/yndd/ndd-provider-srl/apis/srl/v1"
+	"github.com/yndd/ndd-provider-srl/internal/initializer"
 	//+kubebuilder:scaffold:imports
 )
 

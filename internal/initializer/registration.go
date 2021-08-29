@@ -25,7 +25,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	srlv1 "github.com/netw-device-driver/ndd-provider-srl/apis/srl/v1"
+	srlv1 "github.com/yndd/ndd-provider-srl/apis/srl/v1"
 )
 
 const (

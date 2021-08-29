@@ -16,7 +16,7 @@ limitations under the License.
 
 package main
 
-import "github.com/netw-device-driver/ndd-provider-srl/cmd/provider"
+import "github.com/yndd/ndd-provider-srl/cmd/provider"
 
 func main() {
 	provider.Execute()

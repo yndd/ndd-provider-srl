@@ -1,4 +1,4 @@
-module github.com/netw-device-driver/ndd-provider-srl
+module github.com/yndd/ndd-provider-srl
 
 go 1.16
 
