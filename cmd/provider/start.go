@@ -32,7 +32,6 @@ import (
 	"github.com/netw-device-driver/ndd-runtime/pkg/ratelimiter"
 
 	"github.com/yndd/ndd-provider-srl/internal/controllers"
-	"github.com/yndd/ndd-provider-srl/internal/subscription"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -82,10 +81,10 @@ var startCmd = &cobra.Command{
 			return errors.Wrap(err, "Cannot add ndd controllers to manager")
 		}
 
-		d := subscription.NewSubscriptionServer(
-			subscription.WithEventChannels(eventChans),
-			subscription.WithSubscriptionChannel(subChan),
-			subscription.WithLogging(logging.NewLogrLogger(zlog.WithName("srl"))),
+		d := collector.NewDeviationServer(
+			collector.WithEventChannels(eventChans),
+			collector.WithSubscriptionChannel(subChan),
+			collector.WithLogging(logging.NewLogrLogger(zlog.WithName("srl"))),
 		)
 		go func() {
 			d.StartSubscriptionHandler()

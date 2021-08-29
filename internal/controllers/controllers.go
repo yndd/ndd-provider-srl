@@ -26,11 +26,10 @@ import (
 	"github.com/netw-device-driver/ndd-runtime/pkg/logging"
 
 	"github.com/yndd/ndd-provider-srl/internal/controllers/srl"
-	"github.com/yndd/ndd-provider-srl/internal/subscription"
 )
 
 // Setup package controllers.
-func Setup(mgr ctrl.Manager, option controller.Options, l logging.Logger, autopilot bool, poll time.Duration, namespace string, subChan chan subscription.Subscription) (map[string]chan event.GenericEvent, error) {
+func Setup(mgr ctrl.Manager, option controller.Options, l logging.Logger, autopilot bool, poll time.Duration, namespace string, tuChan chan collector.TargetUpdate) (map[string]chan event.GenericEvent, error) {
 	eventChans := make(map[string]chan event.GenericEvent)
 	for _, setup := range []func(ctrl.Manager, controller.Options, logging.Logger, time.Duration, string) (string, chan event.GenericEvent, error){
 		srl.SetupBfd,
@@ -67,10 +66,10 @@ func Setup(mgr ctrl.Manager, option controller.Options, l logging.Logger, autopi
 		eventChans[gvk] = eventChan
 	}
 
-	for _, setup := range []func(ctrl.Manager, controller.Options, logging.Logger, time.Duration, string, chan subscription.Subscription) error{
+	for _, setup := range []func(ctrl.Manager, controller.Options, logging.Logger, time.Duration, string, chan collector.TargetUpdate) error{
 		srl.SetupRegistration,
 	} {
-		if err := setup(mgr, option, l, poll, namespace, subChan); err != nil {
+		if err := setup(mgr, option, l, poll, namespace, tuChan); err != nil {
 			return nil, err
 		}
 	}

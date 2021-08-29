@@ -25,6 +25,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 
+	"github.com/yndd/ndd-provider-srl/internal/pkg/collector"
+
+	"github.com/karimra/gnmic/types"
 	ndrv1 "github.com/netw-device-driver/ndd-core/apis/dvr/v1"
 	config "github.com/netw-device-driver/ndd-grpc/config/configpb"
 	"github.com/netw-device-driver/ndd-grpc/ndd"
@@ -35,11 +38,11 @@ import (
 	"github.com/netw-device-driver/ndd-runtime/pkg/logging"
 	"github.com/netw-device-driver/ndd-runtime/pkg/reconciler/managed"
 	"github.com/netw-device-driver/ndd-runtime/pkg/resource"
+	"github.com/netw-device-driver/ndd-runtime/pkg/utils"
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
 
 	srlv1 "github.com/yndd/ndd-provider-srl/apis/srl/v1"
-	"github.com/yndd/ndd-provider-srl/internal/subscription"
 )
 
 const (
@@ -56,7 +59,7 @@ const (
 )
 
 // SetupRegistration adds a controller that reconciles Registrations.
-func SetupRegistration(mgr ctrl.Manager, o controller.Options, l logging.Logger, poll time.Duration, namespace string, subChan chan subscription.Subscription) error {
+func SetupRegistration(mgr ctrl.Manager, o controller.Options, l logging.Logger, poll time.Duration, namespace string, subChan chan collector.TargetUpdate) error {
 
 	name := managed.ControllerName(srlv1.RegistrationGroupKind)
 
@@ -117,7 +120,7 @@ func (v *validatorRegistration) ValidateResourceIndexes(ctx context.Context, mg 
 // is called.
 type connectorRegistration struct {
 	log         logging.Logger
-	subChan     chan subscription.Subscription
+	subChan     chan collector.TargetUpdate
 	kube        client.Client
 	usage       resource.Tracker
 	newClientFn func(ctx context.Context, cfg ndd.Config) (register.RegistrationClient, error)
@@ -166,7 +169,7 @@ func (c *connectorRegistration) Connect(ctx context.Context, mg resource.Managed
 	// Validate if targets got added or deleted, based on this information the subscription Server
 	// should be informed over the channel
 	// check for deletes
-	deletedTargets := make([]string, 0)
+	deletedTargets := make([]collector.TargetUpdate, 0)
 	for _, origTarget := range o.Status.Target {
 		found := false
 		for _, newTarget := range ts {
@@ -175,11 +178,14 @@ func (c *connectorRegistration) Connect(ctx context.Context, mg resource.Managed
 			}
 		}
 		if !found {
-			deletedTargets = append(deletedTargets, origTarget)
+			deletedTargets = append(deletedTargets, collector.TargetUpdate{
+				Name:   origTarget,
+				Action: collector.TargetDelete,
+			})
 		}
 	}
 	// check for new targets
-	newTargets := make([]string, 0)
+	newTargets := make([]collector.TargetUpdate, 0)
 	for _, newTarget := range ts {
 		found := false
 		for _, origTarget := range o.Status.Target {
@@ -188,25 +194,25 @@ func (c *connectorRegistration) Connect(ctx context.Context, mg resource.Managed
 			}
 		}
 		if !found {
-			newTargets = append(newTargets, newTarget.Name)
+			newTargets = append(newTargets, collector.TargetUpdate{
+				Name:   newTarget.Name,
+				Action: collector.TargetDelete,
+				TargetConfig: &types.TargetConfig{
+					Address:    newTarget.Cfg.Target,
+					SkipVerify: utils.BoolPtr(true),
+					Insecure:   utils.BoolPtr(true),
+				},
+			})
 		}
 	}
 
-	for _, targetName := range deletedTargets {
-		s := subscription.Subscription{
-			Action: subscription.SubscriptionActionStop,
-			Name:   targetName,
-		}
-		log.Debug("Stop Subscription", "target", targetName)
-		c.subChan <- s
+	for _, sub := range deletedTargets {
+		log.Debug("Stop Subscription", "target", sub.Name)
+		c.subChan <- sub
 	}
-	for _, targetName := range newTargets {
-		s := subscription.Subscription{
-			Action: subscription.SubscriptionActionStart,
-			Name:   targetName,
-		}
-		log.Debug("Start Subscription", "target", targetName)
-		c.subChan <- s
+	for _, sub := range newTargets {
+		log.Debug("Start Subscription", "target", sub.Name)
+		c.subChan <- sub
 	}
 
 	// when no targets are found we return a not found error
