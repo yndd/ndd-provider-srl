@@ -8,10 +8,10 @@ import (
 	"github.com/openconfig/gnmi/proto/gnmi"
 )
 
-func CreateSubscriptionRequest(paths []*gnmi.Path) (*gnmi.SubscribeRequest, error) {
+func CreateSubscriptionRequest(target, subName string, paths []*gnmi.Path) (*gnmi.SubscribeRequest, error) {
 	// create subscription
 
-	gnmiPrefix, err := utils.CreatePrefix("", "")
+	gnmiPrefix, err := utils.CreatePrefix(subName, target)
 	if err != nil {
 		return nil, fmt.Errorf("create prefix failed")
 	}

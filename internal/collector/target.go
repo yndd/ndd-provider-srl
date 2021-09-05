@@ -22,18 +22,21 @@ import (
 
 	"github.com/karimra/gnmic/target"
 	"github.com/karimra/gnmic/types"
-	"github.com/netw-device-driver/ndd-runtime/pkg/logging"
 	"github.com/openconfig/gnmi/proto/gnmi"
 	"github.com/pkg/errors"
-	"google.golang.org/grpc"
+	"github.com/yndd/ndd-runtime/pkg/logging"
 	"sigs.k8s.io/controller-runtime/pkg/event"
 )
 
 const (
 	//
 	configSubscription = "ConfigChangesubscription"
+
 	// errors
 	errCreateGnmiClient = "cannot create gnmi client"
+
+	// timers
+	defaultTimeout = 5 * time.Second
 )
 
 // A TargetAction represents an action on a target
@@ -68,7 +71,7 @@ type Target struct {
 	Target    *target.Target
 	StopCh    chan struct{}
 	log       logging.Logger
-	Collector *DeviceCollector
+	Collector *GNMICollector
 }
 
 // Option is a function to initialize the options
@@ -81,7 +84,7 @@ func WithEventChannels(e map[string]chan event.GenericEvent) Option {
 	}
 }
 
-func WithSubscriptionChannel(tu chan TargetUpdate) Option {
+func WithTargetUpdateChannel(tu chan TargetUpdate) Option {
 	return func(d *DeviationServer) {
 		d.tuCh = tu
 	}
@@ -136,28 +139,47 @@ func (d *DeviationServer) StartTargetChangeHandler() {
 func (d *DeviationServer) HandleTargetUpdate(ctx context.Context, tu TargetUpdate) error {
 	switch tu.Action {
 	case TargetAdd:
-		//
-		t := target.NewTarget(tu.TargetConfig)
-		d.Targets[tu.Name] = &Target{
-			log:       d.log,
-			Config:    tu.TargetConfig,
-			Target:    t,
-			StopCh:    make(chan struct{}),
-			Collector: NewDeviceCollector(t, WithDeviceCollectorLogger(d.log)),
+		// it is possible that during a restart the subscription got removed
+		if _, ok := d.Targets[tu.Name]; !ok {
+			t := target.NewTarget(tu.TargetConfig)
+			d.log.Debug("Target", "Config", tu.TargetConfig, "Target", t)
+
+			ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+			defer cancel()
+
+			if err := t.CreateGNMIClient(ctx); err != nil {
+				d.log.Debug("Error Creating client", "Error", err)
+				return errors.Wrap(err, errCreateGnmiClient)
+			}
+			d.Targets[tu.Name] = &Target{
+				log:       d.log,
+				Config:    tu.TargetConfig,
+				Target:    t,
+				StopCh:    make(chan struct{}),
+				Collector: NewGNMICollector(t, WithDeviceCollectorLogger(d.log)),
+			}
+
+			// start gnmi subscription handler
+			go func() {
+				d.log.Debug("Target", "TargetName", tu.Name, "Target Info", d.Targets[tu.Name].Target)
+
+				d.Targets[tu.Name].StartGnmiSubscriptionHandler(d.ctx)
+				// we should delete the target since an error occured and we will get
+				// most likely a device driver got restarted
+				delete(d.Targets, tu.Name)
+
+			}()
 		}
 
-		if err := d.Targets[tu.Name].Target.CreateGNMIClient(d.ctx, grpc.WithBlock()); err != nil {
-			return errors.Wrap(err, errCreateGnmiClient)
-		}
-
-		// start gnmi subscription handler
-		go func() {
-			d.Targets[tu.Name].StartGnmiSubscriptionHandler(d.ctx)
-		}()
 	case TargetDelete:
-		if err := d.Targets[tu.Name].Collector.StopSubscription(d.ctx, configSubscription); err != nil {
-			return err
+		// delete the
+		if _, ok := d.Targets[tu.Name]; ok {
+			if err := d.Targets[tu.Name].Collector.StopSubscription(ctx, configSubscription); err != nil {
+				return err
+			}
+			d.Targets[tu.Name].StopCh <- struct{}{}
 		}
+
 		delete(d.Targets, tu.Name)
 
 	}
@@ -168,9 +190,11 @@ func (t *Target) StartGnmiSubscriptionHandler(ctx context.Context) {
 	t.log.Debug("Starting GNMI subscription...", "Target", t.Target.Config.Name)
 
 	t.Collector.Lock()
-	go t.Collector.StartSubscription(ctx, configSubscription,
+	go t.Collector.StartSubscription(ctx, t.Config.Name, configSubscription,
 		[]*gnmi.Path{{
-			Elem: []*gnmi.PathElem{{}},
+			Elem: []*gnmi.PathElem{
+				{Name: "provider-resource-update"},
+			},
 		}})
 	t.Collector.Unlock()
 
@@ -184,7 +208,7 @@ func (t *Target) StartGnmiSubscriptionHandler(ctx context.Context) {
 			t.ReconcileOnChange(resp.Response)
 		case tErr := <-chanSubErr:
 			t.log.Debug("subscribe", "error", tErr)
-			time.Sleep(60 * time.Second)
+			return
 		case <-t.StopCh:
 			t.log.Debug("Stopping subscription process...")
 			return
@@ -209,7 +233,7 @@ func (t *Target) ReconcileOnChange(resp *gnmi.SubscribeResponse) error {
 		}
 
 	case *gnmi.SubscribeResponse_SyncResponse:
-		// handled for ...
+		t.log.Debug("SyncResponse")
 	}
 
 	return nil

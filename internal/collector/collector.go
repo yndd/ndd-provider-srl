@@ -22,9 +22,9 @@ import (
 	"time"
 
 	"github.com/karimra/gnmic/target"
-	"github.com/netw-device-driver/ndd-runtime/pkg/logging"
 	"github.com/openconfig/gnmi/proto/gnmi"
 	"github.com/pkg/errors"
+	"github.com/yndd/ndd-runtime/pkg/logging"
 )
 
 const (
@@ -45,16 +45,16 @@ type Collector interface {
 }
 
 // DeviceCollectorOption can be used to manipulate Options.
-type DeviceCollectorOption func(*DeviceCollector)
+type DeviceCollectorOption func(*GNMICollector)
 
 // WithTargetLogger specifies how the object should log messages.
 func WithDeviceCollectorLogger(log logging.Logger) DeviceCollectorOption {
-	return func(o *DeviceCollector) {
+	return func(o *GNMICollector) {
 		o.log = log
 	}
 }
 
-type DeviceCollector struct {
+type GNMICollector struct {
 	TargetReceiveBuffer uint
 	RetryTimer          time.Duration
 	Target              *target.Target
@@ -70,8 +70,8 @@ type Subscription struct {
 	CancelFn context.CancelFunc
 }
 
-func NewDeviceCollector(t *target.Target, opts ...DeviceCollectorOption) *DeviceCollector {
-	c := &DeviceCollector{
+func NewGNMICollector(t *target.Target, opts ...DeviceCollectorOption) *GNMICollector {
+	c := &GNMICollector{
 		Target:              t,
 		Subscriptions:       make(map[string]*Subscription),
 		Mutex:               sync.RWMutex{},
@@ -84,22 +84,22 @@ func NewDeviceCollector(t *target.Target, opts ...DeviceCollectorOption) *Device
 	return c
 }
 
-func (c *DeviceCollector) Lock() {
+func (c *GNMICollector) Lock() {
 	c.Mutex.RLock()
 }
 
-func (c *DeviceCollector) Unlock() {
+func (c *GNMICollector) Unlock() {
 	c.Mutex.RUnlock()
 }
 
-func (c *DeviceCollector) GetSubscription(subName string) bool {
+func (c *GNMICollector) GetSubscription(subName string) bool {
 	if _, ok := c.Subscriptions[subName]; !ok {
 		return true
 	}
 	return false
 }
 
-func (c *DeviceCollector) StopSubscription(ctx context.Context, sub string) error {
+func (c *GNMICollector) StopSubscription(ctx context.Context, sub string) error {
 	c.log.WithValues("subscription", sub)
 	c.log.Debug("subscription stop...")
 	c.Subscriptions[sub].StopCh <- true // trigger quit
@@ -108,9 +108,9 @@ func (c *DeviceCollector) StopSubscription(ctx context.Context, sub string) erro
 	return nil
 }
 
-func (c *DeviceCollector) StartSubscription(dctx context.Context, subName string, paths []*gnmi.Path) error {
-	c.log.WithValues("subscriptio", subName, "Paths", paths)
-	c.log.Debug("subscription start...")
+func (c *GNMICollector) StartSubscription(dctx context.Context, target, subName string, paths []*gnmi.Path) error {
+	log := c.log.WithValues("subscription", subName, "Paths", paths)
+	log.Debug("subscription start...")
 	// initialize new subscription
 	ctx, cancel := context.WithCancel(dctx)
 
@@ -119,7 +119,7 @@ func (c *DeviceCollector) StartSubscription(dctx context.Context, subName string
 		CancelFn: cancel,
 	}
 
-	req, err := CreateSubscriptionRequest(paths)
+	req, err := CreateSubscriptionRequest(target, subName, paths)
 	if err != nil {
 		c.log.Debug(errCreateSubscriptionRequest, "error", err)
 		return errors.Wrap(err, errCreateSubscriptionRequest)
@@ -128,7 +128,7 @@ func (c *DeviceCollector) StartSubscription(dctx context.Context, subName string
 	go func() {
 		c.Target.Subscribe(ctx, req, subName)
 	}()
-	c.log.Debug("subscription started ...")
+	log.Debug("subscription started ...")
 
 	for {
 		select {

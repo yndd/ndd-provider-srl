@@ -28,9 +28,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/netw-device-driver/ndd-runtime/pkg/logging"
-	"github.com/netw-device-driver/ndd-runtime/pkg/ratelimiter"
+	"github.com/yndd/ndd-runtime/pkg/logging"
+	"github.com/yndd/ndd-runtime/pkg/ratelimiter"
 
+	"github.com/yndd/ndd-provider-srl/internal/collector"
 	"github.com/yndd/ndd-provider-srl/internal/controllers"
 	//+kubebuilder:scaffold:imports
 )
@@ -72,22 +73,22 @@ var startCmd = &cobra.Command{
 			return errors.Wrap(err, "Cannot create manager")
 		}
 
-		//subChan is the communication channel by which gnmi subscriptions to the device driver are handled
-		subChan := make(chan subscription.Subscription)
+		//tuChan is the communication channel by which gnmi subscriptions to the device driver are handled
+		tuChan := make(chan collector.TargetUpdate)
 
 		// eventChannels are used for deviation handling on the resources
-		eventChans, err := controllers.Setup(mgr, nddCtlrOptions(concurrency), logging.NewLogrLogger(zlog.WithName("srl")), autoPilot, pollInterval, namespace, subChan)
+		eventChans, err := controllers.Setup(mgr, nddCtlrOptions(concurrency), logging.NewLogrLogger(zlog.WithName("srl")), autoPilot, pollInterval, namespace, tuChan)
 		if err != nil {
 			return errors.Wrap(err, "Cannot add ndd controllers to manager")
 		}
 
 		d := collector.NewDeviationServer(
 			collector.WithEventChannels(eventChans),
-			collector.WithSubscriptionChannel(subChan),
+			collector.WithTargetUpdateChannel(tuChan),
 			collector.WithLogging(logging.NewLogrLogger(zlog.WithName("srl"))),
 		)
 		go func() {
-			d.StartSubscriptionHandler()
+			d.StartTargetChangeHandler()
 		}()
 
 		// +kubebuilder:scaffold:builder

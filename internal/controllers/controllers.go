@@ -19,11 +19,12 @@ package controllers
 import (
 	"time"
 
+	"github.com/yndd/ndd-provider-srl/internal/collector"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/event"
 
-	"github.com/netw-device-driver/ndd-runtime/pkg/logging"
+	"github.com/yndd/ndd-runtime/pkg/logging"
 
 	"github.com/yndd/ndd-provider-srl/internal/controllers/srl"
 )

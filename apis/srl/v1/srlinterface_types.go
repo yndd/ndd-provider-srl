@@ -19,7 +19,7 @@ package v1
 import (
 	"reflect"
 
-	nddv1 "github.com/netw-device-driver/ndd-runtime/apis/common/v1"
+	nddv1 "github.com/yndd/ndd-runtime/apis/common/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )

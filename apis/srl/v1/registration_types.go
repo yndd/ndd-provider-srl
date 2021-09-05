@@ -19,7 +19,7 @@ package v1
 import (
 	"reflect"
 
-	nddv1 "github.com/netw-device-driver/ndd-runtime/apis/common/v1"
+	nddv1 "github.com/yndd/ndd-runtime/apis/common/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
@@ -30,19 +30,7 @@ const (
 )
 
 type RegistrationParameters struct {
-	// Registrations defines the Registrations the device driver subscribes to for config change notifications
-	// +optional
-	Subscriptions []string `json:"subscriptions,omitempty"`
-
-	// ExceptionPaths defines the exception paths that should be ignored during change notifications
-	// if the xpath contains the exception path it is considered a match
-	// +optional
-	ExceptionPaths []string `json:"exceptionPaths,omitempty"`
-
-	// ExplicitExceptionPaths defines the exception paths that should be ignored during change notifications
-	// the match should be exact to condider this xpath
-	// +optional
-	ExplicitExceptionPaths []string `json:"explicitExceptionPaths,omitempty"`
+	nddv1.Register `json:",inline"`
 }
 
 // RegistrationObservation are the observable fields of a Registration.
@@ -100,22 +88,6 @@ func (o *Registration) GetSubscriptions() []string {
 
 func (o *Registration) SetSubscriotions(sub []string) {
 	o.Spec.ForNetworkNode.Subscriptions = sub
-}
-
-func (o *Registration) GetExceptionPaths() []string {
-	return o.Spec.ForNetworkNode.ExceptionPaths
-}
-
-func (o *Registration) SetExceptionPaths(ep []string) {
-	o.Spec.ForNetworkNode.ExceptionPaths = ep
-}
-
-func (o *Registration) GetExplicitExceptionPaths() []string {
-	return o.Spec.ForNetworkNode.ExceptionPaths
-}
-
-func (o *Registration) SetExplicitExceptionPaths(eep []string) {
-	o.Spec.ForNetworkNode.ExceptionPaths = eep
 }
 
 // Registration type metadata.

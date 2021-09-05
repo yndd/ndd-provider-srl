@@ -22,16 +22,20 @@ import (
 	"strconv"
 	"time"
 
-	ndrv1 "github.com/netw-device-driver/ndd-core/apis/dvr/v1"
-	cfgclient "github.com/netw-device-driver/ndd-grpc/config/client"
-	config "github.com/netw-device-driver/ndd-grpc/config/configpb"
-	"github.com/netw-device-driver/ndd-grpc/ndd"
-	"github.com/netw-device-driver/ndd-runtime/pkg/event"
-	"github.com/netw-device-driver/ndd-runtime/pkg/gvk"
-	"github.com/netw-device-driver/ndd-runtime/pkg/logging"
-	"github.com/netw-device-driver/ndd-runtime/pkg/reconciler/managed"
-	"github.com/netw-device-driver/ndd-runtime/pkg/resource"
+	"github.com/karimra/gnmic/target"
+	gnmitypes "github.com/karimra/gnmic/types"
+	"github.com/openconfig/gnmi/proto/gnmi"
+	"github.com/openconfig/gnmi/proto/gnmi_ext"
 	"github.com/pkg/errors"
+	ndrv1 "github.com/yndd/ndd-core/apis/dvr/v1"
+	nddv1 "github.com/yndd/ndd-runtime/apis/common/v1"
+	"github.com/yndd/ndd-runtime/pkg/event"
+	"github.com/yndd/ndd-runtime/pkg/gext"
+	"github.com/yndd/ndd-runtime/pkg/gvk"
+	"github.com/yndd/ndd-runtime/pkg/logging"
+	"github.com/yndd/ndd-runtime/pkg/reconciler/managed"
+	"github.com/yndd/ndd-runtime/pkg/resource"
+	"github.com/yndd/ndd-runtime/pkg/utils"
 	"github.com/yndd/ndd-yang/pkg/parser"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -59,46 +63,46 @@ const (
 	// resourcePrefixBfd = "srl.ndd.yndd.io.v1.Bfd"
 )
 
-var ResourceRefPathsBfd = []*config.Path{
+var ResourceRefPathsBfd = []*gnmi.Path{
 	{
-		Elem: []*config.PathElem{
+		Elem: []*gnmi.PathElem{
 			{Name: "bfd"},
 		},
 	},
 	{
-		Elem: []*config.PathElem{
+		Elem: []*gnmi.PathElem{
 			{Name: "bfd"},
 			{Name: "micro-bfd-sessions"},
 		},
 	},
 	{
-		Elem: []*config.PathElem{
+		Elem: []*gnmi.PathElem{
 			{Name: "bfd"},
 			{Name: "micro-bfd-sessions"},
 			{Name: "lag-interface", Key: map[string]string{"name": ""}},
 		},
 	},
 	{
-		Elem: []*config.PathElem{
+		Elem: []*gnmi.PathElem{
 			{Name: "bfd"},
 			{Name: "subinterface", Key: map[string]string{"id": ""}},
 		},
 	},
 }
-var DependencyBfd = []*parser.LeafRef{}
-var LocalleafRefBfd = []*parser.LeafRef{}
-var ExternalleafRefBfd = []*parser.LeafRef{
+var DependencyBfd = []*parser.LeafRefGnmi{}
+var LocalleafRefBfd = []*parser.LeafRefGnmi{}
+var ExternalleafRefBfd = []*parser.LeafRefGnmi{
 	{
-		LocalPath: &config.Path{
-			Elem: []*config.PathElem{
+		LocalPath: &gnmi.Path{
+			Elem: []*gnmi.PathElem{
 				{Name: "bfd"},
 				{Name: "micro-bfd-sessions"},
 				{Name: "lag-interface", Key: map[string]string{"name": ""}},
 				{Name: "name"},
 			},
 		},
-		RemotePath: &config.Path{
-			Elem: []*config.PathElem{
+		RemotePath: &gnmi.Path{
+			Elem: []*gnmi.PathElem{
 				{Name: "interface", Key: map[string]string{"name": ""}},
 			},
 		},
@@ -118,11 +122,10 @@ func SetupBfd(mgr ctrl.Manager, o controller.Options, l logging.Logger, poll tim
 			log:         l,
 			kube:        mgr.GetClient(),
 			usage:       resource.NewNetworkNodeUsageTracker(mgr.GetClient(), &ndrv1.NetworkNodeUsage{}),
-			newClientFn: cfgclient.NewClient},
+			newClientFn: target.NewTarget},
 		),
 		managed.WithParser(l),
 		managed.WithValidator(&validatorBfd{log: l, parser: *parser.NewParser(parser.WithLogger(l))}),
-		//managed.WithResolver(&resolverBfd{log: l}),
 		managed.WithLogger(l.WithValues("controller", name)),
 		managed.WithRecorder(event.NewAPIRecorder(mgr.GetEventRecorderFor(name))))
 
@@ -141,16 +144,6 @@ func SetupBfd(mgr ctrl.Manager, o controller.Options, l logging.Logger, poll tim
 		//).
 		Complete(r)
 }
-
-/*
-type resolverBfd struct {
-	log logging.Logger
-}
-
-func (r *resolverBfd) GetManagedResource(ctx context.Context, resourceName string) (resource.Managed, error) {
-	return getManagedResource(resourceName)
-}
-*/
 
 type validatorBfd struct {
 	log    logging.Logger
@@ -174,7 +167,7 @@ func (v *validatorBfd) ValidateLocalleafRef(ctx context.Context, mg resource.Man
 	json.Unmarshal(d, &x1)
 
 	// For local leafref validation we dont need to supply the external data so we use nil
-	success, resultleafRefValidation, err := v.parser.ValidateLeafRef(
+	success, resultleafRefValidation, err := v.parser.ValidateLeafRefGnmi(
 		parser.LeafRefValidationLocal, x1, nil, LocalleafRefBfd, log)
 	if err != nil {
 		return managed.ValidateLocalleafRefObservation{
@@ -215,7 +208,7 @@ func (v *validatorBfd) ValidateExternalleafRef(ctx context.Context, mg resource.
 
 	// For local external leafref validation we need to supply the external
 	// data to validate the remote leafref, we use x2 for this
-	success, resultleafRefValidation, err := v.parser.ValidateLeafRef(
+	success, resultleafRefValidation, err := v.parser.ValidateLeafRefGnmi(
 		parser.LeafRefValidationExternal, x1, x2, ExternalleafRefBfd, log)
 	if err != nil {
 		return managed.ValidateExternalleafRefObservation{
@@ -239,7 +232,7 @@ func (v *validatorBfd) ValidateParentDependency(ctx context.Context, mg resource
 	log.Debug("ValidateParentDependency...")
 
 	// we initialize a global list for finer information on the resolution
-	resultleafRefValidation := make([]*parser.ResolvedLeafRef, 0)
+	resultleafRefValidation := make([]*parser.ResolvedLeafRefGnmi, 0)
 	log.Debug("ValidateParentDependency success", "resultParentValidation", resultleafRefValidation)
 	return managed.ValidateParentDependencyObservation{
 		Success:          true,
@@ -258,15 +251,17 @@ func (v *validatorBfd) ValidateResourceIndexes(ctx context.Context, mg resource.
 	}
 	log.Debug("ValidateResourceIndexes", "Spec", o.Spec)
 
-	rootPath := &config.Path{
-		Elem: []*config.PathElem{
-			{Name: "bfd"},
+	rootPath := []*gnmi.Path{
+		{
+			Elem: []*gnmi.PathElem{
+				{Name: "bfd"},
+			},
 		},
 	}
 
 	origResourceIndex := mg.GetResourceIndexes()
 	// we call the CompareConfigPathsWithResourceKeys irrespective is the get resource index returns nil
-	changed, deletPaths, newResourceIndex := v.parser.CompareConfigPathsWithResourceKeys(rootPath, origResourceIndex)
+	changed, deletPaths, newResourceIndex := v.parser.CompareGnmiPathsWithResourceKeys(rootPath[0], origResourceIndex)
 	if changed {
 		log.Debug("ValidateResourceIndexes changed", "deletPaths", deletPaths[0])
 		return managed.ValidateResourceIndexesObservation{Changed: true, ResourceDeletes: deletPaths, ResourceIndexes: newResourceIndex}, nil
@@ -282,7 +277,8 @@ type connectorBfd struct {
 	log         logging.Logger
 	kube        client.Client
 	usage       resource.Tracker
-	newClientFn func(ctx context.Context, cfg ndd.Config) (config.ConfigurationClient, error)
+	newClientFn func(c *gnmitypes.TargetConfig) *target.Target
+	//newClientFn func(ctx context.Context, cfg ndd.Config) (config.ConfigurationClient, error)
 }
 
 // Connect produces an ExternalClient by:
@@ -309,16 +305,22 @@ func (c *connectorBfd) Connect(ctx context.Context, mg resource.Managed) (manage
 	if nn.GetCondition(ndrv1.ConditionKindDeviceDriverConfigured).Status != corev1.ConditionTrue {
 		return nil, errors.New(targetNotConfigured)
 	}
-
-	cfg := ndd.Config{
-		SkipVerify: true,
-		Insecure:   true,
-		Target:     ndrv1.PrefixService + "-" + nn.Name + "." + ndrv1.NamespaceLocalK8sDNS + strconv.Itoa(*nn.Spec.GrpcServerPort),
+	cfg := &gnmitypes.TargetConfig{
+		Name:       nn.GetName(),
+		Address:    ndrv1.PrefixService + "-" + nn.Name + "." + ndrv1.NamespaceLocalK8sDNS + strconv.Itoa(*nn.Spec.GrpcServerPort),
+		Username:   utils.StringPtr("admin"),
+		Password:   utils.StringPtr("admin"),
+		Timeout:    10 * time.Second,
+		SkipVerify: utils.BoolPtr(true),
+		Insecure:   utils.BoolPtr(true),
+		TLSCA:      utils.StringPtr(""), //TODO TLS
+		TLSCert:    utils.StringPtr(""), //TODO TLS
+		TLSKey:     utils.StringPtr(""),
+		Gzip:       utils.BoolPtr(false),
 	}
-	log.Debug("Client config", "config", cfg)
 
-	cl, err := c.newClientFn(ctx, cfg)
-	if err != nil {
+	cl := target.NewTarget(cfg)
+	if err := cl.CreateGNMIClient(ctx); err != nil {
 		return nil, errors.Wrap(err, errNewClient)
 	}
 
@@ -327,15 +329,14 @@ func (c *connectorBfd) Connect(ctx context.Context, mg resource.Managed) (manage
 	tns := make([]string, 0)
 	tns = append(tns, nn.GetName())
 
-	log.Debug("Client info", "client", cl)
-
 	return &externalBfd{client: cl, targets: tns, log: log, parser: *parser.NewParser(parser.WithLogger(log))}, nil
 }
 
 // An ExternalClient observes, then either creates, updates, or deletes an
 // external resource to ensure it reflects the managed resource's desired state.
 type externalBfd struct {
-	client  config.ConfigurationClient
+	//client  config.ConfigurationClient
+	client  *target.Target
 	targets []string
 	log     logging.Logger
 	parser  parser.Parser
@@ -349,12 +350,16 @@ func (e *externalBfd) Observe(ctx context.Context, mg resource.Managed) (managed
 	log := e.log.WithValues("Resource", o.GetName())
 	log.Debug("Observing ...")
 
-	rootPath := &config.Path{
-		Elem: []*config.PathElem{
-			{Name: "bfd"},
+	// rootpath of the resource
+	rootPath := []*gnmi.Path{
+		{
+			Elem: []*gnmi.PathElem{
+				{Name: "bfd"},
+			},
 		},
 	}
 
+	// gvk: group, version, kind, name, namespace of the resource
 	gvk := &gvk.GVK{
 		Group:     mg.GetObjectKind().GroupVersionKind().Group,
 		Version:   mg.GetObjectKind().GroupVersionKind().Version,
@@ -367,68 +372,130 @@ func (e *externalBfd) Observe(ctx context.Context, mg resource.Managed) (managed
 		return managed.ExternalObservation{}, err
 	}
 
-	resp, err := e.client.Get(ctx, &config.ResourceKey{
-		Name: gvkstring,
-		//Name: resourcePrefixBfd + "." + o.GetName(),
-		Level: levelBfd,
-		Path:  rootPath,
-	})
+	// gext: gni extension information for the resource: action, gvk name and level
+	gextInfo := &gext.GEXT{
+		Action: gext.GEXTActionGet,
+		Name:   gvkstring,
+		Level:  levelBfd,
+	}
+	gextInfoString, err := gextInfo.String()
 	if err != nil {
-		return managed.ExternalObservation{}, errors.New(errReadBfd)
+		return managed.ExternalObservation{}, errors.Wrap(err, errGetGextInfo)
 	}
 
-	if !resp.Exists {
-		// Resource Does not Exists
-		if resp.Data != nil {
-			// this is an umnaged resource which has data and will be moved to an unmanaged resource
+	// gnmi get request
+	req := &gnmi.GetRequest{
+		Path:     rootPath,
+		Encoding: gnmi.Encoding_JSON,
+		Extension: []*gnmi_ext.Extension{
+			{Ext: &gnmi_ext.Extension_RegisteredExt{
+				RegisteredExt: &gnmi_ext.RegisteredExtension{Id: gnmi_ext.ExtensionID_EID_EXPERIMENTAL, Msg: []byte(gextInfoString)}}},
+		},
+	}
 
-			d, err := json.Marshal(&o.Spec.ForNetworkNode)
+	// gnmi get response
+	resp, err := e.client.Get(ctx, req)
+	if err != nil {
+		return managed.ExternalObservation{}, errors.Wrap(err, errReadBfd)
+	}
+
+	// validate if the extension matches or not
+	if resp.GetExtension()[0].GetRegisteredExt().GetId() != gnmi_ext.ExtensionID_EID_EXPERIMENTAL {
+		log.Debug("Observe response GNMI Extension mismatch", "Extension Info", resp.GetExtension()[0])
+		return managed.ExternalObservation{}, errors.New(errGnmiExtensionMismatch)
+	}
+
+	// get gnmi extension metadata
+	meta := resp.GetExtension()[0].GetRegisteredExt().GetMsg()
+	respMeta := &gext.GEXT{}
+	if err := json.Unmarshal(meta, &respMeta); err != nil {
+		log.Debug("Observe response gext unmarshal issue", "Extension Info", meta)
+		return managed.ExternalObservation{}, errors.Wrap(err, errJSONMarshal)
+	}
+
+	// prepare the input data to compare against the response data
+	d, err := json.Marshal(&o.Spec.ForNetworkNode)
+	if err != nil {
+		return managed.ExternalObservation{}, errors.Wrap(err, errJSONMarshal)
+	}
+	var x1 interface{}
+	if err := json.Unmarshal(d, &x1); err != nil {
+		return managed.ExternalObservation{}, errors.Wrap(err, errJSONUnMarshal)
+	}
+
+	// remove the hierarchical elements for data processing, comparison, etc
+	// they are used in the provider for parent dependency resolution
+	// but are not relevant in the data, they are referenced in the rootPath
+	// when interacting with the device driver
+	hids := make([]string, 0)
+	x1 = e.parser.RemoveLeafsFromJSONData(x1, hids)
+
+	// validate gnmi resp information
+	var x2 interface{}
+	if len(resp.GetNotification()) != 0 {
+		if len(resp.GetNotification()[0].GetUpdate()) != 0 {
+			// get value from gnmi get response
+			x2, err = e.parser.GetValue(resp.GetNotification()[0].GetUpdate()[0].Val)
 			if err != nil {
+				log.Debug("Observe response get value issue")
 				return managed.ExternalObservation{}, errors.Wrap(err, errJSONMarshal)
 			}
+		}
+	}
 
-			var x1 interface{}
-			if err := json.Unmarshal(d, &x1); err != nil {
-				return managed.ExternalObservation{}, errors.Wrap(err, errJSONUnMarshal)
-			}
-			log.Debug("Spec Data Before", "X1", x1)
+	// logging information that will be used to provide the response
+	log.Debug("Observer Response", "Meta", string(meta))
+	log.Debug("Spec Data", "X1", x1)
+	log.Debug("Resp Data", "X2", x2)
 
-			// remove the hierarchical elements for data processing, comparison, etc
-			// they are used in the provider for parent dependency resolution
-			// but are not relevant in the data, they are referenced in the rootPath
-			// when interacting with the device driver
-			hids := make([]string, 0)
-			x1 = e.parser.RemoveLeafsFromJSONData(x1, hids)
+	// if the cache is not ready we back off and return
+	if !respMeta.CacheReady {
+		log.Debug("Cache Not Ready ...")
+		return managed.ExternalObservation{
+			Ready:            false,
+			ResourceExists:   false,
+			ResourceHasData:  true,
+			ResourceUpToDate: false,
+		}, nil
+	}
 
-			var x2 interface{}
-			if err := json.Unmarshal(resp.Data, &x2); err != nil {
-				return managed.ExternalObservation{}, errors.Wrap(err, errJSONUnMarshal)
-			}
-			// for a resource which does not have keys we need to add the last element to the
-			// response data in order to compare the data
-			// x2 = AddlastElement2ResponseData(x2, rootPath)
+	if !respMeta.Exists {
+		// Resource Does not Exists
+		if respMeta.HasData {
+			// this is an umnaged resource which has data and will be moved to a managed resource
 
-			log.Debug("Spec Data", "X1", x1)
-			log.Debug("Resp Data", "X2", x2)
-
-			updatesx1 := e.parser.GetUpdatesFromJSONData(rootPath, e.parser.XpathToConfigGnmiPath("/", 0), x1, ResourceRefPathsBfd)
+			updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, ResourceRefPathsBfd)
 			for _, update := range updatesx1 {
-				log.Debug("Observe Fine Grane Updates X1", "Path", update.Path, "Value", string(update.Value))
+				log.Debug("Observe Fine Grane Updates X1", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 			}
-			updatesx2 := e.parser.GetUpdatesFromJSONData(rootPath, e.parser.XpathToConfigGnmiPath("/", 0), x2, ResourceRefPathsBfd)
+			// for lists with keys we need to create a list before calulating the paths since this is what
+			// the object eventually happens to be based upon. We avoid having multiple entries in a list object
+			// and hence we have to add this step
+			x2, err = e.parser.AddJSONDataToList(x2)
+			if err != nil {
+				return managed.ExternalObservation{}, errors.Wrap(err, errWrongInputdata)
+			}
+			updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, ResourceRefPathsBfd)
 			for _, update := range updatesx2 {
-				log.Debug("Observe Fine Grane Updates X2", "Path", update.Path, "Value", string(update.Value))
+				log.Debug("Observe Fine Grane Updates X2", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 			}
 
-			deletes, updates, err := e.parser.FindResourceDelta(updatesx1, updatesx2, log)
+			deletes, updates, err := e.parser.FindResourceDeltaGnmi(updatesx1, updatesx2, log)
 			if err != nil {
 				return managed.ExternalObservation{}, err
 			}
 			if len(deletes) != 0 || len(updates) != 0 {
-				// resource is NOT up to date
-				log.Debug("Observing resource not up to date", "Updates", updates, "Deletes", deletes)
-				log.Debug("Observing  Respone", "Exists", false, "HasData", true, "UpToDate", false, "Response", resp)
+				// UMR -> MR with data, which is NOT up to date
+				log.Debug("Observing Respone: resource NOT up to date", "Exists", false, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
+				for _, del := range deletes {
+					log.Debug("Observing Respone: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
+				}
+				for _, upd := range updates {
+					val, _ := e.parser.GetValue(upd.GetVal())
+					log.Debug("Observing Respone: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
+				}
 				return managed.ExternalObservation{
+					Ready:            true,
 					ResourceExists:   false,
 					ResourceHasData:  true,
 					ResourceUpToDate: false,
@@ -436,16 +503,19 @@ func (e *externalBfd) Observe(ctx context.Context, mg resource.Managed) (managed
 					ResourceUpdates:  updates,
 				}, nil
 			}
-			// resource is up to date
-			log.Debug("Observing  Respone", "Exists", false, "HasData", true, "UpToDate", true, "Response", resp)
+			// UMR -> MR with data, which is up to date
+			log.Debug("Observing Respone: resource up to date", "Exists", false, "HasData", true, "UpToDate", true, "Response", resp)
 			return managed.ExternalObservation{
+				Ready:            true,
 				ResourceExists:   false,
 				ResourceHasData:  true,
 				ResourceUpToDate: true,
 			}, nil
 		} else {
-			log.Debug("Observing  Respone", "Exists", false, "HasData", false, "UpToDate", false, "Response", resp)
+			// UMR -> MR without data
+			log.Debug("Observing Respone:", "Exists", false, "HasData", false, "UpToDate", false, "Response", resp)
 			return managed.ExternalObservation{
+				Ready:            true,
 				ResourceExists:   false,
 				ResourceHasData:  false,
 				ResourceUpToDate: false,
@@ -453,57 +523,37 @@ func (e *externalBfd) Observe(ctx context.Context, mg resource.Managed) (managed
 		}
 	} else {
 		// Resource Exists
-		switch resp.Status {
-		case config.Status_Success:
-			if resp.Data != nil {
+		switch respMeta.Status {
+		case gext.ResourceStatusSuccess:
+			if respMeta.HasData {
 				// data is present
-				d, err := json.Marshal(&o.Spec.ForNetworkNode)
-				if err != nil {
-					return managed.ExternalObservation{}, errors.Wrap(err, errJSONMarshal)
-				}
 
-				var x1 interface{}
-				if err := json.Unmarshal(d, &x1); err != nil {
-					return managed.ExternalObservation{}, errors.Wrap(err, errJSONUnMarshal)
-				}
-				log.Debug("Spec Data Before", "X1", x1)
-
-				// remove the hierarchical elements for data processing, comparison, etc
-				// they are used in the provider for parent dependency resolution
-				// but are not relevant in the data, they are referenced in the rootPath
-				// when interacting with the device driver
-				hids := make([]string, 0)
-				x1 = e.parser.RemoveLeafsFromJSONData(x1, hids)
-
-				var x2 interface{}
-				if err := json.Unmarshal(resp.Data, &x2); err != nil {
-					return managed.ExternalObservation{}, errors.Wrap(err, errJSONUnMarshal)
-				}
-				// for a resource which does not have keys we need to add the last element to the
-				// response data in order to compare the data
-				// x2 = AddlastElement2ResponseData(x2, rootPath)
-
-				log.Debug("Spec Data", "X1", x1)
-				log.Debug("Resp Data", "X2", x2)
-
-				updatesx1 := e.parser.GetUpdatesFromJSONData(rootPath, e.parser.XpathToConfigGnmiPath("/", 0), x1, ResourceRefPathsBfd)
+				updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, ResourceRefPathsBfd)
 				for _, update := range updatesx1 {
-					log.Debug("Observe Fine Grane Updates X1", "Path", update.Path, "Value", string(update.Value))
+					log.Debug("Observe Fine Grane Updates X1", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 				}
-				updatesx2 := e.parser.GetUpdatesFromJSONData(rootPath, e.parser.XpathToConfigGnmiPath("/", 0), x2, ResourceRefPathsBfd)
+				updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, ResourceRefPathsBfd)
 				for _, update := range updatesx2 {
-					log.Debug("Observe Fine Grane Updates X2", "Path", update.Path, "Value", string(update.Value))
+					log.Debug("Observe Fine Grane Updates X2", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 				}
 
-				deletes, updates, err := e.parser.FindResourceDelta(updatesx1, updatesx2, log)
+				deletes, updates, err := e.parser.FindResourceDeltaGnmi(updatesx1, updatesx2, log)
 				if err != nil {
 					return managed.ExternalObservation{}, err
 				}
+				// MR -> MR, resource is NOT up to date
 				if len(deletes) != 0 || len(updates) != 0 {
 					// resource is NOT up to date
-					log.Debug("Observind resource not up to date", "Updates", updates, "Deletes", deletes)
-					log.Debug("Observing  Respone", "Exists", true, "HasData", true, "UpToDate", false, "Response", resp)
+					log.Debug("Observing Respone: resource NOT up to date", "Exists", true, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
+					for _, del := range deletes {
+						log.Debug("Observing Respone: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
+					}
+					for _, upd := range updates {
+						val, _ := e.parser.GetValue(upd.GetVal())
+						log.Debug("Observing Respone: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
+					}
 					return managed.ExternalObservation{
+						Ready:            true,
 						ResourceExists:   true,
 						ResourceHasData:  true,
 						ResourceUpToDate: false,
@@ -511,24 +561,29 @@ func (e *externalBfd) Observe(ctx context.Context, mg resource.Managed) (managed
 						ResourceUpdates:  updates,
 					}, nil
 				}
-				// resource is up to date
-				log.Debug("Observing  Respone", "Exists", true, "HasData", true, "UpToDate", true, "Response", resp)
+				// MR -> MR, resource is up to date
+				log.Debug("Observing Respone: resource up to date", "Exists", true, "HasData", true, "UpToDate", true, "Response", resp)
 				return managed.ExternalObservation{
+					Ready:            true,
 					ResourceExists:   true,
 					ResourceHasData:  true,
 					ResourceUpToDate: true,
 				}, nil
 			} else {
-				log.Debug("Observing  Respone", "Exists", true, "HasData", false, "UpToDate", false, "Status", resp.Status)
+				// MR -> MR, resource has no data, strange, someone could have deleted the resource
+				log.Debug("Observing Respone", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
 				return managed.ExternalObservation{
+					Ready:            true,
 					ResourceExists:   true,
 					ResourceHasData:  false,
 					ResourceUpToDate: false,
 				}, nil
 			}
 		default:
-			log.Debug("Observing  Respone", "Exists", true, "HasData", false, "UpToDate", false, "Status", resp.Status)
+			// MR -> MR, resource is not in a success state, so the object might still be in creation phase
+			log.Debug("Observing Respone", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
 			return managed.ExternalObservation{
+				Ready:            true,
 				ResourceExists:   true,
 				ResourceHasData:  false,
 				ResourceUpToDate: false,
@@ -545,9 +600,11 @@ func (e *externalBfd) Create(ctx context.Context, mg resource.Managed) (managed.
 	log := e.log.WithValues("Resource", o.GetName())
 	log.Debug("Creating ...")
 
-	rootPath := &config.Path{
-		Elem: []*config.PathElem{
-			{Name: "bfd"},
+	rootPath := []*gnmi.Path{
+		{
+			Elem: []*gnmi.PathElem{
+				{Name: "bfd"},
+			},
 		},
 	}
 
@@ -568,9 +625,9 @@ func (e *externalBfd) Create(ctx context.Context, mg resource.Managed) (managed.
 	hids := make([]string, 0)
 	x1 = e.parser.RemoveLeafsFromJSONData(x1, hids)
 
-	updates := e.parser.GetUpdatesFromJSONData(rootPath, e.parser.XpathToConfigGnmiPath("/", 0), x1, ResourceRefPathsBfd)
+	updates := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, ResourceRefPathsBfd)
 	for _, update := range updates {
-		log.Debug("Create Fine Grane Updates", "Path", update.Path, "Value", update.Value)
+		log.Debug("Create Fine Grane Updates", "Path", update.Path, "Value", update.GetVal())
 	}
 
 	gvk := &gvk.GVK{
@@ -585,16 +642,33 @@ func (e *externalBfd) Create(ctx context.Context, mg resource.Managed) (managed.
 		return managed.ExternalCreation{}, err
 	}
 
-	_, err = e.client.Create(ctx, &config.Request{
-		Name: gvkstring,
-		//Name:  resourcePrefixBfd + "." + o.GetName(),
-		Level:  levelBfd,
-		Path:   rootPath,
-		Data:   d, // depreciated and can be removed later
-		Update: updates,
-	})
+	gextInfo := &gext.GEXT{
+		Action:   gext.GEXTActionCreate,
+		Name:     gvkstring,
+		Level:    levelBfd,
+		RootPath: rootPath[0],
+	}
+	gextInfoString, err := gextInfo.String()
 	if err != nil {
-		return managed.ExternalCreation{}, errors.New(errReadBfd)
+		return managed.ExternalCreation{}, errors.Wrap(err, errGetGextInfo)
+	}
+
+	if len(updates) == 0 {
+		log.Debug("cannot create object since there are no updates present")
+		return managed.ExternalCreation{}, errors.Wrap(err, errCreateObject)
+	}
+
+	req := &gnmi.SetRequest{
+		Replace: updates,
+		Extension: []*gnmi_ext.Extension{
+			{Ext: &gnmi_ext.Extension_RegisteredExt{
+				RegisteredExt: &gnmi_ext.RegisteredExtension{Id: gnmi_ext.ExtensionID_EID_EXPERIMENTAL, Msg: []byte(gextInfoString)}}},
+		},
+	}
+
+	_, err = e.client.Set(ctx, req)
+	if err != nil {
+		return managed.ExternalCreation{}, errors.Wrap(err, errReadBfd)
 	}
 
 	return managed.ExternalCreation{}, nil
@@ -609,7 +683,7 @@ func (e *externalBfd) Update(ctx context.Context, mg resource.Managed, obs manag
 	log.Debug("Updating ...")
 
 	for _, u := range obs.ResourceUpdates {
-		log.Debug("Update -> Update", "Path", u.Path, "Value", string(u.Value))
+		log.Debug("Update -> Update", "Path", u.Path, "Value", u.GetVal())
 	}
 	for _, d := range obs.ResourceDeletes {
 		log.Debug("Update -> Delete", "Path", d)
@@ -627,15 +701,28 @@ func (e *externalBfd) Update(ctx context.Context, mg resource.Managed, obs manag
 		return managed.ExternalUpdate{}, err
 	}
 
-	_, err = e.client.Update(ctx, &config.Notification{
-		Name: gvkstring,
-		//Name:  resourcePrefixInterface + "." + o.GetName(),
-		Level:  levelInterface,
-		Delete: obs.ResourceDeletes,
-		Update: obs.ResourceUpdates,
-	})
+	gextInfo := &gext.GEXT{
+		Action: gext.GEXTActionUpdate,
+		Name:   gvkstring,
+		Level:  levelBfd,
+	}
+	gextInfoString, err := gextInfo.String()
 	if err != nil {
-		return managed.ExternalUpdate{}, errors.New(errReadInterface)
+		return managed.ExternalUpdate{}, errors.Wrap(err, errGetGextInfo)
+	}
+
+	req := &gnmi.SetRequest{
+		Update: obs.ResourceUpdates,
+		Delete: obs.ResourceDeletes,
+		Extension: []*gnmi_ext.Extension{
+			{Ext: &gnmi_ext.Extension_RegisteredExt{
+				RegisteredExt: &gnmi_ext.RegisteredExtension{Id: gnmi_ext.ExtensionID_EID_EXPERIMENTAL, Msg: []byte(gextInfoString)}}},
+		},
+	}
+
+	_, err = e.client.Set(ctx, req)
+	if err != nil {
+		return managed.ExternalUpdate{}, errors.Wrap(err, errReadBfd)
 	}
 
 	return managed.ExternalUpdate{}, nil
@@ -649,9 +736,11 @@ func (e *externalBfd) Delete(ctx context.Context, mg resource.Managed) error {
 	log := e.log.WithValues("Resource", o.GetName())
 	log.Debug("Deleting ...")
 
-	rootPath := &config.Path{
-		Elem: []*config.PathElem{
-			{Name: "bfd"},
+	rootPath := []*gnmi.Path{
+		{
+			Elem: []*gnmi.PathElem{
+				{Name: "bfd"},
+			},
 		},
 	}
 
@@ -667,14 +756,27 @@ func (e *externalBfd) Delete(ctx context.Context, mg resource.Managed) error {
 		return err
 	}
 
-	_, err = e.client.Delete(ctx, &config.ResourceKey{
-		Name: gvkstring,
-		//Name: resourcePrefixBfd + "." + o.GetName(),
-		Level: levelBfd,
-		Path:  rootPath,
-	})
+	gextInfo := &gext.GEXT{
+		Action: gext.GEXTActionDelete,
+		Name:   gvkstring,
+		Level:  levelBfd,
+	}
+	gextInfoString, err := gextInfo.String()
 	if err != nil {
-		return errors.New(errDeleteBfd)
+		return errors.Wrap(err, errGetGextInfo)
+	}
+
+	req := gnmi.SetRequest{
+		Delete: rootPath,
+		Extension: []*gnmi_ext.Extension{
+			{Ext: &gnmi_ext.Extension_RegisteredExt{
+				RegisteredExt: &gnmi_ext.RegisteredExtension{Id: gnmi_ext.ExtensionID_EID_EXPERIMENTAL, Msg: []byte(gextInfoString)}}},
+		},
+	}
+
+	_, err = e.client.Set(ctx, &req)
+	if err != nil {
+		return errors.Wrap(err, errDeleteBfd)
 	}
 
 	return nil
@@ -685,17 +787,76 @@ func (e *externalBfd) GetTarget() []string {
 }
 
 func (e *externalBfd) GetConfig(ctx context.Context) ([]byte, error) {
-	resp, err := e.client.GetConfig(ctx, &config.ConfigRequest{})
-	if err != nil {
-		return make([]byte, 0), errors.Wrap(err, "err get config")
+	e.log.Debug("Get Config ...")
+	req := &gnmi.GetRequest{
+		Path:     []*gnmi.Path{},
+		Encoding: gnmi.Encoding_JSON,
 	}
-	return resp.Data, nil
+
+	resp, err := e.client.Get(ctx, req)
+	if err != nil {
+		return make([]byte, 0), errors.Wrap(err, errGetConfig)
+	}
+
+	if len(resp.GetNotification()) != 0 {
+		if len(resp.GetNotification()[0].GetUpdate()) != 0 {
+			x2, err := e.parser.GetValue(resp.GetNotification()[0].GetUpdate()[0].Val)
+			if err != nil {
+				return make([]byte, 0), errors.Wrap(err, errGetConfig)
+			}
+
+			data, err := json.Marshal(x2)
+			if err != nil {
+				return make([]byte, 0), errors.Wrap(err, errJSONMarshal)
+			}
+			return data, nil
+		}
+	}
+	e.log.Debug("Get Config Empty response")
+	return nil, nil
 }
 
-func (e *externalBfd) GetResourceName(ctx context.Context, path *config.Path) (string, error) {
-	resp, err := e.client.GetResourceName(ctx, &config.ResourceRequest{Path: path})
-	if err != nil {
-		return "", errors.Wrap(err, "err get resourceName")
+func (e *externalBfd) GetResourceName(ctx context.Context, path []*gnmi.Path) (string, error) {
+	e.log.Debug("Get ResourceName ...")
+
+	gextInfo := &gext.GEXT{
+		Action: gext.GEXTActionGetResourceName,
 	}
-	return resp.GetName(), nil
+	gextInfoString, err := gextInfo.String()
+	if err != nil {
+		return "", errors.Wrap(err, errGetGextInfo)
+	}
+
+	req := &gnmi.GetRequest{
+		Path:     path,
+		Encoding: gnmi.Encoding_JSON,
+		Extension: []*gnmi_ext.Extension{
+			{Ext: &gnmi_ext.Extension_RegisteredExt{
+				RegisteredExt: &gnmi_ext.RegisteredExtension{Id: gnmi_ext.ExtensionID_EID_EXPERIMENTAL, Msg: []byte(gextInfoString)}}},
+		},
+	}
+
+	resp, err := e.client.Get(ctx, req)
+	if err != nil {
+		return "", errors.Wrap(err, errGetResourceName)
+	}
+
+	x2, err := e.parser.GetValue(resp.GetNotification()[0].GetUpdate()[0].Val)
+	if err != nil {
+		return "", errors.Wrap(err, errJSONMarshal)
+	}
+
+	d, err := json.Marshal(x2)
+	if err != nil {
+		return "", errors.Wrap(err, errJSONMarshal)
+	}
+
+	var resourceName nddv1.ResourceName
+	if err := json.Unmarshal(d, &resourceName); err != nil {
+		return "", errors.Wrap(err, errJSONUnMarshal)
+	}
+
+	e.log.Debug("Get ResourceName Response", "ResourceName", resourceName)
+
+	return resourceName.Name, nil
 }

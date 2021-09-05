@@ -32,8 +32,8 @@ import (
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 
-	ndrv1 "github.com/netw-device-driver/ndd-core/apis/dvr/v1"
-	"github.com/netw-device-driver/ndd-runtime/pkg/logging"
+	ndrv1 "github.com/yndd/ndd-core/apis/dvr/v1"
+	"github.com/yndd/ndd-runtime/pkg/logging"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 
 	srlv1 "github.com/yndd/ndd-provider-srl/apis/srl/v1"

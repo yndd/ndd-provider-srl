@@ -93,6 +93,10 @@ spec:
                     items:
                       type: string
                     type: array
+                  matchString:
+                    description: MatchString defines the string to match the devices
+                      for discovery
+                    type: string
                   subscriptions:
                     description: Registrations defines the Registrations the device
                       driver subscribes to for config change notifications

@@ -21,18 +21,25 @@ import (
 )
 
 const (
-	errTrackTCUsage      = "cannot track TargetConfig usage"
-	errGetTC             = "cannot get TargetConfig"
-	errGetNetworkNode    = "cannot get NetworkNode"
-	errNewClient         = "cannot create new client"
-	targetNotConfigured  = "target is not configured to proceed"
-	errNoTargetFound     = "target not found"
-	errJSONMarshal       = "cannot marshal JSON object"
-	errJSONUnMarshal     = "cannot unmarshal JSON object"
-	errJSONCompare       = "cannot compare JSON objects"
-	errJSONMarshalIndent = "cannot marshal JSON object with indent"
-	errUpdateObject      = "cannot update object"
-	errWrongInputdata    = "wrong input data"
+	errTrackTCUsage          = "cannot track TargetConfig usage"
+	errGetTC                 = "cannot get TargetConfig"
+	errGetNetworkNode        = "cannot get NetworkNode"
+	errNewClient             = "cannot create new client"
+	targetNotConfigured      = "target is not configured to proceed"
+	errNoTargetFound         = "target not found"
+	errJSONMarshal           = "cannot marshal JSON object"
+	errJSONUnMarshal         = "cannot unmarshal JSON object"
+	errJSONCompare           = "cannot compare JSON objects"
+	errJSONMarshalIndent     = "cannot marshal JSON object with indent"
+	errUpdateObject          = "cannot update object"
+	errWrongInputdata        = "wrong input data"
+	errGetValue              = "cannot get value from GNMI data"
+	errGnmiExtensionMismatch = "gnmi extension is either not present or these is a mismatch"
+	errGetConfig             = "cannot get device config"
+	errGetResourceName       = "cannot get resourceName"
+	errGetGextInfo           = "cannot get gnmi extension info"
+	errEmptyResponse         = "cannot get gnmi data"
+	errCreateObject          = "cannot create object without updates"
 )
 
 // An ErrorIs function returns true if an error satisfies a particular condition.
