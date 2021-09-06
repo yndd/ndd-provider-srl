@@ -731,13 +731,13 @@ type NetworkinstanceProtocolsBgpTransport struct {
 	TcpMss *uint16 `json:"tcp-mss,omitempty"`
 }
 
-// NetworkinstanceProtocolsBgpSpec struct
+// NetworkinstanceProtocolsBgpParameters struct defines the resource Parameters
 type NetworkinstanceProtocolsBgpParameters struct {
 	NetworkInstanceName            *string                      `json:"network-instance-name"`
 	SrlNetworkinstanceProtocolsBgp *NetworkinstanceProtocolsBgp `json:"bgp,omitempty"`
 }
 
-// NetworkinstanceProtocolsBgpStatus struct
+// NetworkinstanceProtocolsBgpObservation struct defines the resource Observation
 type NetworkinstanceProtocolsBgpObservation struct {
 }
 

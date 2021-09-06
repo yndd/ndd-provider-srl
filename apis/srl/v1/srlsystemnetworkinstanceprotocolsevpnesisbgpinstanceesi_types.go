@@ -118,13 +118,13 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEthernetSegment s
 	OriginatingIp *string `json:"originating-ip,omitempty"`
 }
 
-// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiSpec struct
+// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiParameters struct defines the resource Parameters
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiParameters struct {
 	BgpInstanceId                                           *string                                               `json:"bgp-instance-id"`
 	SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi `json:"ethernet-segment,omitempty"`
 }
 
-// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiStatus struct
+// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiObservation struct defines the resource Observation
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiObservation struct {
 }
 

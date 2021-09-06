@@ -425,13 +425,13 @@ type NetworkinstanceProtocolsOspfInstanceTrafficEngineering struct {
 	LegacyLinkAttributeAdvertisement *bool `json:"legacy-link-attribute-advertisement,omitempty"`
 }
 
-// NetworkinstanceProtocolsOspfSpec struct
+// NetworkinstanceProtocolsOspfParameters struct defines the resource Parameters
 type NetworkinstanceProtocolsOspfParameters struct {
 	NetworkInstanceName             *string                       `json:"network-instance-name"`
 	SrlNetworkinstanceProtocolsOspf *NetworkinstanceProtocolsOspf `json:"ospf,omitempty"`
 }
 
-// NetworkinstanceProtocolsOspfStatus struct
+// NetworkinstanceProtocolsOspfObservation struct defines the resource Observation
 type NetworkinstanceProtocolsOspfObservation struct {
 }
 

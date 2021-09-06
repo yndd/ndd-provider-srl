@@ -109,13 +109,13 @@ type TunnelinterfaceVxlaninterfaceIngress struct {
 	Vni *uint32 `json:"vni"`
 }
 
-// TunnelinterfaceVxlaninterfaceSpec struct
+// TunnelinterfaceVxlaninterfaceParameters struct defines the resource Parameters
 type TunnelinterfaceVxlaninterfaceParameters struct {
 	TunnelInterfaceName              *string                        `json:"tunnel-interface-name"`
 	SrlTunnelinterfaceVxlaninterface *TunnelinterfaceVxlaninterface `json:"vxlan-interface,omitempty"`
 }
 
-// TunnelinterfaceVxlaninterfaceStatus struct
+// TunnelinterfaceVxlaninterfaceObservation struct defines the resource Observation
 type TunnelinterfaceVxlaninterfaceObservation struct {
 }
 

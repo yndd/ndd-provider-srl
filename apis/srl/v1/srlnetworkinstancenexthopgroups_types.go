@@ -91,13 +91,13 @@ type NetworkinstanceNexthopgroupsGroupNexthopFailureDetectionEnableBfd struct {
 	RemoteDiscriminator *uint32 `json:"remote-discriminator,omitempty"`
 }
 
-// NetworkinstanceNexthopgroupsSpec struct
+// NetworkinstanceNexthopgroupsParameters struct defines the resource Parameters
 type NetworkinstanceNexthopgroupsParameters struct {
 	NetworkInstanceName             *string                       `json:"network-instance-name"`
 	SrlNetworkinstanceNexthopgroups *NetworkinstanceNexthopgroups `json:"next-hop-groups,omitempty"`
 }
 
-// NetworkinstanceNexthopgroupsStatus struct
+// NetworkinstanceNexthopgroupsObservation struct defines the resource Observation
 type NetworkinstanceNexthopgroupsObservation struct {
 }
 

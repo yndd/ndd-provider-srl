@@ -250,12 +250,12 @@ type RoutingpolicyPolicyStatementMatchOspf struct {
 	RouteType  *string `json:"route-type,omitempty"`
 }
 
-// RoutingpolicyPolicySpec struct
+// RoutingpolicyPolicyParameters struct defines the resource Parameters
 type RoutingpolicyPolicyParameters struct {
 	SrlRoutingpolicyPolicy *RoutingpolicyPolicy `json:"policy,omitempty"`
 }
 
-// RoutingpolicyPolicyStatus struct
+// RoutingpolicyPolicyObservation struct defines the resource Observation
 type RoutingpolicyPolicyObservation struct {
 }
 

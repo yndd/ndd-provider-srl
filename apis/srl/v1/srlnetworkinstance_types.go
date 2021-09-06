@@ -489,12 +489,12 @@ type NetworkinstanceVxlanInterface struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// NetworkinstanceSpec struct
+// NetworkinstanceParameters struct defines the resource Parameters
 type NetworkinstanceParameters struct {
 	SrlNetworkinstance *Networkinstance `json:"network-instance,omitempty"`
 }
 
-// NetworkinstanceStatus struct
+// NetworkinstanceObservation struct defines the resource Observation
 type NetworkinstanceObservation struct {
 }
 

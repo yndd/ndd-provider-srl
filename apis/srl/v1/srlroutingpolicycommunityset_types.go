@@ -43,12 +43,12 @@ type RoutingpolicyCommunityset struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// RoutingpolicyCommunitysetSpec struct
+// RoutingpolicyCommunitysetParameters struct defines the resource Parameters
 type RoutingpolicyCommunitysetParameters struct {
 	SrlRoutingpolicyCommunityset *RoutingpolicyCommunityset `json:"community-set,omitempty"`
 }
 
-// RoutingpolicyCommunitysetStatus struct
+// RoutingpolicyCommunitysetObservation struct defines the resource Observation
 type RoutingpolicyCommunitysetObservation struct {
 }
 

@@ -612,13 +612,13 @@ type InterfaceSubinterfaceVlanEncapSingleTagged struct {
 type InterfaceSubinterfaceVlanEncapUntagged struct {
 }
 
-// InterfaceSubinterfaceSpec struct
+// InterfaceSubinterfaceParameters struct defines the resource Parameters
 type InterfaceSubinterfaceParameters struct {
 	InterfaceName            *string                `json:"interface-name"`
 	SrlInterfaceSubinterface *InterfaceSubinterface `json:"subinterface,omitempty"`
 }
 
-// InterfaceSubinterfaceStatus struct
+// InterfaceSubinterfaceObservation struct defines the resource Observation
 type InterfaceSubinterfaceObservation struct {
 }
 

@@ -55,13 +55,13 @@ type NetworkinstanceStaticroutesRoute struct {
 	Prefix *string `json:"prefix,omitempty"`
 }
 
-// NetworkinstanceStaticroutesSpec struct
+// NetworkinstanceStaticroutesParameters struct defines the resource Parameters
 type NetworkinstanceStaticroutesParameters struct {
 	NetworkInstanceName            *string                      `json:"network-instance-name"`
 	SrlNetworkinstanceStaticroutes *NetworkinstanceStaticroutes `json:"static-routes,omitempty"`
 }
 
-// NetworkinstanceStaticroutesStatus struct
+// NetworkinstanceStaticroutesObservation struct defines the resource Observation
 type NetworkinstanceStaticroutesObservation struct {
 }
 

@@ -96,12 +96,12 @@ type BfdSubinterface struct {
 	RequiredMinimumReceive *uint32 `json:"required-minimum-receive,omitempty"`
 }
 
-// BfdSpec struct
+// BfdParameters struct defines the resource Parameters
 type BfdParameters struct {
 	SrlBfd *Bfd `json:"bfd,omitempty"`
 }
 
-// BfdStatus struct
+// BfdObservation struct defines the resource Observation
 type BfdObservation struct {
 }
 

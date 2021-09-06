@@ -40,12 +40,12 @@ type Tunnelinterface struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// TunnelinterfaceSpec struct
+// TunnelinterfaceParameters struct defines the resource Parameters
 type TunnelinterfaceParameters struct {
 	SrlTunnelinterface *Tunnelinterface `json:"tunnel-interface,omitempty"`
 }
 
-// TunnelinterfaceStatus struct
+// TunnelinterfaceObservation struct defines the resource Observation
 type TunnelinterfaceObservation struct {
 }
 

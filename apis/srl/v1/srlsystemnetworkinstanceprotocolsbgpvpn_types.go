@@ -53,12 +53,12 @@ type SystemNetworkinstanceProtocolsBgpvpnBgpInstanceRouteDistinguisher struct {
 type SystemNetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget struct {
 }
 
-// SystemNetworkinstanceProtocolsBgpvpnSpec struct
+// SystemNetworkinstanceProtocolsBgpvpnParameters struct defines the resource Parameters
 type SystemNetworkinstanceProtocolsBgpvpnParameters struct {
 	SrlSystemNetworkinstanceProtocolsBgpvpn *SystemNetworkinstanceProtocolsBgpvpn `json:"bgp-vpn,omitempty"`
 }
 
-// SystemNetworkinstanceProtocolsBgpvpnStatus struct
+// SystemNetworkinstanceProtocolsBgpvpnObservation struct defines the resource Observation
 type SystemNetworkinstanceProtocolsBgpvpnObservation struct {
 }
 

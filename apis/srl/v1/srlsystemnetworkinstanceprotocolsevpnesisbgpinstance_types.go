@@ -36,12 +36,12 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstance struct {
 	Id *string `json:"id,omitempty"`
 }
 
-// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceSpec struct
+// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceParameters struct defines the resource Parameters
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceParameters struct {
 	SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstance *SystemNetworkinstanceProtocolsEvpnEsisBgpinstance `json:"bgp-instance,omitempty"`
 }
 
-// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceStatus struct
+// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceObservation struct defines the resource Observation
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceObservation struct {
 }
 

@@ -43,12 +43,12 @@ type RoutingpolicyAspathset struct {
 	Name *string `json:"name,omitempty"`
 }
 
-// RoutingpolicyAspathsetSpec struct
+// RoutingpolicyAspathsetParameters struct defines the resource Parameters
 type RoutingpolicyAspathsetParameters struct {
 	SrlRoutingpolicyAspathset *RoutingpolicyAspathset `json:"as-path-set,omitempty"`
 }
 
-// RoutingpolicyAspathsetStatus struct
+// RoutingpolicyAspathsetObservation struct defines the resource Observation
 type RoutingpolicyAspathsetObservation struct {
 }
 

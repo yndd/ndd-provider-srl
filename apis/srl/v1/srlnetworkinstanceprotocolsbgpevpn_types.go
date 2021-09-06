@@ -100,13 +100,13 @@ type NetworkinstanceProtocolsBgpevpnBgpInstanceRoutesRouteTableMacIp struct {
 	AdvertiseGatewayMac *bool `json:"advertise-gateway-mac,omitempty"`
 }
 
-// NetworkinstanceProtocolsBgpevpnSpec struct
+// NetworkinstanceProtocolsBgpevpnParameters struct defines the resource Parameters
 type NetworkinstanceProtocolsBgpevpnParameters struct {
 	NetworkInstanceName                *string                          `json:"network-instance-name"`
 	SrlNetworkinstanceProtocolsBgpevpn *NetworkinstanceProtocolsBgpevpn `json:"bgp-evpn,omitempty"`
 }
 
-// NetworkinstanceProtocolsBgpevpnStatus struct
+// NetworkinstanceProtocolsBgpevpnObservation struct defines the resource Observation
 type NetworkinstanceProtocolsBgpevpnObservation struct {
 }
 

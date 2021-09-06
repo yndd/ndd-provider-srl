@@ -41,13 +41,13 @@ type NetworkinstanceProtocolsLinux struct {
 	ImportRoutes *bool `json:"import-routes,omitempty"`
 }
 
-// NetworkinstanceProtocolsLinuxSpec struct
+// NetworkinstanceProtocolsLinuxParameters struct defines the resource Parameters
 type NetworkinstanceProtocolsLinuxParameters struct {
 	NetworkInstanceName              *string                        `json:"network-instance-name"`
 	SrlNetworkinstanceProtocolsLinux *NetworkinstanceProtocolsLinux `json:"linux,omitempty"`
 }
 
-// NetworkinstanceProtocolsLinuxStatus struct
+// NetworkinstanceProtocolsLinuxObservation struct defines the resource Observation
 type NetworkinstanceProtocolsLinuxObservation struct {
 }
 

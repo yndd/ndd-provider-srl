@@ -50,12 +50,12 @@ type SystemNtpServer struct {
 	Prefer *bool `json:"prefer,omitempty"`
 }
 
-// SystemNtpSpec struct
+// SystemNtpParameters struct defines the resource Parameters
 type SystemNtpParameters struct {
 	SrlSystemNtp *SystemNtp `json:"ntp,omitempty"`
 }
 
-// SystemNtpStatus struct
+// SystemNtpObservation struct defines the resource Observation
 type SystemNtpObservation struct {
 }
 

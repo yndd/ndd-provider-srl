@@ -423,13 +423,13 @@ type NetworkinstanceProtocolsIsisInstanceTransport struct {
 	LspMtuSize *uint16 `json:"lsp-mtu-size,omitempty"`
 }
 
-// NetworkinstanceProtocolsIsisSpec struct
+// NetworkinstanceProtocolsIsisParameters struct defines the resource Parameters
 type NetworkinstanceProtocolsIsisParameters struct {
 	NetworkInstanceName             *string                       `json:"network-instance-name"`
 	SrlNetworkinstanceProtocolsIsis *NetworkinstanceProtocolsIsis `json:"isis,omitempty"`
 }
 
-// NetworkinstanceProtocolsIsisStatus struct
+// NetworkinstanceProtocolsIsisObservation struct defines the resource Observation
 type NetworkinstanceProtocolsIsisObservation struct {
 }
 

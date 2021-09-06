@@ -502,16 +502,16 @@ func (e *externalSystemNetworkinstanceProtocolsBgpvpn) Observe(ctx context.Conte
 				ResourceHasData:  true,
 				ResourceUpToDate: true,
 			}, nil
-		} else {
-			// UMR -> MR without data
-			log.Debug("Observing Response:", "Exists", false, "HasData", false, "UpToDate", false, "Response", resp)
-			return managed.ExternalObservation{
-				Ready:            true,
-				ResourceExists:   false,
-				ResourceHasData:  false,
-				ResourceUpToDate: false,
-			}, nil
 		}
+		// UMR -> MR without data
+		log.Debug("Observing Response:", "Exists", false, "HasData", false, "UpToDate", false, "Response", resp)
+		return managed.ExternalObservation{
+			Ready:            true,
+			ResourceExists:   false,
+			ResourceHasData:  false,
+			ResourceUpToDate: false,
+		}, nil
+
 	} else {
 		// Resource Exists
 		switch respMeta.Status {
@@ -560,16 +560,16 @@ func (e *externalSystemNetworkinstanceProtocolsBgpvpn) Observe(ctx context.Conte
 					ResourceHasData:  true,
 					ResourceUpToDate: true,
 				}, nil
-			} else {
-				// MR -> MR, resource has no data, strange, someone could have deleted the resource
-				log.Debug("Observing Response", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
-				return managed.ExternalObservation{
-					Ready:            true,
-					ResourceExists:   true,
-					ResourceHasData:  false,
-					ResourceUpToDate: false,
-				}, nil
 			}
+			// MR -> MR, resource has no data, strange, someone could have deleted the resource
+			log.Debug("Observing Response", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
+			return managed.ExternalObservation{
+				Ready:            true,
+				ResourceExists:   true,
+				ResourceHasData:  false,
+				ResourceUpToDate: false,
+			}, nil
+
 		default:
 			// MR -> MR, resource is not in a success state, so the object might still be in creation phase
 			log.Debug("Observing Response", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)

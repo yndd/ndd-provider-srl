@@ -209,12 +209,12 @@ type InterfaceTransceiver struct {
 	TxLaser                *bool   `json:"tx-laser,omitempty"`
 }
 
-// InterfaceSpec struct
+// InterfaceParameters struct defines the resource Parameters
 type InterfaceParameters struct {
 	SrlInterface *Interface `json:"interface,omitempty"`
 }
 
-// InterfaceStatus struct
+// InterfaceObservation struct defines the resource Observation
 type InterfaceObservation struct {
 }
 

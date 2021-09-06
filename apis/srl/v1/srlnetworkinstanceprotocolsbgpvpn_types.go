@@ -64,13 +64,13 @@ type NetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget struct {
 	ImportRt *string `json:"import-rt,omitempty"`
 }
 
-// NetworkinstanceProtocolsBgpvpnSpec struct
+// NetworkinstanceProtocolsBgpvpnParameters struct defines the resource Parameters
 type NetworkinstanceProtocolsBgpvpnParameters struct {
 	NetworkInstanceName               *string                         `json:"network-instance-name"`
 	SrlNetworkinstanceProtocolsBgpvpn *NetworkinstanceProtocolsBgpvpn `json:"bgp-vpn,omitempty"`
 }
 
-// NetworkinstanceProtocolsBgpvpnStatus struct
+// NetworkinstanceProtocolsBgpvpnObservation struct defines the resource Observation
 type NetworkinstanceProtocolsBgpvpnObservation struct {
 }
 

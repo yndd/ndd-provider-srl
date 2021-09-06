@@ -51,12 +51,12 @@ type RoutingpolicyPrefixsetPrefix struct {
 	MaskLengthRange *string `json:"mask-length-range,omitempty"`
 }
 
-// RoutingpolicyPrefixsetSpec struct
+// RoutingpolicyPrefixsetParameters struct defines the resource Parameters
 type RoutingpolicyPrefixsetParameters struct {
 	SrlRoutingpolicyPrefixset *RoutingpolicyPrefixset `json:"prefix-set,omitempty"`
 }
 
-// RoutingpolicyPrefixsetStatus struct
+// RoutingpolicyPrefixsetObservation struct defines the resource Observation
 type RoutingpolicyPrefixsetObservation struct {
 }
 

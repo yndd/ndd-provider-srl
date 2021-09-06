@@ -53,12 +53,12 @@ type SystemNetworkinstanceProtocolsEvpnEthernetSegmentsTimers struct {
 	BootTimer *uint32 `json:"boot-timer,omitempty"`
 }
 
-// SystemNetworkinstanceProtocolsEvpnSpec struct
+// SystemNetworkinstanceProtocolsEvpnParameters struct defines the resource Parameters
 type SystemNetworkinstanceProtocolsEvpnParameters struct {
 	SrlSystemNetworkinstanceProtocolsEvpn *SystemNetworkinstanceProtocolsEvpn `json:"evpn,omitempty"`
 }
 
-// SystemNetworkinstanceProtocolsEvpnStatus struct
+// SystemNetworkinstanceProtocolsEvpnObservation struct defines the resource Observation
 type SystemNetworkinstanceProtocolsEvpnObservation struct {
 }
 

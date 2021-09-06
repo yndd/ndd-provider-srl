@@ -68,13 +68,13 @@ type NetworkinstanceAggregateroutesRouteCommunities struct {
 	Add *string `json:"add,omitempty"`
 }
 
-// NetworkinstanceAggregateroutesSpec struct
+// NetworkinstanceAggregateroutesParameters struct defines the resource Parameters
 type NetworkinstanceAggregateroutesParameters struct {
 	NetworkInstanceName               *string                         `json:"network-instance-name"`
 	SrlNetworkinstanceAggregateroutes *NetworkinstanceAggregateroutes `json:"aggregate-routes,omitempty"`
 }
 
-// NetworkinstanceAggregateroutesStatus struct
+// NetworkinstanceAggregateroutesObservation struct defines the resource Observation
 type NetworkinstanceAggregateroutesObservation struct {
 }
 
