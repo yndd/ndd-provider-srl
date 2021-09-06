@@ -6,7 +6,7 @@
 
 ## Overview
  
-NDD provider srl implements an [srlinux] provider, which exposes its configuration in kubernetes through [CRs]. 
+ndd-provider-srl implements an [srlinux] provider, which exposes its configuration in kubernetes through [CRs]. 
 
 Features:
 
