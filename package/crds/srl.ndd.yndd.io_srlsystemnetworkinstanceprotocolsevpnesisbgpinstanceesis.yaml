@@ -1,5 +1,5 @@
 
-
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -78,8 +78,8 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiSpec
-                  struct
+                description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiParameters
+                  struct defines the resource Parameters
                 properties:
                   bgp-instance-id:
                     type: string
@@ -214,8 +214,8 @@ spec:
               represents the observed state of a SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi.
             properties:
               atNetworkNode:
-                description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiStatus
-                  struct
+                description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiObservation
+                  struct defines the resource Observation
                 type: object
               conditions:
                 description: Conditions of the resource.

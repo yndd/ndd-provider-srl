@@ -1,5 +1,5 @@
 
-
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -76,7 +76,7 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: BfdSpec struct
+                description: BfdParameters struct defines the resource Parameters
                 properties:
                   bfd:
                     description: Bfd struct
@@ -177,7 +177,7 @@ spec:
             description: A BfdStatus represents the observed state of a Bfd.
             properties:
               atNetworkNode:
-                description: BfdStatus struct
+                description: BfdObservation struct defines the resource Observation
                 type: object
               conditions:
                 description: Conditions of the resource.

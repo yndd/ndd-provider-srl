@@ -1,5 +1,5 @@
 
-
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -76,7 +76,8 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: TunnelinterfaceSpec struct
+                description: TunnelinterfaceParameters struct defines the resource
+                  Parameters
                 properties:
                   tunnel-interface:
                     description: Tunnelinterface struct
@@ -107,7 +108,8 @@ spec:
               a Tunnelinterface.
             properties:
               atNetworkNode:
-                description: TunnelinterfaceStatus struct
+                description: TunnelinterfaceObservation struct defines the resource
+                  Observation
                 type: object
               conditions:
                 description: Conditions of the resource.

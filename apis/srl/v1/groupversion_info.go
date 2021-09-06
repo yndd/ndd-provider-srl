@@ -26,7 +26,7 @@ import (
 
 const (
 	// Group in the kubernetes api
-	Group   = "srl.ndd.yndd.io"
+	Group = "srl.ndd.yndd.io"
 	// Version in the kubernetes api
 	Version = "v1"
 )

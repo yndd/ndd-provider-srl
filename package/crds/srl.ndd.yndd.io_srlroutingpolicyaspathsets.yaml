@@ -1,5 +1,5 @@
 
-
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -78,7 +78,8 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: RoutingpolicyAspathsetSpec struct
+                description: RoutingpolicyAspathsetParameters struct defines the resource
+                  Parameters
                 properties:
                   as-path-set:
                     description: RoutingpolicyAspathset struct
@@ -112,7 +113,8 @@ spec:
               of a RoutingpolicyAspathset.
             properties:
               atNetworkNode:
-                description: RoutingpolicyAspathsetStatus struct
+                description: RoutingpolicyAspathsetObservation struct defines the
+                  resource Observation
                 type: object
               conditions:
                 description: Conditions of the resource.

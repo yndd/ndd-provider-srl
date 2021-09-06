@@ -1,5 +1,5 @@
 
-
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -78,7 +78,8 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: NetworkinstanceProtocolsOspfSpec struct
+                description: NetworkinstanceProtocolsOspfParameters struct defines
+                  the resource Parameters
                 properties:
                   network-instance-name:
                     type: string
@@ -648,7 +649,8 @@ spec:
               state of a NetworkinstanceProtocolsOspf.
             properties:
               atNetworkNode:
-                description: NetworkinstanceProtocolsOspfStatus struct
+                description: NetworkinstanceProtocolsOspfObservation struct defines
+                  the resource Observation
                 type: object
               conditions:
                 description: Conditions of the resource.

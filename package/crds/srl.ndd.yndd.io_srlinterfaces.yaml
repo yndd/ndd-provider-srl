@@ -1,5 +1,5 @@
 
-
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -76,7 +76,7 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: InterfaceSpec struct
+                description: InterfaceParameters struct defines the resource Parameters
                 properties:
                   interface:
                     description: Interface struct
@@ -339,7 +339,7 @@ spec:
             description: A InterfaceStatus represents the observed state of a Interface.
             properties:
               atNetworkNode:
-                description: InterfaceStatus struct
+                description: InterfaceObservation struct defines the resource Observation
                 type: object
               conditions:
                 description: Conditions of the resource.
