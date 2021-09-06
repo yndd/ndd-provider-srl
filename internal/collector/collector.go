@@ -36,6 +36,7 @@ const (
 	errCreateSubscriptionRequest = "cannot create subscription request"
 )
 
+// Collector defines the interfaces for the collector
 type Collector interface {
 	Lock()
 	Unlock()
@@ -54,6 +55,7 @@ func WithDeviceCollectorLogger(log logging.Logger) DeviceCollectorOption {
 	}
 }
 
+// GNMICollector defines the parameters for the collector
 type GNMICollector struct {
 	TargetReceiveBuffer uint
 	RetryTimer          time.Duration
@@ -65,11 +67,13 @@ type GNMICollector struct {
 	log           logging.Logger
 }
 
+// Subscription defines the parameters for the subscription
 type Subscription struct {
 	StopCh   chan bool
 	CancelFn context.CancelFunc
 }
 
+// NewGNMICollector creates a new GNMI collector
 func NewGNMICollector(t *target.Target, opts ...DeviceCollectorOption) *GNMICollector {
 	c := &GNMICollector{
 		Target:              t,
@@ -84,14 +88,17 @@ func NewGNMICollector(t *target.Target, opts ...DeviceCollectorOption) *GNMIColl
 	return c
 }
 
+// Lock locks a gnmi collector
 func (c *GNMICollector) Lock() {
 	c.Mutex.RLock()
 }
 
+// Unlock unlocks a gnmi collector
 func (c *GNMICollector) Unlock() {
 	c.Mutex.RUnlock()
 }
 
+// GetSubscription returns a bool based on a subscription name
 func (c *GNMICollector) GetSubscription(subName string) bool {
 	if _, ok := c.Subscriptions[subName]; !ok {
 		return true
@@ -99,6 +106,7 @@ func (c *GNMICollector) GetSubscription(subName string) bool {
 	return false
 }
 
+// StopSubscription stops a subscription
 func (c *GNMICollector) StopSubscription(ctx context.Context, sub string) error {
 	c.log.WithValues("subscription", sub)
 	c.log.Debug("subscription stop...")
@@ -108,6 +116,7 @@ func (c *GNMICollector) StopSubscription(ctx context.Context, sub string) error 
 	return nil
 }
 
+// StartSubscription starts a subscription
 func (c *GNMICollector) StartSubscription(dctx context.Context, target, subName string, paths []*gnmi.Path) error {
 	log := c.log.WithValues("subscription", subName, "Paths", paths)
 	log.Debug("subscription start...")
