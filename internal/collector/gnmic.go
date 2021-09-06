@@ -8,6 +8,7 @@ import (
 	"github.com/openconfig/gnmi/proto/gnmi"
 )
 
+// CreateSubscriptionRequest create a gnmi subscription
 func CreateSubscriptionRequest(target, subName string, paths []*gnmi.Path) (*gnmi.SubscribeRequest, error) {
 	// create subscription
 

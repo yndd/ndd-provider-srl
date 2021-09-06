@@ -50,6 +50,7 @@ const (
 	TargetDelete TargetAction = "target deleted"
 )
 
+// TargetUpdate identifies the update actions on the target
 type TargetUpdate struct {
 	Name         string
 	Action       TargetAction
@@ -66,6 +67,7 @@ type DeviationServer struct {
 	ctx      context.Context
 }
 
+// Target defines the parameters for a Target
 type Target struct {
 	Config    *types.TargetConfig
 	Target    *target.Target
@@ -77,32 +79,35 @@ type Target struct {
 // Option is a function to initialize the options
 type Option func(d *DeviationServer)
 
-// WithDeviationServer initializes the deviation server in the srl operator
+// WithDeviationServer initializes the deviation server with event channels
 func WithEventChannels(e map[string]chan event.GenericEvent) Option {
 	return func(s *DeviationServer) {
 		s.eventChs = e
 	}
 }
 
+// WithTargetUpdateChannel initializes the deviation server with target update channels
 func WithTargetUpdateChannel(tu chan TargetUpdate) Option {
 	return func(d *DeviationServer) {
 		d.tuCh = tu
 	}
 }
 
+// WithLogging initializes the deviation server with logging info
 func WithLogging(l logging.Logger) Option {
 	return func(d *DeviationServer) {
 		d.log = l
 	}
 }
 
+// WithStopChannel initializes the deviation server with stop channel info
 func WithStopChannel(stopCh chan struct{}) Option {
 	return func(d *DeviationServer) {
 		d.stopCh = stopCh
 	}
 }
 
-// NewSubscriptionServer function defines a new SubscriptionServer
+// NewSubscriptionServer function defines a new Deviation Server
 func NewDeviationServer(opts ...Option) *DeviationServer {
 	s := &DeviationServer{
 		Targets: make(map[string]*Target),
@@ -136,6 +141,7 @@ func (d *DeviationServer) StartTargetChangeHandler() {
 	}
 }
 
+// HandleTargetUpdate supports updates of a Target
 func (d *DeviationServer) HandleTargetUpdate(ctx context.Context, tu TargetUpdate) error {
 	switch tu.Action {
 	case TargetAdd:
@@ -186,6 +192,7 @@ func (d *DeviationServer) HandleTargetUpdate(ctx context.Context, tu TargetUpdat
 	return nil
 }
 
+// StartGnmiSubscriptionHandler starts gnmi subscription
 func (t *Target) StartGnmiSubscriptionHandler(ctx context.Context) {
 	t.log.Debug("Starting GNMI subscription...", "Target", t.Target.Config.Name)
 
@@ -216,6 +223,7 @@ func (t *Target) StartGnmiSubscriptionHandler(ctx context.Context) {
 	}
 }
 
+// ReconcileOnChange reconciles an on change update
 func (t *Target) ReconcileOnChange(resp *gnmi.SubscribeResponse) error {
 	switch resp.GetResponse().(type) {
 	case *gnmi.SubscribeResponse_Update:
