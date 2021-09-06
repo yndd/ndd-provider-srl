@@ -54,3 +54,4 @@ ndd-runtime is under the Apache 2.0 license.
 [CRs]: https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/
 [kubebuilder]: https://kubebuilder.io
 [operator-pattern]: https://kubernetes.io/docs/concepts/extend-kubernetes/operator/
+[srlinux]: https://www.nokia.com/networks/products/service-router-linux-NOS/
