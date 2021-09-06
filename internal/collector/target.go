@@ -79,7 +79,7 @@ type Target struct {
 // Option is a function to initialize the options
 type Option func(d *DeviationServer)
 
-// WithDeviationServer initializes the deviation server with event channels
+// WithEventChannels initializes the deviation server with event channels
 func WithEventChannels(e map[string]chan event.GenericEvent) Option {
 	return func(s *DeviationServer) {
 		s.eventChs = e
@@ -107,7 +107,7 @@ func WithStopChannel(stopCh chan struct{}) Option {
 	}
 }
 
-// NewSubscriptionServer function defines a new Deviation Server
+// NewDeviationServer function defines a new Deviation Server
 func NewDeviationServer(opts ...Option) *DeviationServer {
 	s := &DeviationServer{
 		Targets: make(map[string]*Target),
@@ -170,7 +170,7 @@ func (d *DeviationServer) HandleTargetUpdate(ctx context.Context, tu TargetUpdat
 				d.log.Debug("Target", "TargetName", tu.Name, "Target Info", d.Targets[tu.Name].Target)
 
 				d.Targets[tu.Name].StartGnmiSubscriptionHandler(d.ctx)
-				// we should delete the target since an error occured and we will get
+				// we should delete the target since an error occurred and we will get
 				// most likely a device driver got restarted
 				delete(d.Targets, tu.Name)
 

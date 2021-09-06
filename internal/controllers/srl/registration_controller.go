@@ -46,7 +46,7 @@ import (
 )
 
 const (
-	// Finalizer
+	// RegistrationFinalizer defines the finalizer for Registration
 	RegistrationFinalizer = "Registration.srl.ndd.yndd.io"
 
 	// Errors
@@ -130,7 +130,7 @@ type connectorRegistration struct {
 // Connect produces an ExternalClient by:
 // 1. Tracking that the managed resource is using a NetworkNode Reference.
 // 2. Getting the managed resource's NetworkNode with connection details
-// For registartion we did a trick to use aall network nodes in the system since
+// For registration we did a trick to use aall network nodes in the system since
 // we want to register to all nodes, this is an exception for registration
 func (c *connectorRegistration) Connect(ctx context.Context, mg resource.Managed) (managed.ExternalClient, error) {
 	log := c.log.WithValues("resource", mg.GetName())

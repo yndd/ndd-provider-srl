@@ -51,12 +51,12 @@ type SystemMtu struct {
 	MinPathMtu *uint16 `json:"min-path-mtu,omitempty"`
 }
 
-// SystemMtuSpec struct
+// SystemMtuParameters struct
 type SystemMtuParameters struct {
 	SrlSystemMtu *SystemMtu `json:"system-mtu"`
 }
 
-// SystemMtuStatus struct
+// SystemMtuObservation struct
 type SystemMtuObservation struct {
 }
 

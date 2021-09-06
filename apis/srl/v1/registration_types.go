@@ -25,7 +25,9 @@ import (
 )
 
 const (
+	// DeviceMatch is the matching string for device registration
 	DeviceMatch                    = "srl_nokia"
+	// DeviceTypeSRL defines the device type the provider supports
 	DeviceTypeSRL nddv1.DeviceType = "nokia-srl"
 )
 
@@ -82,10 +84,12 @@ func init() {
 	SchemeBuilder.Register(&Registration{}, &RegistrationList{})
 }
 
+// GetSubscriptions defines a method to get subscriptions
 func (o *Registration) GetSubscriptions() []string {
 	return o.Spec.ForNetworkNode.Subscriptions
 }
 
+// SetSubscriptions defines a method to set subscriptions
 func (o *Registration) SetSubscriotions(sub []string) {
 	o.Spec.ForNetworkNode.Subscriptions = sub
 }

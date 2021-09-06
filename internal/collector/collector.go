@@ -48,7 +48,7 @@ type Collector interface {
 // DeviceCollectorOption can be used to manipulate Options.
 type DeviceCollectorOption func(*GNMICollector)
 
-// WithTargetLogger specifies how the object should log messages.
+// WithDeviceCollectorLogger specifies how the collector logs messages.
 func WithDeviceCollectorLogger(log logging.Logger) DeviceCollectorOption {
 	return func(o *GNMICollector) {
 		o.log = log
