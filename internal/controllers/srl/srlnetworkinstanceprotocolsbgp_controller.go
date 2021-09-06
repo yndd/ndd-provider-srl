@@ -1183,74 +1183,73 @@ func (e *externalNetworkinstanceProtocolsBgp) Observe(ctx context.Context, mg re
 			ResourceUpToDate: false,
 		}, nil
 
-	} else {
-		// Resource Exists
-		switch respMeta.Status {
-		case gext.ResourceStatusSuccess:
-			if respMeta.HasData {
-				// data is present
+	}
+	// Resource Exists
+	switch respMeta.Status {
+	case gext.ResourceStatusSuccess:
+		if respMeta.HasData {
+			// data is present
 
-				updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, resourceRefPathsNetworkinstanceProtocolsBgp)
-				for _, update := range updatesx1 {
-					log.Debug("Observe Fine Grane Updates X1", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
-				}
-				updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, resourceRefPathsNetworkinstanceProtocolsBgp)
-				for _, update := range updatesx2 {
-					log.Debug("Observe Fine Grane Updates X2", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
-				}
+			updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, resourceRefPathsNetworkinstanceProtocolsBgp)
+			for _, update := range updatesx1 {
+				log.Debug("Observe Fine Grane Updates X1", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
+			}
+			updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, resourceRefPathsNetworkinstanceProtocolsBgp)
+			for _, update := range updatesx2 {
+				log.Debug("Observe Fine Grane Updates X2", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
+			}
 
-				deletes, updates, err := e.parser.FindResourceDeltaGnmi(updatesx1, updatesx2, log)
-				if err != nil {
-					return managed.ExternalObservation{}, err
+			deletes, updates, err := e.parser.FindResourceDeltaGnmi(updatesx1, updatesx2, log)
+			if err != nil {
+				return managed.ExternalObservation{}, err
+			}
+			// MR -> MR, resource is NOT up to date
+			if len(deletes) != 0 || len(updates) != 0 {
+				// resource is NOT up to date
+				log.Debug("Observing Response: resource NOT up to date", "Exists", true, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
+				for _, del := range deletes {
+					log.Debug("Observing Response: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
 				}
-				// MR -> MR, resource is NOT up to date
-				if len(deletes) != 0 || len(updates) != 0 {
-					// resource is NOT up to date
-					log.Debug("Observing Response: resource NOT up to date", "Exists", true, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
-					for _, del := range deletes {
-						log.Debug("Observing Response: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
-					}
-					for _, upd := range updates {
-						val, _ := e.parser.GetValue(upd.GetVal())
-						log.Debug("Observing Response: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
-					}
-					return managed.ExternalObservation{
-						Ready:            true,
-						ResourceExists:   true,
-						ResourceHasData:  true,
-						ResourceUpToDate: false,
-						ResourceDeletes:  deletes,
-						ResourceUpdates:  updates,
-					}, nil
+				for _, upd := range updates {
+					val, _ := e.parser.GetValue(upd.GetVal())
+					log.Debug("Observing Response: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
 				}
-				// MR -> MR, resource is up to date
-				log.Debug("Observing Response: resource up to date", "Exists", true, "HasData", true, "UpToDate", true, "Response", resp)
 				return managed.ExternalObservation{
 					Ready:            true,
 					ResourceExists:   true,
 					ResourceHasData:  true,
-					ResourceUpToDate: true,
+					ResourceUpToDate: false,
+					ResourceDeletes:  deletes,
+					ResourceUpdates:  updates,
 				}, nil
 			}
-			// MR -> MR, resource has no data, strange, someone could have deleted the resource
-			log.Debug("Observing Response", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
+			// MR -> MR, resource is up to date
+			log.Debug("Observing Response: resource up to date", "Exists", true, "HasData", true, "UpToDate", true, "Response", resp)
 			return managed.ExternalObservation{
 				Ready:            true,
 				ResourceExists:   true,
-				ResourceHasData:  false,
-				ResourceUpToDate: false,
-			}, nil
-
-		default:
-			// MR -> MR, resource is not in a success state, so the object might still be in creation phase
-			log.Debug("Observing Response", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
-			return managed.ExternalObservation{
-				Ready:            true,
-				ResourceExists:   true,
-				ResourceHasData:  false,
-				ResourceUpToDate: false,
+				ResourceHasData:  true,
+				ResourceUpToDate: true,
 			}, nil
 		}
+		// MR -> MR, resource has no data, strange, someone could have deleted the resource
+		log.Debug("Observing Response", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
+		return managed.ExternalObservation{
+			Ready:            true,
+			ResourceExists:   true,
+			ResourceHasData:  false,
+			ResourceUpToDate: false,
+		}, nil
+
+	default:
+		// MR -> MR, resource is not in a success state, so the object might still be in creation phase
+		log.Debug("Observing Response", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
+		return managed.ExternalObservation{
+			Ready:            true,
+			ResourceExists:   true,
+			ResourceHasData:  false,
+			ResourceUpToDate: false,
+		}, nil
 	}
 }
 
