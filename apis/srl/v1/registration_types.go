@@ -31,6 +31,7 @@ const (
 	DeviceTypeSRL nddv1.DeviceType = "nokia-srl"
 )
 
+// RegistrationParameters are the parameter fields of a Registration.
 type RegistrationParameters struct {
 	nddv1.Register `json:",inline"`
 }
@@ -90,7 +91,7 @@ func (o *Registration) GetSubscriptions() []string {
 }
 
 // SetSubscriptions defines a method to set subscriptions
-func (o *Registration) SetSubscriotions(sub []string) {
+func (o *Registration) SetSubscriptions(sub []string) {
 	o.Spec.ForNetworkNode.Subscriptions = sub
 }
 
