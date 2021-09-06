@@ -63,7 +63,7 @@ const (
 	// resourcePrefixTunnelinterfaceVxlaninterface = "srl.ndd.yndd.io.v1.TunnelinterfaceVxlaninterface"
 )
 
-var ResourceRefPathsTunnelinterfaceVxlaninterface = []*gnmi.Path{
+var resourceRefPathsTunnelinterfaceVxlaninterface = []*gnmi.Path{
 	{
 		Elem: []*gnmi.PathElem{
 			{Name: "vxlan-interface", Key: map[string]string{"index": ""}},
@@ -129,7 +129,7 @@ var ResourceRefPathsTunnelinterfaceVxlaninterface = []*gnmi.Path{
 		},
 	},
 }
-var DependencyTunnelinterfaceVxlaninterface = []*parser.LeafRefGnmi{
+var dependencyTunnelinterfaceVxlaninterface = []*parser.LeafRefGnmi{
 	{
 		RemotePath: &gnmi.Path{
 			Elem: []*gnmi.PathElem{
@@ -138,8 +138,8 @@ var DependencyTunnelinterfaceVxlaninterface = []*parser.LeafRefGnmi{
 		},
 	},
 }
-var LocalleafRefTunnelinterfaceVxlaninterface = []*parser.LeafRefGnmi{}
-var ExternalleafRefTunnelinterfaceVxlaninterface = []*parser.LeafRefGnmi{}
+var localleafRefTunnelinterfaceVxlaninterface = []*parser.LeafRefGnmi{}
+var externalLeafRefTunnelinterfaceVxlaninterface = []*parser.LeafRefGnmi{}
 
 // SetupTunnelinterfaceVxlaninterface adds a controller that reconciles TunnelinterfaceVxlaninterfaces.
 func SetupTunnelinterfaceVxlaninterface(mgr ctrl.Manager, o controller.Options, l logging.Logger, poll time.Duration, namespace string) (string, chan cevent.GenericEvent, error) {
@@ -200,7 +200,7 @@ func (v *validatorTunnelinterfaceVxlaninterface) ValidateLocalleafRef(ctx contex
 
 	// For local leafref validation we dont need to supply the external data so we use nil
 	success, resultleafRefValidation, err := v.parser.ValidateLeafRefGnmi(
-		parser.LeafRefValidationLocal, x1, nil, LocalleafRefTunnelinterfaceVxlaninterface, log)
+		parser.LeafRefValidationLocal, x1, nil, localleafRefTunnelinterfaceVxlaninterface, log)
 	if err != nil {
 		return managed.ValidateLocalleafRefObservation{
 			Success: false,
@@ -241,19 +241,19 @@ func (v *validatorTunnelinterfaceVxlaninterface) ValidateExternalleafRef(ctx con
 	// For local external leafref validation we need to supply the external
 	// data to validate the remote leafref, we use x2 for this
 	success, resultleafRefValidation, err := v.parser.ValidateLeafRefGnmi(
-		parser.LeafRefValidationExternal, x1, x2, ExternalleafRefTunnelinterfaceVxlaninterface, log)
+		parser.LeafRefValidationExternal, x1, x2, externalLeafRefTunnelinterfaceVxlaninterface, log)
 	if err != nil {
 		return managed.ValidateExternalleafRefObservation{
 			Success: false,
 		}, nil
 	}
 	if !success {
-		log.Debug("ValidateExternalLeafRef failed", "resultleafRefValidation", resultleafRefValidation)
+		log.Debug("ValidateExternalleafRef failed", "resultleafRefValidation", resultleafRefValidation)
 		return managed.ValidateExternalleafRefObservation{
 			Success:          false,
 			ResolvedLeafRefs: resultleafRefValidation}, nil
 	}
-	log.Debug("ValidateExternalLeafRef success", "resultleafRefValidation", resultleafRefValidation)
+	log.Debug("ValidateExternalleafRef success", "resultleafRefValidation", resultleafRefValidation)
 	return managed.ValidateExternalleafRefObservation{
 		Success:          true,
 		ResolvedLeafRefs: resultleafRefValidation}, nil
@@ -277,7 +277,7 @@ func (v *validatorTunnelinterfaceVxlaninterface) ValidateParentDependency(ctx co
 	//log.Debug("Latest Config", "data", x1)
 
 	success, resultleafRefValidation, err := v.parser.ValidateParentDependencyGnmi(
-		x1, *o.Spec.ForNetworkNode.TunnelInterfaceName, DependencyTunnelinterfaceVxlaninterface, log)
+		x1, *o.Spec.ForNetworkNode.TunnelInterfaceName, dependencyTunnelinterfaceVxlaninterface, log)
 	if err != nil {
 		return managed.ValidateParentDependencyObservation{
 			Success: false,
@@ -530,7 +530,7 @@ func (e *externalTunnelinterfaceVxlaninterface) Observe(ctx context.Context, mg 
 				return managed.ExternalObservation{}, errors.Wrap(err, errWrongInputdata)
 			}
 
-			updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, ResourceRefPathsTunnelinterfaceVxlaninterface)
+			updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, resourceRefPathsTunnelinterfaceVxlaninterface)
 			for _, update := range updatesx1 {
 				log.Debug("Observe Fine Grane Updates X1", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 			}
@@ -541,7 +541,7 @@ func (e *externalTunnelinterfaceVxlaninterface) Observe(ctx context.Context, mg 
 			if err != nil {
 				return managed.ExternalObservation{}, errors.Wrap(err, errWrongInputdata)
 			}
-			updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, ResourceRefPathsTunnelinterfaceVxlaninterface)
+			updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, resourceRefPathsTunnelinterfaceVxlaninterface)
 			for _, update := range updatesx2 {
 				log.Debug("Observe Fine Grane Updates X2", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 			}
@@ -552,13 +552,13 @@ func (e *externalTunnelinterfaceVxlaninterface) Observe(ctx context.Context, mg 
 			}
 			if len(deletes) != 0 || len(updates) != 0 {
 				// UMR -> MR with data, which is NOT up to date
-				log.Debug("Observing Respone: resource NOT up to date", "Exists", false, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
+				log.Debug("Observing Response: resource NOT up to date", "Exists", false, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
 				for _, del := range deletes {
-					log.Debug("Observing Respone: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
+					log.Debug("Observing Response: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
 				}
 				for _, upd := range updates {
 					val, _ := e.parser.GetValue(upd.GetVal())
-					log.Debug("Observing Respone: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
+					log.Debug("Observing Response: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
 				}
 				return managed.ExternalObservation{
 					Ready:            true,
@@ -570,7 +570,7 @@ func (e *externalTunnelinterfaceVxlaninterface) Observe(ctx context.Context, mg 
 				}, nil
 			}
 			// UMR -> MR with data, which is up to date
-			log.Debug("Observing Respone: resource up to date", "Exists", false, "HasData", true, "UpToDate", true, "Response", resp)
+			log.Debug("Observing Response: resource up to date", "Exists", false, "HasData", true, "UpToDate", true, "Response", resp)
 			return managed.ExternalObservation{
 				Ready:            true,
 				ResourceExists:   false,
@@ -579,7 +579,7 @@ func (e *externalTunnelinterfaceVxlaninterface) Observe(ctx context.Context, mg 
 			}, nil
 		} else {
 			// UMR -> MR without data
-			log.Debug("Observing Respone:", "Exists", false, "HasData", false, "UpToDate", false, "Response", resp)
+			log.Debug("Observing Response:", "Exists", false, "HasData", false, "UpToDate", false, "Response", resp)
 			return managed.ExternalObservation{
 				Ready:            true,
 				ResourceExists:   false,
@@ -601,7 +601,7 @@ func (e *externalTunnelinterfaceVxlaninterface) Observe(ctx context.Context, mg 
 					return managed.ExternalObservation{}, errors.Wrap(err, errWrongInputdata)
 				}
 
-				updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, ResourceRefPathsTunnelinterfaceVxlaninterface)
+				updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, resourceRefPathsTunnelinterfaceVxlaninterface)
 				for _, update := range updatesx1 {
 					log.Debug("Observe Fine Grane Updates X1", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 				}
@@ -612,7 +612,7 @@ func (e *externalTunnelinterfaceVxlaninterface) Observe(ctx context.Context, mg 
 				if err != nil {
 					return managed.ExternalObservation{}, errors.Wrap(err, errWrongInputdata)
 				}
-				updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, ResourceRefPathsTunnelinterfaceVxlaninterface)
+				updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, resourceRefPathsTunnelinterfaceVxlaninterface)
 				for _, update := range updatesx2 {
 					log.Debug("Observe Fine Grane Updates X2", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 				}
@@ -624,13 +624,13 @@ func (e *externalTunnelinterfaceVxlaninterface) Observe(ctx context.Context, mg 
 				// MR -> MR, resource is NOT up to date
 				if len(deletes) != 0 || len(updates) != 0 {
 					// resource is NOT up to date
-					log.Debug("Observing Respone: resource NOT up to date", "Exists", true, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
+					log.Debug("Observing Response: resource NOT up to date", "Exists", true, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
 					for _, del := range deletes {
-						log.Debug("Observing Respone: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
+						log.Debug("Observing Response: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
 					}
 					for _, upd := range updates {
 						val, _ := e.parser.GetValue(upd.GetVal())
-						log.Debug("Observing Respone: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
+						log.Debug("Observing Response: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
 					}
 					return managed.ExternalObservation{
 						Ready:            true,
@@ -642,7 +642,7 @@ func (e *externalTunnelinterfaceVxlaninterface) Observe(ctx context.Context, mg 
 					}, nil
 				}
 				// MR -> MR, resource is up to date
-				log.Debug("Observing Respone: resource up to date", "Exists", true, "HasData", true, "UpToDate", true, "Response", resp)
+				log.Debug("Observing Response: resource up to date", "Exists", true, "HasData", true, "UpToDate", true, "Response", resp)
 				return managed.ExternalObservation{
 					Ready:            true,
 					ResourceExists:   true,
@@ -651,7 +651,7 @@ func (e *externalTunnelinterfaceVxlaninterface) Observe(ctx context.Context, mg 
 				}, nil
 			} else {
 				// MR -> MR, resource has no data, strange, someone could have deleted the resource
-				log.Debug("Observing Respone", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
+				log.Debug("Observing Response", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
 				return managed.ExternalObservation{
 					Ready:            true,
 					ResourceExists:   true,
@@ -661,7 +661,7 @@ func (e *externalTunnelinterfaceVxlaninterface) Observe(ctx context.Context, mg 
 			}
 		default:
 			// MR -> MR, resource is not in a success state, so the object might still be in creation phase
-			log.Debug("Observing Respone", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
+			log.Debug("Observing Response", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
 			return managed.ExternalObservation{
 				Ready:            true,
 				ResourceExists:   true,
@@ -714,7 +714,7 @@ func (e *externalTunnelinterfaceVxlaninterface) Create(ctx context.Context, mg r
 		return managed.ExternalCreation{}, errors.Wrap(err, errWrongInputdata)
 	}
 
-	updates := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, ResourceRefPathsTunnelinterfaceVxlaninterface)
+	updates := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, resourceRefPathsTunnelinterfaceVxlaninterface)
 	for _, update := range updates {
 		log.Debug("Create Fine Grane Updates", "Path", update.Path, "Value", update.GetVal())
 	}

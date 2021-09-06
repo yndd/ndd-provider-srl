@@ -63,7 +63,7 @@ const (
 	// resourcePrefixNetworkinstanceProtocolsOspf = "srl.ndd.yndd.io.v1.NetworkinstanceProtocolsOspf"
 )
 
-var ResourceRefPathsNetworkinstanceProtocolsOspf = []*gnmi.Path{
+var resourceRefPathsNetworkinstanceProtocolsOspf = []*gnmi.Path{
 	{
 		Elem: []*gnmi.PathElem{
 			{Name: "ospf"},
@@ -328,7 +328,7 @@ var ResourceRefPathsNetworkinstanceProtocolsOspf = []*gnmi.Path{
 		},
 	},
 }
-var DependencyNetworkinstanceProtocolsOspf = []*parser.LeafRefGnmi{
+var dependencyNetworkinstanceProtocolsOspf = []*parser.LeafRefGnmi{
 	{
 		RemotePath: &gnmi.Path{
 			Elem: []*gnmi.PathElem{
@@ -337,8 +337,8 @@ var DependencyNetworkinstanceProtocolsOspf = []*parser.LeafRefGnmi{
 		},
 	},
 }
-var LocalleafRefNetworkinstanceProtocolsOspf = []*parser.LeafRefGnmi{}
-var ExternalleafRefNetworkinstanceProtocolsOspf = []*parser.LeafRefGnmi{
+var localleafRefNetworkinstanceProtocolsOspf = []*parser.LeafRefGnmi{}
+var externalLeafRefNetworkinstanceProtocolsOspf = []*parser.LeafRefGnmi{
 	{
 		LocalPath: &gnmi.Path{
 			Elem: []*gnmi.PathElem{
@@ -467,7 +467,7 @@ func (v *validatorNetworkinstanceProtocolsOspf) ValidateLocalleafRef(ctx context
 
 	// For local leafref validation we dont need to supply the external data so we use nil
 	success, resultleafRefValidation, err := v.parser.ValidateLeafRefGnmi(
-		parser.LeafRefValidationLocal, x1, nil, LocalleafRefNetworkinstanceProtocolsOspf, log)
+		parser.LeafRefValidationLocal, x1, nil, localleafRefNetworkinstanceProtocolsOspf, log)
 	if err != nil {
 		return managed.ValidateLocalleafRefObservation{
 			Success: false,
@@ -508,19 +508,19 @@ func (v *validatorNetworkinstanceProtocolsOspf) ValidateExternalleafRef(ctx cont
 	// For local external leafref validation we need to supply the external
 	// data to validate the remote leafref, we use x2 for this
 	success, resultleafRefValidation, err := v.parser.ValidateLeafRefGnmi(
-		parser.LeafRefValidationExternal, x1, x2, ExternalleafRefNetworkinstanceProtocolsOspf, log)
+		parser.LeafRefValidationExternal, x1, x2, externalLeafRefNetworkinstanceProtocolsOspf, log)
 	if err != nil {
 		return managed.ValidateExternalleafRefObservation{
 			Success: false,
 		}, nil
 	}
 	if !success {
-		log.Debug("ValidateExternalLeafRef failed", "resultleafRefValidation", resultleafRefValidation)
+		log.Debug("ValidateExternalleafRef failed", "resultleafRefValidation", resultleafRefValidation)
 		return managed.ValidateExternalleafRefObservation{
 			Success:          false,
 			ResolvedLeafRefs: resultleafRefValidation}, nil
 	}
-	log.Debug("ValidateExternalLeafRef success", "resultleafRefValidation", resultleafRefValidation)
+	log.Debug("ValidateExternalleafRef success", "resultleafRefValidation", resultleafRefValidation)
 	return managed.ValidateExternalleafRefObservation{
 		Success:          true,
 		ResolvedLeafRefs: resultleafRefValidation}, nil
@@ -544,7 +544,7 @@ func (v *validatorNetworkinstanceProtocolsOspf) ValidateParentDependency(ctx con
 	//log.Debug("Latest Config", "data", x1)
 
 	success, resultleafRefValidation, err := v.parser.ValidateParentDependencyGnmi(
-		x1, *o.Spec.ForNetworkNode.NetworkInstanceName, DependencyNetworkinstanceProtocolsOspf, log)
+		x1, *o.Spec.ForNetworkNode.NetworkInstanceName, dependencyNetworkinstanceProtocolsOspf, log)
 	if err != nil {
 		return managed.ValidateParentDependencyObservation{
 			Success: false,
@@ -792,7 +792,7 @@ func (e *externalNetworkinstanceProtocolsOspf) Observe(ctx context.Context, mg r
 		if respMeta.HasData {
 			// this is an umnaged resource which has data and will be moved to a managed resource
 
-			updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, ResourceRefPathsNetworkinstanceProtocolsOspf)
+			updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, resourceRefPathsNetworkinstanceProtocolsOspf)
 			for _, update := range updatesx1 {
 				log.Debug("Observe Fine Grane Updates X1", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 			}
@@ -803,7 +803,7 @@ func (e *externalNetworkinstanceProtocolsOspf) Observe(ctx context.Context, mg r
 			if err != nil {
 				return managed.ExternalObservation{}, errors.Wrap(err, errWrongInputdata)
 			}
-			updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, ResourceRefPathsNetworkinstanceProtocolsOspf)
+			updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, resourceRefPathsNetworkinstanceProtocolsOspf)
 			for _, update := range updatesx2 {
 				log.Debug("Observe Fine Grane Updates X2", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 			}
@@ -814,13 +814,13 @@ func (e *externalNetworkinstanceProtocolsOspf) Observe(ctx context.Context, mg r
 			}
 			if len(deletes) != 0 || len(updates) != 0 {
 				// UMR -> MR with data, which is NOT up to date
-				log.Debug("Observing Respone: resource NOT up to date", "Exists", false, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
+				log.Debug("Observing Response: resource NOT up to date", "Exists", false, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
 				for _, del := range deletes {
-					log.Debug("Observing Respone: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
+					log.Debug("Observing Response: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
 				}
 				for _, upd := range updates {
 					val, _ := e.parser.GetValue(upd.GetVal())
-					log.Debug("Observing Respone: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
+					log.Debug("Observing Response: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
 				}
 				return managed.ExternalObservation{
 					Ready:            true,
@@ -832,7 +832,7 @@ func (e *externalNetworkinstanceProtocolsOspf) Observe(ctx context.Context, mg r
 				}, nil
 			}
 			// UMR -> MR with data, which is up to date
-			log.Debug("Observing Respone: resource up to date", "Exists", false, "HasData", true, "UpToDate", true, "Response", resp)
+			log.Debug("Observing Response: resource up to date", "Exists", false, "HasData", true, "UpToDate", true, "Response", resp)
 			return managed.ExternalObservation{
 				Ready:            true,
 				ResourceExists:   false,
@@ -841,7 +841,7 @@ func (e *externalNetworkinstanceProtocolsOspf) Observe(ctx context.Context, mg r
 			}, nil
 		} else {
 			// UMR -> MR without data
-			log.Debug("Observing Respone:", "Exists", false, "HasData", false, "UpToDate", false, "Response", resp)
+			log.Debug("Observing Response:", "Exists", false, "HasData", false, "UpToDate", false, "Response", resp)
 			return managed.ExternalObservation{
 				Ready:            true,
 				ResourceExists:   false,
@@ -856,11 +856,11 @@ func (e *externalNetworkinstanceProtocolsOspf) Observe(ctx context.Context, mg r
 			if respMeta.HasData {
 				// data is present
 
-				updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, ResourceRefPathsNetworkinstanceProtocolsOspf)
+				updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, resourceRefPathsNetworkinstanceProtocolsOspf)
 				for _, update := range updatesx1 {
 					log.Debug("Observe Fine Grane Updates X1", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 				}
-				updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, ResourceRefPathsNetworkinstanceProtocolsOspf)
+				updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, resourceRefPathsNetworkinstanceProtocolsOspf)
 				for _, update := range updatesx2 {
 					log.Debug("Observe Fine Grane Updates X2", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 				}
@@ -872,13 +872,13 @@ func (e *externalNetworkinstanceProtocolsOspf) Observe(ctx context.Context, mg r
 				// MR -> MR, resource is NOT up to date
 				if len(deletes) != 0 || len(updates) != 0 {
 					// resource is NOT up to date
-					log.Debug("Observing Respone: resource NOT up to date", "Exists", true, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
+					log.Debug("Observing Response: resource NOT up to date", "Exists", true, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
 					for _, del := range deletes {
-						log.Debug("Observing Respone: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
+						log.Debug("Observing Response: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
 					}
 					for _, upd := range updates {
 						val, _ := e.parser.GetValue(upd.GetVal())
-						log.Debug("Observing Respone: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
+						log.Debug("Observing Response: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
 					}
 					return managed.ExternalObservation{
 						Ready:            true,
@@ -890,7 +890,7 @@ func (e *externalNetworkinstanceProtocolsOspf) Observe(ctx context.Context, mg r
 					}, nil
 				}
 				// MR -> MR, resource is up to date
-				log.Debug("Observing Respone: resource up to date", "Exists", true, "HasData", true, "UpToDate", true, "Response", resp)
+				log.Debug("Observing Response: resource up to date", "Exists", true, "HasData", true, "UpToDate", true, "Response", resp)
 				return managed.ExternalObservation{
 					Ready:            true,
 					ResourceExists:   true,
@@ -899,7 +899,7 @@ func (e *externalNetworkinstanceProtocolsOspf) Observe(ctx context.Context, mg r
 				}, nil
 			} else {
 				// MR -> MR, resource has no data, strange, someone could have deleted the resource
-				log.Debug("Observing Respone", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
+				log.Debug("Observing Response", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
 				return managed.ExternalObservation{
 					Ready:            true,
 					ResourceExists:   true,
@@ -909,7 +909,7 @@ func (e *externalNetworkinstanceProtocolsOspf) Observe(ctx context.Context, mg r
 			}
 		default:
 			// MR -> MR, resource is not in a success state, so the object might still be in creation phase
-			log.Debug("Observing Respone", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
+			log.Debug("Observing Response", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
 			return managed.ExternalObservation{
 				Ready:            true,
 				ResourceExists:   true,
@@ -956,7 +956,7 @@ func (e *externalNetworkinstanceProtocolsOspf) Create(ctx context.Context, mg re
 	hids = append(hids, "network-instance-name")
 	x1 = e.parser.RemoveLeafsFromJSONData(x1, hids)
 
-	updates := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, ResourceRefPathsNetworkinstanceProtocolsOspf)
+	updates := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, resourceRefPathsNetworkinstanceProtocolsOspf)
 	for _, update := range updates {
 		log.Debug("Create Fine Grane Updates", "Path", update.Path, "Value", update.GetVal())
 	}

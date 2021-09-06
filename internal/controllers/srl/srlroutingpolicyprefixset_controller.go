@@ -63,7 +63,7 @@ const (
 	// resourcePrefixRoutingpolicyPrefixset = "srl.ndd.yndd.io.v1.RoutingpolicyPrefixset"
 )
 
-var ResourceRefPathsRoutingpolicyPrefixset = []*gnmi.Path{
+var resourceRefPathsRoutingpolicyPrefixset = []*gnmi.Path{
 	{
 		Elem: []*gnmi.PathElem{
 			{Name: "prefix-set", Key: map[string]string{"name": ""}},
@@ -76,9 +76,9 @@ var ResourceRefPathsRoutingpolicyPrefixset = []*gnmi.Path{
 		},
 	},
 }
-var DependencyRoutingpolicyPrefixset = []*parser.LeafRefGnmi{}
-var LocalleafRefRoutingpolicyPrefixset = []*parser.LeafRefGnmi{}
-var ExternalleafRefRoutingpolicyPrefixset = []*parser.LeafRefGnmi{}
+var dependencyRoutingpolicyPrefixset = []*parser.LeafRefGnmi{}
+var localleafRefRoutingpolicyPrefixset = []*parser.LeafRefGnmi{}
+var externalLeafRefRoutingpolicyPrefixset = []*parser.LeafRefGnmi{}
 
 // SetupRoutingpolicyPrefixset adds a controller that reconciles RoutingpolicyPrefixsets.
 func SetupRoutingpolicyPrefixset(mgr ctrl.Manager, o controller.Options, l logging.Logger, poll time.Duration, namespace string) (string, chan cevent.GenericEvent, error) {
@@ -139,7 +139,7 @@ func (v *validatorRoutingpolicyPrefixset) ValidateLocalleafRef(ctx context.Conte
 
 	// For local leafref validation we dont need to supply the external data so we use nil
 	success, resultleafRefValidation, err := v.parser.ValidateLeafRefGnmi(
-		parser.LeafRefValidationLocal, x1, nil, LocalleafRefRoutingpolicyPrefixset, log)
+		parser.LeafRefValidationLocal, x1, nil, localleafRefRoutingpolicyPrefixset, log)
 	if err != nil {
 		return managed.ValidateLocalleafRefObservation{
 			Success: false,
@@ -180,19 +180,19 @@ func (v *validatorRoutingpolicyPrefixset) ValidateExternalleafRef(ctx context.Co
 	// For local external leafref validation we need to supply the external
 	// data to validate the remote leafref, we use x2 for this
 	success, resultleafRefValidation, err := v.parser.ValidateLeafRefGnmi(
-		parser.LeafRefValidationExternal, x1, x2, ExternalleafRefRoutingpolicyPrefixset, log)
+		parser.LeafRefValidationExternal, x1, x2, externalLeafRefRoutingpolicyPrefixset, log)
 	if err != nil {
 		return managed.ValidateExternalleafRefObservation{
 			Success: false,
 		}, nil
 	}
 	if !success {
-		log.Debug("ValidateExternalLeafRef failed", "resultleafRefValidation", resultleafRefValidation)
+		log.Debug("ValidateExternalleafRef failed", "resultleafRefValidation", resultleafRefValidation)
 		return managed.ValidateExternalleafRefObservation{
 			Success:          false,
 			ResolvedLeafRefs: resultleafRefValidation}, nil
 	}
-	log.Debug("ValidateExternalLeafRef success", "resultleafRefValidation", resultleafRefValidation)
+	log.Debug("ValidateExternalleafRef success", "resultleafRefValidation", resultleafRefValidation)
 	return managed.ValidateExternalleafRefObservation{
 		Success:          true,
 		ResolvedLeafRefs: resultleafRefValidation}, nil
@@ -444,7 +444,7 @@ func (e *externalRoutingpolicyPrefixset) Observe(ctx context.Context, mg resourc
 				return managed.ExternalObservation{}, errors.Wrap(err, errWrongInputdata)
 			}
 
-			updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, ResourceRefPathsRoutingpolicyPrefixset)
+			updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, resourceRefPathsRoutingpolicyPrefixset)
 			for _, update := range updatesx1 {
 				log.Debug("Observe Fine Grane Updates X1", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 			}
@@ -455,7 +455,7 @@ func (e *externalRoutingpolicyPrefixset) Observe(ctx context.Context, mg resourc
 			if err != nil {
 				return managed.ExternalObservation{}, errors.Wrap(err, errWrongInputdata)
 			}
-			updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, ResourceRefPathsRoutingpolicyPrefixset)
+			updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, resourceRefPathsRoutingpolicyPrefixset)
 			for _, update := range updatesx2 {
 				log.Debug("Observe Fine Grane Updates X2", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 			}
@@ -466,13 +466,13 @@ func (e *externalRoutingpolicyPrefixset) Observe(ctx context.Context, mg resourc
 			}
 			if len(deletes) != 0 || len(updates) != 0 {
 				// UMR -> MR with data, which is NOT up to date
-				log.Debug("Observing Respone: resource NOT up to date", "Exists", false, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
+				log.Debug("Observing Response: resource NOT up to date", "Exists", false, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
 				for _, del := range deletes {
-					log.Debug("Observing Respone: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
+					log.Debug("Observing Response: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
 				}
 				for _, upd := range updates {
 					val, _ := e.parser.GetValue(upd.GetVal())
-					log.Debug("Observing Respone: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
+					log.Debug("Observing Response: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
 				}
 				return managed.ExternalObservation{
 					Ready:            true,
@@ -484,7 +484,7 @@ func (e *externalRoutingpolicyPrefixset) Observe(ctx context.Context, mg resourc
 				}, nil
 			}
 			// UMR -> MR with data, which is up to date
-			log.Debug("Observing Respone: resource up to date", "Exists", false, "HasData", true, "UpToDate", true, "Response", resp)
+			log.Debug("Observing Response: resource up to date", "Exists", false, "HasData", true, "UpToDate", true, "Response", resp)
 			return managed.ExternalObservation{
 				Ready:            true,
 				ResourceExists:   false,
@@ -493,7 +493,7 @@ func (e *externalRoutingpolicyPrefixset) Observe(ctx context.Context, mg resourc
 			}, nil
 		} else {
 			// UMR -> MR without data
-			log.Debug("Observing Respone:", "Exists", false, "HasData", false, "UpToDate", false, "Response", resp)
+			log.Debug("Observing Response:", "Exists", false, "HasData", false, "UpToDate", false, "Response", resp)
 			return managed.ExternalObservation{
 				Ready:            true,
 				ResourceExists:   false,
@@ -515,7 +515,7 @@ func (e *externalRoutingpolicyPrefixset) Observe(ctx context.Context, mg resourc
 					return managed.ExternalObservation{}, errors.Wrap(err, errWrongInputdata)
 				}
 
-				updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, ResourceRefPathsRoutingpolicyPrefixset)
+				updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, resourceRefPathsRoutingpolicyPrefixset)
 				for _, update := range updatesx1 {
 					log.Debug("Observe Fine Grane Updates X1", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 				}
@@ -526,7 +526,7 @@ func (e *externalRoutingpolicyPrefixset) Observe(ctx context.Context, mg resourc
 				if err != nil {
 					return managed.ExternalObservation{}, errors.Wrap(err, errWrongInputdata)
 				}
-				updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, ResourceRefPathsRoutingpolicyPrefixset)
+				updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, resourceRefPathsRoutingpolicyPrefixset)
 				for _, update := range updatesx2 {
 					log.Debug("Observe Fine Grane Updates X2", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 				}
@@ -538,13 +538,13 @@ func (e *externalRoutingpolicyPrefixset) Observe(ctx context.Context, mg resourc
 				// MR -> MR, resource is NOT up to date
 				if len(deletes) != 0 || len(updates) != 0 {
 					// resource is NOT up to date
-					log.Debug("Observing Respone: resource NOT up to date", "Exists", true, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
+					log.Debug("Observing Response: resource NOT up to date", "Exists", true, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
 					for _, del := range deletes {
-						log.Debug("Observing Respone: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
+						log.Debug("Observing Response: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
 					}
 					for _, upd := range updates {
 						val, _ := e.parser.GetValue(upd.GetVal())
-						log.Debug("Observing Respone: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
+						log.Debug("Observing Response: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
 					}
 					return managed.ExternalObservation{
 						Ready:            true,
@@ -556,7 +556,7 @@ func (e *externalRoutingpolicyPrefixset) Observe(ctx context.Context, mg resourc
 					}, nil
 				}
 				// MR -> MR, resource is up to date
-				log.Debug("Observing Respone: resource up to date", "Exists", true, "HasData", true, "UpToDate", true, "Response", resp)
+				log.Debug("Observing Response: resource up to date", "Exists", true, "HasData", true, "UpToDate", true, "Response", resp)
 				return managed.ExternalObservation{
 					Ready:            true,
 					ResourceExists:   true,
@@ -565,7 +565,7 @@ func (e *externalRoutingpolicyPrefixset) Observe(ctx context.Context, mg resourc
 				}, nil
 			} else {
 				// MR -> MR, resource has no data, strange, someone could have deleted the resource
-				log.Debug("Observing Respone", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
+				log.Debug("Observing Response", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
 				return managed.ExternalObservation{
 					Ready:            true,
 					ResourceExists:   true,
@@ -575,7 +575,7 @@ func (e *externalRoutingpolicyPrefixset) Observe(ctx context.Context, mg resourc
 			}
 		default:
 			// MR -> MR, resource is not in a success state, so the object might still be in creation phase
-			log.Debug("Observing Respone", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
+			log.Debug("Observing Response", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
 			return managed.ExternalObservation{
 				Ready:            true,
 				ResourceExists:   true,
@@ -627,7 +627,7 @@ func (e *externalRoutingpolicyPrefixset) Create(ctx context.Context, mg resource
 		return managed.ExternalCreation{}, errors.Wrap(err, errWrongInputdata)
 	}
 
-	updates := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, ResourceRefPathsRoutingpolicyPrefixset)
+	updates := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, resourceRefPathsRoutingpolicyPrefixset)
 	for _, update := range updates {
 		log.Debug("Create Fine Grane Updates", "Path", update.Path, "Value", update.GetVal())
 	}

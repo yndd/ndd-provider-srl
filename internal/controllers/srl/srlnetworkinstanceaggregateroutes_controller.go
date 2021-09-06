@@ -63,7 +63,7 @@ const (
 	// resourcePrefixNetworkinstanceAggregateroutes = "srl.ndd.yndd.io.v1.NetworkinstanceAggregateroutes"
 )
 
-var ResourceRefPathsNetworkinstanceAggregateroutes = []*gnmi.Path{
+var resourceRefPathsNetworkinstanceAggregateroutes = []*gnmi.Path{
 	{
 		Elem: []*gnmi.PathElem{
 			{Name: "aggregate-routes"},
@@ -90,7 +90,7 @@ var ResourceRefPathsNetworkinstanceAggregateroutes = []*gnmi.Path{
 		},
 	},
 }
-var DependencyNetworkinstanceAggregateroutes = []*parser.LeafRefGnmi{
+var dependencyNetworkinstanceAggregateroutes = []*parser.LeafRefGnmi{
 	{
 		RemotePath: &gnmi.Path{
 			Elem: []*gnmi.PathElem{
@@ -99,8 +99,8 @@ var DependencyNetworkinstanceAggregateroutes = []*parser.LeafRefGnmi{
 		},
 	},
 }
-var LocalleafRefNetworkinstanceAggregateroutes = []*parser.LeafRefGnmi{}
-var ExternalleafRefNetworkinstanceAggregateroutes = []*parser.LeafRefGnmi{}
+var localleafRefNetworkinstanceAggregateroutes = []*parser.LeafRefGnmi{}
+var externalLeafRefNetworkinstanceAggregateroutes = []*parser.LeafRefGnmi{}
 
 // SetupNetworkinstanceAggregateroutes adds a controller that reconciles NetworkinstanceAggregateroutess.
 func SetupNetworkinstanceAggregateroutes(mgr ctrl.Manager, o controller.Options, l logging.Logger, poll time.Duration, namespace string) (string, chan cevent.GenericEvent, error) {
@@ -161,7 +161,7 @@ func (v *validatorNetworkinstanceAggregateroutes) ValidateLocalleafRef(ctx conte
 
 	// For local leafref validation we dont need to supply the external data so we use nil
 	success, resultleafRefValidation, err := v.parser.ValidateLeafRefGnmi(
-		parser.LeafRefValidationLocal, x1, nil, LocalleafRefNetworkinstanceAggregateroutes, log)
+		parser.LeafRefValidationLocal, x1, nil, localleafRefNetworkinstanceAggregateroutes, log)
 	if err != nil {
 		return managed.ValidateLocalleafRefObservation{
 			Success: false,
@@ -202,19 +202,19 @@ func (v *validatorNetworkinstanceAggregateroutes) ValidateExternalleafRef(ctx co
 	// For local external leafref validation we need to supply the external
 	// data to validate the remote leafref, we use x2 for this
 	success, resultleafRefValidation, err := v.parser.ValidateLeafRefGnmi(
-		parser.LeafRefValidationExternal, x1, x2, ExternalleafRefNetworkinstanceAggregateroutes, log)
+		parser.LeafRefValidationExternal, x1, x2, externalLeafRefNetworkinstanceAggregateroutes, log)
 	if err != nil {
 		return managed.ValidateExternalleafRefObservation{
 			Success: false,
 		}, nil
 	}
 	if !success {
-		log.Debug("ValidateExternalLeafRef failed", "resultleafRefValidation", resultleafRefValidation)
+		log.Debug("ValidateExternalleafRef failed", "resultleafRefValidation", resultleafRefValidation)
 		return managed.ValidateExternalleafRefObservation{
 			Success:          false,
 			ResolvedLeafRefs: resultleafRefValidation}, nil
 	}
-	log.Debug("ValidateExternalLeafRef success", "resultleafRefValidation", resultleafRefValidation)
+	log.Debug("ValidateExternalleafRef success", "resultleafRefValidation", resultleafRefValidation)
 	return managed.ValidateExternalleafRefObservation{
 		Success:          true,
 		ResolvedLeafRefs: resultleafRefValidation}, nil
@@ -238,7 +238,7 @@ func (v *validatorNetworkinstanceAggregateroutes) ValidateParentDependency(ctx c
 	//log.Debug("Latest Config", "data", x1)
 
 	success, resultleafRefValidation, err := v.parser.ValidateParentDependencyGnmi(
-		x1, *o.Spec.ForNetworkNode.NetworkInstanceName, DependencyNetworkinstanceAggregateroutes, log)
+		x1, *o.Spec.ForNetworkNode.NetworkInstanceName, dependencyNetworkinstanceAggregateroutes, log)
 	if err != nil {
 		return managed.ValidateParentDependencyObservation{
 			Success: false,
@@ -484,7 +484,7 @@ func (e *externalNetworkinstanceAggregateroutes) Observe(ctx context.Context, mg
 		if respMeta.HasData {
 			// this is an umnaged resource which has data and will be moved to a managed resource
 
-			updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, ResourceRefPathsNetworkinstanceAggregateroutes)
+			updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, resourceRefPathsNetworkinstanceAggregateroutes)
 			for _, update := range updatesx1 {
 				log.Debug("Observe Fine Grane Updates X1", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 			}
@@ -495,7 +495,7 @@ func (e *externalNetworkinstanceAggregateroutes) Observe(ctx context.Context, mg
 			if err != nil {
 				return managed.ExternalObservation{}, errors.Wrap(err, errWrongInputdata)
 			}
-			updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, ResourceRefPathsNetworkinstanceAggregateroutes)
+			updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, resourceRefPathsNetworkinstanceAggregateroutes)
 			for _, update := range updatesx2 {
 				log.Debug("Observe Fine Grane Updates X2", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 			}
@@ -506,13 +506,13 @@ func (e *externalNetworkinstanceAggregateroutes) Observe(ctx context.Context, mg
 			}
 			if len(deletes) != 0 || len(updates) != 0 {
 				// UMR -> MR with data, which is NOT up to date
-				log.Debug("Observing Respone: resource NOT up to date", "Exists", false, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
+				log.Debug("Observing Response: resource NOT up to date", "Exists", false, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
 				for _, del := range deletes {
-					log.Debug("Observing Respone: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
+					log.Debug("Observing Response: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
 				}
 				for _, upd := range updates {
 					val, _ := e.parser.GetValue(upd.GetVal())
-					log.Debug("Observing Respone: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
+					log.Debug("Observing Response: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
 				}
 				return managed.ExternalObservation{
 					Ready:            true,
@@ -524,7 +524,7 @@ func (e *externalNetworkinstanceAggregateroutes) Observe(ctx context.Context, mg
 				}, nil
 			}
 			// UMR -> MR with data, which is up to date
-			log.Debug("Observing Respone: resource up to date", "Exists", false, "HasData", true, "UpToDate", true, "Response", resp)
+			log.Debug("Observing Response: resource up to date", "Exists", false, "HasData", true, "UpToDate", true, "Response", resp)
 			return managed.ExternalObservation{
 				Ready:            true,
 				ResourceExists:   false,
@@ -533,7 +533,7 @@ func (e *externalNetworkinstanceAggregateroutes) Observe(ctx context.Context, mg
 			}, nil
 		} else {
 			// UMR -> MR without data
-			log.Debug("Observing Respone:", "Exists", false, "HasData", false, "UpToDate", false, "Response", resp)
+			log.Debug("Observing Response:", "Exists", false, "HasData", false, "UpToDate", false, "Response", resp)
 			return managed.ExternalObservation{
 				Ready:            true,
 				ResourceExists:   false,
@@ -548,11 +548,11 @@ func (e *externalNetworkinstanceAggregateroutes) Observe(ctx context.Context, mg
 			if respMeta.HasData {
 				// data is present
 
-				updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, ResourceRefPathsNetworkinstanceAggregateroutes)
+				updatesx1 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, resourceRefPathsNetworkinstanceAggregateroutes)
 				for _, update := range updatesx1 {
 					log.Debug("Observe Fine Grane Updates X1", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 				}
-				updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, ResourceRefPathsNetworkinstanceAggregateroutes)
+				updatesx2 := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x2, resourceRefPathsNetworkinstanceAggregateroutes)
 				for _, update := range updatesx2 {
 					log.Debug("Observe Fine Grane Updates X2", "Path", e.parser.GnmiPathToXPath(update.Path, true), "Value", update.GetVal())
 				}
@@ -564,13 +564,13 @@ func (e *externalNetworkinstanceAggregateroutes) Observe(ctx context.Context, mg
 				// MR -> MR, resource is NOT up to date
 				if len(deletes) != 0 || len(updates) != 0 {
 					// resource is NOT up to date
-					log.Debug("Observing Respone: resource NOT up to date", "Exists", true, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
+					log.Debug("Observing Response: resource NOT up to date", "Exists", true, "HasData", true, "UpToDate", false, "Response", resp, "Updates", updates, "Deletes", deletes)
 					for _, del := range deletes {
-						log.Debug("Observing Respone: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
+						log.Debug("Observing Response: resource NOT up to date, deletes", "path", e.parser.GnmiPathToXPath(del, true))
 					}
 					for _, upd := range updates {
 						val, _ := e.parser.GetValue(upd.GetVal())
-						log.Debug("Observing Respone: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
+						log.Debug("Observing Response: resource NOT up to date, updates", "path", e.parser.GnmiPathToXPath(upd.GetPath(), true), "data", val)
 					}
 					return managed.ExternalObservation{
 						Ready:            true,
@@ -582,7 +582,7 @@ func (e *externalNetworkinstanceAggregateroutes) Observe(ctx context.Context, mg
 					}, nil
 				}
 				// MR -> MR, resource is up to date
-				log.Debug("Observing Respone: resource up to date", "Exists", true, "HasData", true, "UpToDate", true, "Response", resp)
+				log.Debug("Observing Response: resource up to date", "Exists", true, "HasData", true, "UpToDate", true, "Response", resp)
 				return managed.ExternalObservation{
 					Ready:            true,
 					ResourceExists:   true,
@@ -591,7 +591,7 @@ func (e *externalNetworkinstanceAggregateroutes) Observe(ctx context.Context, mg
 				}, nil
 			} else {
 				// MR -> MR, resource has no data, strange, someone could have deleted the resource
-				log.Debug("Observing Respone", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
+				log.Debug("Observing Response", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
 				return managed.ExternalObservation{
 					Ready:            true,
 					ResourceExists:   true,
@@ -601,7 +601,7 @@ func (e *externalNetworkinstanceAggregateroutes) Observe(ctx context.Context, mg
 			}
 		default:
 			// MR -> MR, resource is not in a success state, so the object might still be in creation phase
-			log.Debug("Observing Respone", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
+			log.Debug("Observing Response", "Exists", true, "HasData", false, "UpToDate", false, "Status", respMeta.Status)
 			return managed.ExternalObservation{
 				Ready:            true,
 				ResourceExists:   true,
@@ -647,7 +647,7 @@ func (e *externalNetworkinstanceAggregateroutes) Create(ctx context.Context, mg 
 	hids = append(hids, "network-instance-name")
 	x1 = e.parser.RemoveLeafsFromJSONData(x1, hids)
 
-	updates := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, ResourceRefPathsNetworkinstanceAggregateroutes)
+	updates := e.parser.GetUpdatesFromJSONDataGnmi(rootPath[0], e.parser.XpathToGnmiPath("/", 0), x1, resourceRefPathsNetworkinstanceAggregateroutes)
 	for _, update := range updates {
 		log.Debug("Create Fine Grane Updates", "Path", update.Path, "Value", update.GetVal())
 	}
