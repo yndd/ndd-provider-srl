@@ -78,8 +78,8 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: NetworkinstanceStaticroutesParameters struct defines
-                  the resource Parameters
+                description: NetworkinstanceStaticroutesParameters are the parameter
+                  fields of a NetworkinstanceStaticroutes.
                 properties:
                   network-instance-name:
                     type: string
@@ -91,20 +91,17 @@ spec:
                           description: NetworkinstanceStaticroutesRoute struct
                           properties:
                             admin-state:
-                              default: enable
                               enum:
                               - disable
                               - enable
                               type: string
                             metric:
-                              default: 1
                               description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=4294967295
                               format: int32
                               type: integer
                             next-hop-group:
                               type: string
                             preference:
-                              default: 5
                               description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=255
                               type: integer
                             prefix:
@@ -136,8 +133,8 @@ spec:
               state of a NetworkinstanceStaticroutes.
             properties:
               atNetworkNode:
-                description: NetworkinstanceStaticroutesObservation struct defines
-                  the resource Observation
+                description: NetworkinstanceStaticroutesObservation are the observable
+                  fields of a NetworkinstanceStaticroutes.
                 type: object
               conditions:
                 description: Conditions of the resource.

@@ -70,7 +70,10 @@ var resourceRefPathsTunnelinterface = []*gnmi.Path{
 		},
 	},
 }
+
+/*
 var dependencyTunnelinterface = []*parser.LeafRefGnmi{}
+*/
 var localleafRefTunnelinterface = []*parser.LeafRefGnmi{}
 var externalLeafRefTunnelinterface = []*parser.LeafRefGnmi{}
 
@@ -204,15 +207,29 @@ func (v *validatorTunnelinterface) ValidateParentDependency(ctx context.Context,
 		ResolvedLeafRefs: resultleafRefValidation}, nil
 }
 
+/*
+func (v *validatorTunnelinterface) ValidateParentDependency(ctx context.Context, mg resource.Managed, cfg []byte) (managed.ValidateParentDependencyObservation, error) {
+	log := v.log.WithValues("resource", mg.GetName())
+	log.Debug("ValidateParentDependency...")
+
+	// we initialize a global list for finer information on the resolution
+	resultleafRefValidation := make([]*parser.ResolvedLeafRefGnmi, 0)
+	log.Debug("ValidateParentDependency success", "resultParentValidation", resultleafRefValidation)
+	return managed.ValidateParentDependencyObservation{
+		Success: true,
+		ResolvedLeafRefs: resultleafRefValidation}, nil
+}
+*/
+
 // ValidateResourceIndexes validates if the indexes of a resource got changed
 // if so we need to delete the original resource, because it will be dangling if we dont delete it
 func (v *validatorTunnelinterface) ValidateResourceIndexes(ctx context.Context, mg resource.Managed) (managed.ValidateResourceIndexesObservation, error) {
-	log := v.log.WithValues("resosurce", mg.GetName())
+	log := v.log.WithValues("resource", mg.GetName())
 
 	// json unmarshal the resource
 	o, ok := mg.(*srlv1.SrlTunnelinterface)
 	if !ok {
-		return managed.ValidateResourceIndexesObservation{}, errors.New(errUnexpectedInterface)
+		return managed.ValidateResourceIndexesObservation{}, errors.New(errUnexpectedTunnelinterface)
 	}
 	log.Debug("ValidateResourceIndexes", "Spec", o.Spec)
 

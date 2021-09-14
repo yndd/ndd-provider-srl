@@ -78,8 +78,8 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: NetworkinstanceProtocolsOspfParameters struct defines
-                  the resource Parameters
+                description: NetworkinstanceProtocolsOspfParameters are the parameter
+                  fields of a NetworkinstanceProtocolsOspf.
                 properties:
                   network-instance-name:
                     type: string
@@ -93,7 +93,6 @@ spec:
                             address-family:
                               type: string
                             admin-state:
-                              default: disable
                               enum:
                               - disable
                               - enable
@@ -111,7 +110,6 @@ spec:
                                   struct
                                 properties:
                                   advertise-router-capability:
-                                    default: true
                                     type: boolean
                                   area-id:
                                     pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|[0-9\.]*|(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])([\p{N}\p{L}]+)?
@@ -122,7 +120,6 @@ spec:
                                         struct
                                       properties:
                                         advertise:
-                                          default: true
                                           type: boolean
                                         ip-prefix-mask:
                                           pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))
@@ -130,7 +127,6 @@ spec:
                                       type: object
                                     type: array
                                   bgp-ls-exclude:
-                                    default: false
                                     type: boolean
                                   blackhole-aggregate:
                                     type: boolean
@@ -142,16 +138,13 @@ spec:
                                         struct
                                       properties:
                                         admin-state:
-                                          default: enable
                                           enum:
                                           - disable
                                           - enable
                                           type: string
                                         advertise-router-capability:
-                                          default: true
                                           type: boolean
                                         advertise-subnet:
-                                          default: true
                                           type: boolean
                                         authentication:
                                           description: NetworkinstanceProtocolsOspfInstanceAreaInterfaceAuthentication
@@ -161,7 +154,6 @@ spec:
                                               type: string
                                           type: object
                                         dead-interval:
-                                          default: 40
                                           description: kubebuilder:validation:Minimum=2
                                             kubebuilder:validation:Maximum=65535
                                           format: int32
@@ -171,11 +163,9 @@ spec:
                                             struct
                                           properties:
                                             enable-bfd:
-                                              default: false
                                               type: boolean
                                           type: object
                                         hello-interval:
-                                          default: 10
                                           description: kubebuilder:validation:Minimum=1
                                             kubebuilder:validation:Maximum=65535
                                           format: int32
@@ -188,7 +178,6 @@ spec:
                                           - point-to-point
                                           type: string
                                         lsa-filter-out:
-                                          default: none
                                           enum:
                                           - all
                                           - except-own-rtrlsa
@@ -207,12 +196,10 @@ spec:
                                         passive:
                                           type: boolean
                                         priority:
-                                          default: 1
                                           description: kubebuilder:validation:Minimum=0
                                             kubebuilder:validation:Maximum=255
                                           type: integer
                                         retransmit-interval:
-                                          default: 5
                                           description: kubebuilder:validation:Minimum=1
                                             kubebuilder:validation:Maximum=1800
                                           format: int32
@@ -255,11 +242,12 @@ spec:
                                               type: object
                                           type: object
                                         transit-delay:
-                                          default: 1
                                           description: kubebuilder:validation:Minimum=1
                                             kubebuilder:validation:Maximum=1800
                                           format: int32
                                           type: integer
+                                      required:
+                                      - interface-name
                                       type: object
                                     type: array
                                   nssa:
@@ -272,7 +260,6 @@ spec:
                                             struct
                                           properties:
                                             advertise:
-                                              default: true
                                               type: boolean
                                             ip-prefix-mask:
                                               pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))
@@ -284,10 +271,8 @@ spec:
                                           struct
                                         properties:
                                           adjacency-check:
-                                            default: true
                                             type: boolean
                                           type-nssa:
-                                            default: false
                                             type: boolean
                                         type: object
                                       redistribute-external:
@@ -306,6 +291,8 @@ spec:
                                       summaries:
                                         type: boolean
                                     type: object
+                                required:
+                                - area-id
                                 type: object
                               type: array
                             asbr:
@@ -313,7 +300,6 @@ spec:
                                 struct
                               properties:
                                 trace-path:
-                                  default: none
                                   type: string
                               type: object
                             export-limit:
@@ -325,7 +311,7 @@ spec:
                                   format: int32
                                   type: integer
                                 number:
-                                  description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=0
+                                  description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=4294967295
                                   format: int32
                                   type: integer
                               required:
@@ -338,18 +324,15 @@ spec:
                                 struct
                               properties:
                                 interval:
-                                  default: 0
                                   description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=2147483647
                                   format: int32
                                   type: integer
                                 limit:
-                                  default: 0
                                   description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=2147483647
                                   format: int32
                                   type: integer
                               type: object
                             external-preference:
-                              default: 150
                               description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=255
                               type: integer
                             graceful-restart:
@@ -357,10 +340,8 @@ spec:
                                 struct
                               properties:
                                 helper-mode:
-                                  default: false
                                   type: boolean
                                 strict-lsa-checking:
-                                  default: false
                                   type: boolean
                               type: object
                             instance-id:
@@ -368,7 +349,6 @@ spec:
                               format: int32
                               type: integer
                             max-ecmp-paths:
-                              default: 1
                               description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
                               type: integer
                             name:
@@ -380,23 +360,18 @@ spec:
                                 struct
                               properties:
                                 active:
-                                  default: false
                                   type: boolean
                                 overload-include-ext-1:
-                                  default: false
                                   type: boolean
                                 overload-include-ext-2:
-                                  default: false
                                   type: boolean
                                 overload-include-ext-stub:
-                                  default: false
                                   type: boolean
                                 overload-on-boot:
                                   description: NetworkinstanceProtocolsOspfInstanceOverloadOverloadOnBoot
                                     struct
                                   properties:
                                     timeout:
-                                      default: 60
                                       description: kubebuilder:validation:Minimum=60
                                         kubebuilder:validation:Maximum=1800
                                       format: int32
@@ -418,18 +393,15 @@ spec:
                                         kubebuilder:validation:Maximum=1800
                                       type: integer
                                     warning-threshold:
-                                      default: 0
                                       description: kubebuilder:validation:Minimum=0
                                         kubebuilder:validation:Maximum=100
                                       type: integer
                                   type: object
                               type: object
                             preference:
-                              default: 10
                               description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=255
                               type: integer
                             reference-bandwidth:
-                              default: 400000000
                               description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=8000000000
                               format: int64
                               type: integer
@@ -461,17 +433,14 @@ spec:
                                 struct
                               properties:
                                 incremental-spf-wait:
-                                  default: 1000
                                   description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=1000
                                   format: int32
                                   type: integer
                                 lsa-accumulate:
-                                  default: 1000
                                   description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=1000
                                   format: int32
                                   type: integer
                                 lsa-arrival:
-                                  default: 1000
                                   description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=600000
                                   format: int32
                                   type: integer
@@ -480,26 +449,22 @@ spec:
                                     struct
                                   properties:
                                     lsa-initial-wait:
-                                      default: 5000
                                       description: kubebuilder:validation:Minimum=10
                                         kubebuilder:validation:Maximum=600000
                                       format: int32
                                       type: integer
                                     lsa-second-wait:
-                                      default: 5000
                                       description: kubebuilder:validation:Minimum=10
                                         kubebuilder:validation:Maximum=600000
                                       format: int32
                                       type: integer
                                     max-lsa-wait:
-                                      default: 5000
                                       description: kubebuilder:validation:Minimum=10
                                         kubebuilder:validation:Maximum=600000
                                       format: int32
                                       type: integer
                                   type: object
                                 redistribute-delay:
-                                  default: 1000
                                   description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=1000
                                   format: int32
                                   type: integer
@@ -508,19 +473,16 @@ spec:
                                     struct
                                   properties:
                                     spf-initial-wait:
-                                      default: 1000
                                       description: kubebuilder:validation:Minimum=10
                                         kubebuilder:validation:Maximum=100000
                                       format: int32
                                       type: integer
                                     spf-max-wait:
-                                      default: 10000
                                       description: kubebuilder:validation:Minimum=10
                                         kubebuilder:validation:Maximum=120000
                                       format: int32
                                       type: integer
                                     spf-second-wait:
-                                      default: 1000
                                       description: kubebuilder:validation:Minimum=10
                                         kubebuilder:validation:Maximum=100000
                                       format: int32
@@ -613,15 +575,14 @@ spec:
                                 struct
                               properties:
                                 advertisement:
-                                  default: false
                                   type: boolean
                                 legacy-link-attribute-advertisement:
-                                  default: true
                                   type: boolean
                               type: object
                             version:
                               type: string
                           required:
+                          - name
                           - version
                           type: object
                         type: array
@@ -649,8 +610,8 @@ spec:
               state of a NetworkinstanceProtocolsOspf.
             properties:
               atNetworkNode:
-                description: NetworkinstanceProtocolsOspfObservation struct defines
-                  the resource Observation
+                description: NetworkinstanceProtocolsOspfObservation are the observable
+                  fields of a NetworkinstanceProtocolsOspf.
                 type: object
               conditions:
                 description: Conditions of the resource.

@@ -33,15 +33,15 @@ const (
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstance struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstance struct {
-	Id *string `json:"id,omitempty"`
+	Id *string `json:"id"`
 }
 
-// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceParameters struct defines the resource Parameters
+// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceParameters are the parameter fields of a SystemNetworkinstanceProtocolsEvpnEsisBgpinstance.
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceParameters struct {
 	SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstance *SystemNetworkinstanceProtocolsEvpnEsisBgpinstance `json:"bgp-instance,omitempty"`
 }
 
-// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceObservation struct defines the resource Observation
+// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceObservation are the observable fields of a SystemNetworkinstanceProtocolsEvpnEsisBgpinstance.
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceObservation struct {
 }
 

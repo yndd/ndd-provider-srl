@@ -78,8 +78,8 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: NetworkinstanceProtocolsIsisParameters struct defines
-                  the resource Parameters
+                description: NetworkinstanceProtocolsIsisParameters are the parameter
+                  fields of a NetworkinstanceProtocolsIsis.
                 properties:
                   isis:
                     description: NetworkinstanceProtocolsIsis struct
@@ -89,7 +89,6 @@ spec:
                           description: NetworkinstanceProtocolsIsisInstance struct
                           properties:
                             admin-state:
-                              default: disable
                               enum:
                               - disable
                               - enable
@@ -99,10 +98,8 @@ spec:
                                 struct
                               properties:
                                 ignore:
-                                  default: false
                                   type: boolean
                                 suppress:
-                                  default: false
                                   type: boolean
                               type: object
                             authentication:
@@ -134,7 +131,6 @@ spec:
                                 struct
                               properties:
                                 helper-mode:
-                                  default: false
                                   type: boolean
                               type: object
                             inter-level-propagation-policies:
@@ -168,7 +164,6 @@ spec:
                                   struct
                                 properties:
                                   admin-state:
-                                    default: enable
                                     enum:
                                     - disable
                                     - enable
@@ -188,7 +183,6 @@ spec:
                                     - point-to-point
                                     type: string
                                   hello-padding:
-                                    default: disable
                                     enum:
                                     - adaptive
                                     - disable
@@ -202,16 +196,13 @@ spec:
                                       struct
                                     properties:
                                       admin-state:
-                                        default: enable
                                         enum:
                                         - disable
                                         - enable
                                         type: string
                                       enable-bfd:
-                                        default: false
                                         type: boolean
                                       include-bfd-tlv:
-                                        default: false
                                         type: boolean
                                     type: object
                                   ipv6-unicast:
@@ -219,16 +210,13 @@ spec:
                                       struct
                                     properties:
                                       admin-state:
-                                        default: enable
                                         enum:
                                         - disable
                                         - enable
                                         type: string
                                       enable-bfd:
-                                        default: false
                                         type: boolean
                                       include-bfd-tlv:
-                                        default: false
                                         type: boolean
                                     type: object
                                   ldp-synchronization:
@@ -257,7 +245,6 @@ spec:
                                               type: string
                                           type: object
                                         disable:
-                                          default: false
                                           type: boolean
                                         ipv6-unicast-metric:
                                           description: kubebuilder:validation:Minimum=1
@@ -274,7 +261,6 @@ spec:
                                           format: int32
                                           type: integer
                                         priority:
-                                          default: 64
                                           description: kubebuilder:validation:Minimum=0
                                             kubebuilder:validation:Maximum=127
                                           type: integer
@@ -283,33 +269,30 @@ spec:
                                             struct
                                           properties:
                                             hello-interval:
-                                              default: 9
                                               description: kubebuilder:validation:Minimum=1
                                                 kubebuilder:validation:Maximum=20000
                                               format: int32
                                               type: integer
                                             hello-multiplier:
-                                              default: 3
                                               description: kubebuilder:validation:Minimum=2
                                                 kubebuilder:validation:Maximum=100
                                               type: integer
                                           type: object
+                                      required:
+                                      - level-number
                                       type: object
                                     type: array
                                   passive:
-                                    default: false
                                     type: boolean
                                   timers:
                                     description: NetworkinstanceProtocolsIsisInstanceInterfaceTimers
                                       struct
                                     properties:
                                       csnp-interval:
-                                        default: 10
                                         description: kubebuilder:validation:Minimum=1
                                           kubebuilder:validation:Maximum=65535
                                         type: integer
                                       lsp-pacing-interval:
-                                        default: 100
                                         description: kubebuilder:validation:Minimum=0
                                           kubebuilder:validation:Maximum=100000
                                         format: int64
@@ -334,6 +317,8 @@ spec:
                                         - packets-p2p-hello
                                         type: string
                                     type: object
+                                required:
+                                - interface-name
                                 type: object
                               type: array
                             ipv4-unicast:
@@ -341,7 +326,6 @@ spec:
                                 struct
                               properties:
                                 admin-state:
-                                  default: enable
                                   enum:
                                   - disable
                                   - enable
@@ -352,13 +336,11 @@ spec:
                                 struct
                               properties:
                                 admin-state:
-                                  default: enable
                                   enum:
                                   - disable
                                   - enable
                                   type: string
                                 multi-topology:
-                                  default: false
                                   type: boolean
                               type: object
                             ldp-synchronization:
@@ -366,10 +348,8 @@ spec:
                                 struct
                               properties:
                                 end-of-lib:
-                                  default: false
                                   type: boolean
                                 hold-down-timer:
-                                  default: 60
                                   description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=1800
                                   type: integer
                               type: object
@@ -392,14 +372,12 @@ spec:
                                         type: boolean
                                     type: object
                                   bgp-ls-exclude:
-                                    default: false
                                     type: boolean
                                   level-number:
                                     description: kubebuilder:validation:Minimum=1
                                       kubebuilder:validation:Maximum=2
                                     type: integer
                                   metric-style:
-                                    default: wide
                                     enum:
                                     - narrow
                                     - wide
@@ -429,17 +407,17 @@ spec:
                                         - spf
                                         type: string
                                     type: object
+                                required:
+                                - level-number
                                 type: object
                               type: array
                             level-capability:
-                              default: L2
                               enum:
                               - L1
                               - L1L2
                               - L2
                               type: string
                             max-ecmp-paths:
-                              default: 1
                               description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
                               type: integer
                             name:
@@ -454,20 +432,16 @@ spec:
                                 struct
                               properties:
                                 advertise-external:
-                                  default: false
                                   type: boolean
                                 advertise-interlevel:
-                                  default: false
                                   type: boolean
                                 immediate:
                                   description: NetworkinstanceProtocolsIsisInstanceOverloadImmediate
                                     struct
                                   properties:
                                     max-metric:
-                                      default: false
                                       type: boolean
                                     set-bit:
-                                      default: false
                                       type: boolean
                                   type: object
                                 on-boot:
@@ -485,7 +459,6 @@ spec:
                                   type: object
                               type: object
                             poi-tlv:
-                              default: false
                               type: boolean
                             te-database-install:
                               description: NetworkinstanceProtocolsIsisInstanceTeDatabaseInstall
@@ -516,26 +489,22 @@ spec:
                                     struct
                                   properties:
                                     initial-wait:
-                                      default: 10
                                       description: kubebuilder:validation:Minimum=10
                                         kubebuilder:validation:Maximum=100000
                                       format: int64
                                       type: integer
                                     max-wait:
-                                      default: 5000
                                       description: kubebuilder:validation:Minimum=10
                                         kubebuilder:validation:Maximum=120000
                                       format: int64
                                       type: integer
                                     second-wait:
-                                      default: 1000
                                       description: kubebuilder:validation:Minimum=10
                                         kubebuilder:validation:Maximum=100000
                                       format: int64
                                       type: integer
                                   type: object
                                 lsp-lifetime:
-                                  default: 1200
                                   description: kubebuilder:validation:Minimum=350
                                     kubebuilder:validation:Maximum=65535
                                   type: integer
@@ -544,10 +513,8 @@ spec:
                                     struct
                                   properties:
                                     half-lifetime:
-                                      default: true
                                       type: boolean
                                     interval:
-                                      default: 600
                                       description: kubebuilder:validation:Minimum=150
                                         kubebuilder:validation:Maximum=65535
                                       type: integer
@@ -557,19 +524,16 @@ spec:
                                     struct
                                   properties:
                                     initial-wait:
-                                      default: 1000
                                       description: kubebuilder:validation:Minimum=10
                                         kubebuilder:validation:Maximum=100000
                                       format: int64
                                       type: integer
                                     max-wait:
-                                      default: 10000
                                       description: kubebuilder:validation:Minimum=10
                                         kubebuilder:validation:Maximum=120000
                                       format: int64
                                       type: integer
                                     second-wait:
-                                      default: 1000
                                       description: kubebuilder:validation:Minimum=10
                                         kubebuilder:validation:Maximum=100000
                                       format: int64
@@ -604,10 +568,8 @@ spec:
                                 struct
                               properties:
                                 advertisement:
-                                  default: false
                                   type: boolean
                                 legacy-link-attribute-advertisement:
-                                  default: true
                                   type: boolean
                               type: object
                             transport:
@@ -615,11 +577,12 @@ spec:
                                 struct
                               properties:
                                 lsp-mtu-size:
-                                  default: 1492
                                   description: kubebuilder:validation:Minimum=490
                                     kubebuilder:validation:Maximum=9490
                                   type: integer
                               type: object
+                          required:
+                          - name
                           type: object
                         type: array
                     type: object
@@ -648,8 +611,8 @@ spec:
               state of a NetworkinstanceProtocolsIsis.
             properties:
               atNetworkNode:
-                description: NetworkinstanceProtocolsIsisObservation struct defines
-                  the resource Observation
+                description: NetworkinstanceProtocolsIsisObservation are the observable
+                  fields of a NetworkinstanceProtocolsIsis.
                 type: object
               conditions:
                 description: Conditions of the resource.

@@ -78,8 +78,8 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: NetworkinstanceAggregateroutesParameters struct defines
-                  the resource Parameters
+                description: NetworkinstanceAggregateroutesParameters are the parameter
+                  fields of a NetworkinstanceAggregateroutes.
                 properties:
                   aggregate-routes:
                     description: NetworkinstanceAggregateroutes struct
@@ -89,7 +89,6 @@ spec:
                           description: NetworkinstanceAggregateroutesRoute struct
                           properties:
                             admin-state:
-                              default: enable
                               enum:
                               - disable
                               - enable
@@ -120,7 +119,6 @@ spec:
                               pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))
                               type: string
                             summary-only:
-                              default: false
                               type: boolean
                           type: object
                         type: array
@@ -150,8 +148,8 @@ spec:
               state of a NetworkinstanceAggregateroutes.
             properties:
               atNetworkNode:
-                description: NetworkinstanceAggregateroutesObservation struct defines
-                  the resource Observation
+                description: NetworkinstanceAggregateroutesObservation are the observable
+                  fields of a NetworkinstanceAggregateroutes.
                 type: object
               conditions:
                 description: Conditions of the resource.

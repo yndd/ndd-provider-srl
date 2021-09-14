@@ -76,7 +76,7 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: SystemNameParameters struct defines the resource Parameters
+                description: SystemNameParameters are the parameter fields of a SystemName.
                 properties:
                   name:
                     description: SystemName struct
@@ -110,7 +110,8 @@ spec:
             description: A SystemNameStatus represents the observed state of a SystemName.
             properties:
               atNetworkNode:
-                description: SystemNameObservation struct defines the resource Observation
+                description: SystemNameObservation are the observable fields of a
+                  SystemName.
                 type: object
               conditions:
                 description: Conditions of the resource.

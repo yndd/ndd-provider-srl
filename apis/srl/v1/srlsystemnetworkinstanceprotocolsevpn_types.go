@@ -45,20 +45,18 @@ type SystemNetworkinstanceProtocolsEvpnEthernetSegments struct {
 type SystemNetworkinstanceProtocolsEvpnEthernetSegmentsTimers struct {
 	// kubebuilder:validation:Minimum=0
 	// kubebuilder:validation:Maximum=100
-	// +kubebuilder:default:=3
 	ActivationTimer *uint32 `json:"activation-timer,omitempty"`
 	// kubebuilder:validation:Minimum=0
 	// kubebuilder:validation:Maximum=6000
-	// +kubebuilder:default:=10
 	BootTimer *uint32 `json:"boot-timer,omitempty"`
 }
 
-// SystemNetworkinstanceProtocolsEvpnParameters struct defines the resource Parameters
+// SystemNetworkinstanceProtocolsEvpnParameters are the parameter fields of a SystemNetworkinstanceProtocolsEvpn.
 type SystemNetworkinstanceProtocolsEvpnParameters struct {
 	SrlSystemNetworkinstanceProtocolsEvpn *SystemNetworkinstanceProtocolsEvpn `json:"evpn,omitempty"`
 }
 
-// SystemNetworkinstanceProtocolsEvpnObservation struct defines the resource Observation
+// SystemNetworkinstanceProtocolsEvpnObservation are the observable fields of a SystemNetworkinstanceProtocolsEvpn.
 type SystemNetworkinstanceProtocolsEvpnObservation struct {
 }
 

@@ -76,13 +76,12 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: InterfaceParameters struct defines the resource Parameters
+                description: InterfaceParameters are the parameter fields of a Interface.
                 properties:
                   interface:
                     description: Interface struct
                     properties:
                       admin-state:
-                        default: enable
                         enum:
                         - disable
                         - enable
@@ -139,13 +138,11 @@ spec:
                                 description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=65535
                                 type: integer
                               interval:
-                                default: SLOW
                                 enum:
                                 - FAST
                                 - SLOW
                                 type: string
                               lacp-mode:
-                                default: ACTIVE
                                 enum:
                                 - ACTIVE
                                 - PASSIVE
@@ -165,7 +162,6 @@ spec:
                             description: kubebuilder:validation:Minimum=4 kubebuilder:validation:Maximum=3600
                             type: integer
                           lag-type:
-                            default: static
                             enum:
                             - lacp
                             - static
@@ -182,7 +178,6 @@ spec:
                             - 40G
                             type: string
                           min-links:
-                            default: 1
                             description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
                             type: integer
                         type: object
@@ -214,13 +209,14 @@ spec:
                                         struct
                                       properties:
                                         peak-rate-percent:
-                                          default: 100
                                           description: kubebuilder:validation:Minimum=1
                                             kubebuilder:validation:Maximum=100
                                           type: integer
                                       type: object
                                     template:
                                       type: string
+                                  required:
+                                  - queue-id
                                   type: object
                                 type: array
                               scheduler:
@@ -247,12 +243,15 @@ spec:
                                               strict-priority:
                                                 type: boolean
                                               weight:
-                                                default: 1
                                                 description: kubebuilder:validation:Minimum=1
                                                   kubebuilder:validation:Maximum=127
                                                 type: integer
+                                            required:
+                                            - node-number
                                             type: object
                                           type: array
+                                      required:
+                                      - level
                                       type: object
                                     type: array
                                 type: object
@@ -269,15 +268,12 @@ spec:
                                         struct
                                       properties:
                                         peak-rate-percent:
-                                          default: 100
                                           description: kubebuilder:validation:Minimum=1
                                             kubebuilder:validation:Maximum=100
                                           type: integer
                                         strict-priority:
-                                          default: true
                                           type: boolean
                                         weight:
-                                          default: 1
                                           description: kubebuilder:validation:Minimum=1
                                             kubebuilder:validation:Maximum=255
                                           type: integer
@@ -286,6 +282,8 @@ spec:
                                       type: string
                                     voq-template:
                                       type: string
+                                  required:
+                                  - queue-id
                                   type: object
                                 type: array
                             type: object
@@ -305,7 +303,6 @@ spec:
                           ddm-events:
                             type: boolean
                           forward-error-correction:
-                            default: disabled
                             enum:
                             - base-r
                             - disabled
@@ -318,6 +315,8 @@ spec:
                         type: object
                       vlan-tagging:
                         type: boolean
+                    required:
+                    - name
                     type: object
                 type: object
               networkNodeRef:
@@ -339,7 +338,7 @@ spec:
             description: A InterfaceStatus represents the observed state of a Interface.
             properties:
               atNetworkNode:
-                description: InterfaceObservation struct defines the resource Observation
+                description: InterfaceObservation are the observable fields of a Interface.
                 type: object
               conditions:
                 description: Conditions of the resource.

@@ -40,15 +40,15 @@ type RoutingpolicyCommunityset struct {
 	// kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Name *string `json:"name,omitempty"`
+	Name *string `json:"name"`
 }
 
-// RoutingpolicyCommunitysetParameters struct defines the resource Parameters
+// RoutingpolicyCommunitysetParameters are the parameter fields of a RoutingpolicyCommunityset.
 type RoutingpolicyCommunitysetParameters struct {
 	SrlRoutingpolicyCommunityset *RoutingpolicyCommunityset `json:"community-set,omitempty"`
 }
 
-// RoutingpolicyCommunitysetObservation struct defines the resource Observation
+// RoutingpolicyCommunitysetObservation are the observable fields of a RoutingpolicyCommunityset.
 type RoutingpolicyCommunitysetObservation struct {
 }
 

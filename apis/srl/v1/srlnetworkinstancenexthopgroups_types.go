@@ -39,38 +39,34 @@ type NetworkinstanceNexthopgroups struct {
 // NetworkinstanceNexthopgroupsGroup struct
 type NetworkinstanceNexthopgroupsGroup struct {
 	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
 	AdminState *string                                     `json:"admin-state,omitempty"`
 	Blackhole  *NetworkinstanceNexthopgroupsGroupBlackhole `json:"blackhole,omitempty"`
 	// kubebuilder:validation:MinLength=1
 	// kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Name    *string                                     `json:"name,omitempty"`
+	Name    *string                                     `json:"name"`
 	Nexthop []*NetworkinstanceNexthopgroupsGroupNexthop `json:"nexthop,omitempty"`
 }
 
 // NetworkinstanceNexthopgroupsGroupBlackhole struct
 type NetworkinstanceNexthopgroupsGroupBlackhole struct {
-	// +kubebuilder:default:=false
 	GenerateIcmp *bool `json:"generate-icmp,omitempty"`
 }
 
 // NetworkinstanceNexthopgroupsGroupNexthop struct
 type NetworkinstanceNexthopgroupsGroupNexthop struct {
 	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
 	AdminState       *string                                                   `json:"admin-state,omitempty"`
 	FailureDetection *NetworkinstanceNexthopgroupsGroupNexthopFailureDetection `json:"failure-detection,omitempty"`
 	// kubebuilder:validation:Minimum=0
 	// kubebuilder:validation:Maximum=65535
-	Index *uint16 `json:"index,omitempty"`
+	Index *uint16 `json:"index"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
 	IpAddress            *string `json:"ip-address,omitempty"`
 	PushedMplsLabelStack *string `json:"pushed-mpls-label-stack,omitempty"`
-	// +kubebuilder:default:=true
-	Resolve *bool `json:"resolve,omitempty"`
+	Resolve              *bool   `json:"resolve,omitempty"`
 }
 
 // NetworkinstanceNexthopgroupsGroupNexthopFailureDetection struct
@@ -91,13 +87,13 @@ type NetworkinstanceNexthopgroupsGroupNexthopFailureDetectionEnableBfd struct {
 	RemoteDiscriminator *uint32 `json:"remote-discriminator,omitempty"`
 }
 
-// NetworkinstanceNexthopgroupsParameters struct defines the resource Parameters
+// NetworkinstanceNexthopgroupsParameters are the parameter fields of a NetworkinstanceNexthopgroups.
 type NetworkinstanceNexthopgroupsParameters struct {
 	NetworkInstanceName             *string                       `json:"network-instance-name"`
 	SrlNetworkinstanceNexthopgroups *NetworkinstanceNexthopgroups `json:"next-hop-groups,omitempty"`
 }
 
-// NetworkinstanceNexthopgroupsObservation struct defines the resource Observation
+// NetworkinstanceNexthopgroupsObservation are the observable fields of a NetworkinstanceNexthopgroups.
 type NetworkinstanceNexthopgroupsObservation struct {
 }
 

@@ -78,14 +78,13 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: NetworkinstanceProtocolsBgpParameters struct defines
-                  the resource Parameters
+                description: NetworkinstanceProtocolsBgpParameters are the parameter
+                  fields of a NetworkinstanceProtocolsBgp.
                 properties:
                   bgp:
                     description: NetworkinstanceProtocolsBgp struct
                     properties:
                       admin-state:
-                        default: enable
                         enum:
                         - disable
                         - enable
@@ -94,7 +93,6 @@ spec:
                         description: NetworkinstanceProtocolsBgpAsPathOptions struct
                         properties:
                           allow-own-as:
-                            default: 0
                             description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=255
                             type: integer
                           remove-private-as:
@@ -102,13 +100,10 @@ spec:
                               struct
                             properties:
                               ignore-peer-as:
-                                default: false
                                 type: boolean
                               leading-only:
-                                default: false
                                 type: boolean
                               mode:
-                                default: disabled
                                 enum:
                                 - delete
                                 - disabled
@@ -130,7 +125,6 @@ spec:
                         description: NetworkinstanceProtocolsBgpConvergence struct
                         properties:
                           min-wait-to-advertise:
-                            default: 0
                             description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=3600
                             type: integer
                         type: object
@@ -159,7 +153,6 @@ spec:
                                   type: object
                                 type: array
                               max-sessions:
-                                default: 0
                                 description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=65535
                                 type: integer
                             type: object
@@ -169,23 +162,19 @@ spec:
                           struct
                         properties:
                           export-reject-all:
-                            default: true
                             type: boolean
                           import-reject-all:
-                            default: true
                             type: boolean
                         type: object
                       evpn:
                         description: NetworkinstanceProtocolsBgpEvpn struct
                         properties:
                           admin-state:
-                            default: disable
                             enum:
                             - disable
                             - enable
                             type: string
                           advertise-ipv6-next-hops:
-                            default: false
                             type: boolean
                           keep-all-routes:
                             type: boolean
@@ -194,21 +183,17 @@ spec:
                               struct
                             properties:
                               allow-multiple-as:
-                                default: true
                                 type: boolean
                               max-paths-level-1:
-                                default: 1
                                 description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
                                 format: int32
                                 type: integer
                               max-paths-level-2:
-                                default: 1
                                 description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
                                 format: int32
                                 type: integer
                             type: object
                           rapid-update:
-                            default: false
                             type: boolean
                         type: object
                       export-policy:
@@ -217,23 +202,19 @@ spec:
                         description: NetworkinstanceProtocolsBgpFailureDetection struct
                         properties:
                           enable-bfd:
-                            default: false
                             type: boolean
                           fast-failover:
-                            default: true
                             type: boolean
                         type: object
                       graceful-restart:
                         description: NetworkinstanceProtocolsBgpGracefulRestart struct
                         properties:
                           admin-state:
-                            default: disable
                             enum:
                             - disable
                             - enable
                             type: string
                           stale-routes-time:
-                            default: 360
                             description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=3600
                             type: integer
                         type: object
@@ -242,7 +223,6 @@ spec:
                           description: NetworkinstanceProtocolsBgpGroup struct
                           properties:
                             admin-state:
-                              default: enable
                               enum:
                               - disable
                               - enable
@@ -259,10 +239,8 @@ spec:
                                     struct
                                   properties:
                                     ignore-peer-as:
-                                      default: false
                                       type: boolean
                                     leading-only:
-                                      default: false
                                       type: boolean
                                     mode:
                                       enum:
@@ -302,13 +280,11 @@ spec:
                                     struct
                                   properties:
                                     max-received-routes:
-                                      default: 4294967295
                                       description: kubebuilder:validation:Minimum=1
                                         kubebuilder:validation:Maximum=4294967295
                                       format: int32
                                       type: integer
                                     warning-threshold-pct:
-                                      default: 90
                                       description: kubebuilder:validation:Minimum=0
                                         kubebuilder:validation:Maximum=100
                                       type: integer
@@ -360,13 +336,11 @@ spec:
                                     struct
                                   properties:
                                     max-received-routes:
-                                      default: 4294967295
                                       description: kubebuilder:validation:Minimum=1
                                         kubebuilder:validation:Maximum=4294967295
                                       format: int32
                                       type: integer
                                     warning-threshold-pct:
-                                      default: 90
                                       description: kubebuilder:validation:Minimum=0
                                         kubebuilder:validation:Maximum=100
                                       type: integer
@@ -388,13 +362,11 @@ spec:
                                     struct
                                   properties:
                                     max-received-routes:
-                                      default: 4294967295
                                       description: kubebuilder:validation:Minimum=1
                                         kubebuilder:validation:Maximum=4294967295
                                       format: int32
                                       type: integer
                                     warning-threshold-pct:
-                                      default: 90
                                       description: kubebuilder:validation:Minimum=0
                                         kubebuilder:validation:Maximum=100
                                       type: integer
@@ -411,11 +383,11 @@ spec:
                                     format: int32
                                     type: integer
                                   prepend-global-as:
-                                    default: true
                                     type: boolean
                                   prepend-local-as:
-                                    default: true
                                     type: boolean
+                                required:
+                                - as-number
                                 type: object
                               type: array
                             local-preference:
@@ -423,7 +395,6 @@ spec:
                               format: int32
                               type: integer
                             next-hop-self:
-                              default: false
                               type: boolean
                             peer-as:
                               description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=4294967295
@@ -455,10 +426,8 @@ spec:
                                 export-policy:
                                   type: string
                                 ipv4-unicast:
-                                  default: false
                                   type: boolean
                                 ipv6-unicast:
-                                  default: false
                                   type: boolean
                               type: object
                             timers:
@@ -466,18 +435,15 @@ spec:
                                 struct
                               properties:
                                 connect-retry:
-                                  default: 120
                                   description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=65535
                                   type: integer
                                 hold-time:
-                                  default: 90
                                   description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=0
                                   type: integer
                                 keepalive-interval:
                                   description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=21845
                                   type: integer
                                 minimum-advertisement-interval:
-                                  default: 5
                                   description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=255
                                   type: integer
                               type: object
@@ -509,6 +475,8 @@ spec:
                                         - timers
                                         - update
                                         type: string
+                                    required:
+                                    - name
                                     type: object
                                   type: array
                               type: object
@@ -520,13 +488,14 @@ spec:
                                   pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
                                   type: string
                                 passive-mode:
-                                  default: false
                                   type: boolean
                                 tcp-mss:
                                   description: kubebuilder:validation:Minimum=536
                                     kubebuilder:validation:Maximum=9446
                                   type: integer
                               type: object
+                          required:
+                          - group-name
                           type: object
                         type: array
                       import-policy:
@@ -535,20 +504,17 @@ spec:
                         description: NetworkinstanceProtocolsBgpIpv4Unicast struct
                         properties:
                           admin-state:
-                            default: enable
                             enum:
                             - disable
                             - enable
                             type: string
                           advertise-ipv6-next-hops:
-                            default: false
                             type: boolean
                           convergence:
                             description: NetworkinstanceProtocolsBgpIpv4UnicastConvergence
                               struct
                             properties:
                               max-wait-to-advertise:
-                                default: 0
                                 description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=3600
                                 type: integer
                             type: object
@@ -557,28 +523,23 @@ spec:
                               struct
                             properties:
                               allow-multiple-as:
-                                default: true
                                 type: boolean
                               max-paths-level-1:
-                                default: 1
                                 description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
                                 format: int32
                                 type: integer
                               max-paths-level-2:
-                                default: 1
                                 description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
                                 format: int32
                                 type: integer
                             type: object
                           receive-ipv6-next-hops:
-                            default: false
                             type: boolean
                         type: object
                       ipv6-unicast:
                         description: NetworkinstanceProtocolsBgpIpv6Unicast struct
                         properties:
                           admin-state:
-                            default: disable
                             enum:
                             - disable
                             - enable
@@ -588,7 +549,6 @@ spec:
                               struct
                             properties:
                               max-wait-to-advertise:
-                                default: 0
                                 description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=3600
                                 type: integer
                             type: object
@@ -597,22 +557,18 @@ spec:
                               struct
                             properties:
                               allow-multiple-as:
-                                default: true
                                 type: boolean
                               max-paths-level-1:
-                                default: 1
                                 description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
                                 format: int32
                                 type: integer
                               max-paths-level-2:
-                                default: 1
                                 description: kubebuilder:validation:Minimum=1 kubebuilder:validation:Maximum=64
                                 format: int32
                                 type: integer
                             type: object
                         type: object
                       local-preference:
-                        default: 100
                         description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=4294967295
                         format: int32
                         type: integer
@@ -621,7 +577,6 @@ spec:
                           description: NetworkinstanceProtocolsBgpNeighbor struct
                           properties:
                             admin-state:
-                              default: enable
                               enum:
                               - disable
                               - enable
@@ -638,10 +593,8 @@ spec:
                                     struct
                                   properties:
                                     ignore-peer-as:
-                                      default: false
                                       type: boolean
                                     leading-only:
-                                      default: false
                                       type: boolean
                                     mode:
                                       enum:
@@ -794,6 +747,8 @@ spec:
                                     type: boolean
                                   prepend-local-as:
                                     type: boolean
+                                required:
+                                - as-number
                                 type: object
                               type: array
                             local-preference:
@@ -886,6 +841,8 @@ spec:
                                         - timers
                                         - update
                                         type: string
+                                    required:
+                                    - name
                                     type: object
                                   type: array
                               type: object
@@ -911,11 +868,9 @@ spec:
                         description: NetworkinstanceProtocolsBgpPreference struct
                         properties:
                           ebgp:
-                            default: 170
                             description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=255
                             type: integer
                           ibgp:
-                            default: 170
                             description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=255
                             type: integer
                         type: object
@@ -924,17 +879,14 @@ spec:
                           struct
                         properties:
                           rapid-withdrawal:
-                            default: false
                             type: boolean
                           wait-for-fib-install:
-                            default: true
                             type: boolean
                         type: object
                       route-reflector:
                         description: NetworkinstanceProtocolsBgpRouteReflector struct
                         properties:
                           client:
-                            default: false
                             type: boolean
                           cluster-id:
                             pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])
@@ -947,10 +899,8 @@ spec:
                         description: NetworkinstanceProtocolsBgpSendCommunity struct
                         properties:
                           large:
-                            default: true
                             type: boolean
                           standard:
-                            default: true
                             type: boolean
                         type: object
                       trace-options:
@@ -980,6 +930,8 @@ spec:
                                   - timers
                                   - update
                                   type: string
+                              required:
+                              - name
                               type: object
                             type: array
                         type: object
@@ -987,7 +939,6 @@ spec:
                         description: NetworkinstanceProtocolsBgpTransport struct
                         properties:
                           tcp-mss:
-                            default: 1024
                             description: kubebuilder:validation:Minimum=536 kubebuilder:validation:Maximum=9446
                             type: integer
                         type: object
@@ -1019,8 +970,8 @@ spec:
               state of a NetworkinstanceProtocolsBgp.
             properties:
               atNetworkNode:
-                description: NetworkinstanceProtocolsBgpObservation struct defines
-                  the resource Observation
+                description: NetworkinstanceProtocolsBgpObservation are the observable
+                  fields of a NetworkinstanceProtocolsBgp.
                 type: object
               conditions:
                 description: Conditions of the resource.

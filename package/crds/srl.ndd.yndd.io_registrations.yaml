@@ -78,6 +78,8 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
+                description: RegistrationParameters are the parameter fields of a
+                  Registration.
                 properties:
                   exceptionPaths:
                     description: ExceptionPaths defines the exception paths that should

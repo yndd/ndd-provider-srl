@@ -37,15 +37,15 @@ type Tunnelinterface struct {
 	// kubebuilder:validation:MaxLength=8
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`(vxlan(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9]))`
-	Name *string `json:"name,omitempty"`
+	Name *string `json:"name"`
 }
 
-// TunnelinterfaceParameters struct defines the resource Parameters
+// TunnelinterfaceParameters are the parameter fields of a Tunnelinterface.
 type TunnelinterfaceParameters struct {
 	SrlTunnelinterface *Tunnelinterface `json:"tunnel-interface,omitempty"`
 }
 
-// TunnelinterfaceObservation struct defines the resource Observation
+// TunnelinterfaceObservation are the observable fields of a Tunnelinterface.
 type TunnelinterfaceObservation struct {
 }
 

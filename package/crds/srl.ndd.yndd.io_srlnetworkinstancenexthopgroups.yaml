@@ -78,8 +78,8 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: NetworkinstanceNexthopgroupsParameters struct defines
-                  the resource Parameters
+                description: NetworkinstanceNexthopgroupsParameters are the parameter
+                  fields of a NetworkinstanceNexthopgroups.
                 properties:
                   network-instance-name:
                     type: string
@@ -91,7 +91,6 @@ spec:
                           description: NetworkinstanceNexthopgroupsGroup struct
                           properties:
                             admin-state:
-                              default: enable
                               enum:
                               - disable
                               - enable
@@ -101,7 +100,6 @@ spec:
                                 struct
                               properties:
                                 generate-icmp:
-                                  default: false
                                   type: boolean
                               type: object
                             name:
@@ -114,7 +112,6 @@ spec:
                                   struct
                                 properties:
                                   admin-state:
-                                    default: enable
                                     enum:
                                     - disable
                                     - enable
@@ -152,10 +149,13 @@ spec:
                                   pushed-mpls-label-stack:
                                     type: string
                                   resolve:
-                                    default: true
                                     type: boolean
+                                required:
+                                - index
                                 type: object
                               type: array
+                          required:
+                          - name
                           type: object
                         type: array
                     type: object
@@ -182,8 +182,8 @@ spec:
               state of a NetworkinstanceNexthopgroups.
             properties:
               atNetworkNode:
-                description: NetworkinstanceNexthopgroupsObservation struct defines
-                  the resource Observation
+                description: NetworkinstanceNexthopgroupsObservation are the observable
+                  fields of a NetworkinstanceNexthopgroups.
                 type: object
               conditions:
                 description: Conditions of the resource.

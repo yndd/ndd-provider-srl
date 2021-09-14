@@ -514,15 +514,29 @@ var resourceRefPathsInterfaceSubinterface = []*gnmi.Path{
 		},
 	},
 }
+
+/*
 var dependencyInterfaceSubinterface = []*parser.LeafRefGnmi{
 	{
 		RemotePath: &gnmi.Path{
 			Elem: []*gnmi.PathElem{
-				{Name: "interface", Key: map[string]string{"name": "string"}},
+				{ Name: "interface", Key: map[string]string{"name": "string"}},
 			},
 		},
 	},
 }
+*/
+/*
+var dependencyInterfaceSubinterface = []*parser.LeafRefGnmi{
+	{
+		RemotePath: &gnmi.Path{
+            Elem: []*gnmi.PathElem{
+				{ Name: "interface", Key: map[string]string{"name": "string" }},
+			},
+		},
+	},
+}
+*/
 var localleafRefInterfaceSubinterface = []*parser.LeafRefGnmi{}
 var externalLeafRefInterfaceSubinterface = []*parser.LeafRefGnmi{
 	{
@@ -939,13 +953,23 @@ func (v *validatorInterfaceSubinterface) ValidateParentDependency(ctx context.Co
 		return managed.ValidateParentDependencyObservation{}, errors.New(errUnexpectedInterfaceSubinterface)
 	}
 
+	dependencyLeafRef := []*parser.LeafRefGnmi{
+		{
+			RemotePath: &gnmi.Path{
+				Elem: []*gnmi.PathElem{
+					{Name: "interface", Key: map[string]string{"name": *o.Spec.ForNetworkNode.InterfaceName}},
+				},
+			},
+		},
+	}
+
+	// unmarshal the config
 	var x1 interface{}
 	json.Unmarshal(cfg, &x1)
-
 	//log.Debug("Latest Config", "data", x1)
 
-	success, resultleafRefValidation, err := v.parser.ValidateParentDependencyGnmi(
-		x1, *o.Spec.ForNetworkNode.InterfaceName, dependencyInterfaceSubinterface, log)
+	success, resultleafRefValidation, err := v.parser.ValidateParentDependency(
+		x1, dependencyLeafRef, log)
 	if err != nil {
 		return managed.ValidateParentDependencyObservation{
 			Success: false,
@@ -963,15 +987,53 @@ func (v *validatorInterfaceSubinterface) ValidateParentDependency(ctx context.Co
 		ResolvedLeafRefs: resultleafRefValidation}, nil
 }
 
+/*
+func (v *validatorInterfaceSubinterface) ValidateParentDependency(ctx context.Context, mg resource.Managed, cfg []byte) (managed.ValidateParentDependencyObservation, error) {
+	log := v.log.WithValues("resource", mg.GetName())
+	log.Debug("ValidateParentDependency...")
+
+	// we initialize a global list for finer information on the resolution
+	resultleafRefValidation := make([]*parser.ResolvedLeafRefGnmi, 0)
+	// json unmarshal the resource
+	o, ok := mg.(*srlv1.SrlInterfaceSubinterface)
+	if !ok {
+		return managed.ValidateParentDependencyObservation{}, errors.New(errUnexpectedInterfaceSubinterface)
+	}
+
+	var x1 interface{}
+	json.Unmarshal(cfg, &x1)
+
+	//log.Debug("Latest Config", "data", x1)
+
+	success, resultleafRefValidation, err := v.parser.ValidateParentDependencyGnmi(
+		x1, *o.Spec.ForNetworkNode.InterfaceName ,dependencyInterfaceSubinterface, log)
+	if err != nil {
+		return managed.ValidateParentDependencyObservation{
+			Success: false,
+		}, nil
+	}
+	if !success {
+		log.Debug("ValidateParentDependency failed", "resultParentValidation", resultleafRefValidation)
+		return managed.ValidateParentDependencyObservation{
+			Success: false,
+			ResolvedLeafRefs: resultleafRefValidation}, nil
+	}
+	log.Debug("ValidateParentDependency success", "resultParentValidation", resultleafRefValidation)
+	return managed.ValidateParentDependencyObservation{
+		Success: true,
+		ResolvedLeafRefs: resultleafRefValidation}, nil
+}
+*/
+
 // ValidateResourceIndexes validates if the indexes of a resource got changed
 // if so we need to delete the original resource, because it will be dangling if we dont delete it
 func (v *validatorInterfaceSubinterface) ValidateResourceIndexes(ctx context.Context, mg resource.Managed) (managed.ValidateResourceIndexesObservation, error) {
-	log := v.log.WithValues("resosurce", mg.GetName())
+	log := v.log.WithValues("resource", mg.GetName())
 
 	// json unmarshal the resource
 	o, ok := mg.(*srlv1.SrlInterfaceSubinterface)
 	if !ok {
-		return managed.ValidateResourceIndexesObservation{}, errors.New(errUnexpectedInterface)
+		return managed.ValidateResourceIndexesObservation{}, errors.New(errUnexpectedInterfaceSubinterface)
 	}
 	log.Debug("ValidateResourceIndexes", "Spec", o.Spec)
 

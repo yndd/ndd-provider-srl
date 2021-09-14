@@ -38,7 +38,7 @@ type RoutingpolicyPolicy struct {
 	// kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Name      *string                         `json:"name,omitempty"`
+	Name      *string                         `json:"name"`
 	Statement []*RoutingpolicyPolicyStatement `json:"statement,omitempty"`
 }
 
@@ -77,7 +77,6 @@ type RoutingpolicyPolicyDefaultActionAcceptBgpAsPathPrepend struct {
 	AsNumber *string `json:"as-number,omitempty"`
 	// kubebuilder:validation:Minimum=1
 	// kubebuilder:validation:Maximum=50
-	// +kubebuilder:default:=1
 	RepeatN *uint8 `json:"repeat-n,omitempty"`
 }
 
@@ -119,7 +118,7 @@ type RoutingpolicyPolicyStatement struct {
 	Match  *RoutingpolicyPolicyStatementMatch  `json:"match,omitempty"`
 	// kubebuilder:validation:Minimum=1
 	// kubebuilder:validation:Maximum=4294967295
-	SequenceId *uint32 `json:"sequence-id,omitempty"`
+	SequenceId *uint32 `json:"sequence-id"`
 }
 
 // RoutingpolicyPolicyStatementAction struct
@@ -157,7 +156,6 @@ type RoutingpolicyPolicyStatementActionAcceptBgpAsPathPrepend struct {
 	AsNumber *string `json:"as-number,omitempty"`
 	// kubebuilder:validation:Minimum=1
 	// kubebuilder:validation:Maximum=50
-	// +kubebuilder:default:=1
 	RepeatN *uint8 `json:"repeat-n,omitempty"`
 }
 
@@ -214,10 +212,8 @@ type RoutingpolicyPolicyStatementMatchBgp struct {
 // RoutingpolicyPolicyStatementMatchBgpAsPathLength struct
 type RoutingpolicyPolicyStatementMatchBgpAsPathLength struct {
 	// +kubebuilder:validation:Enum=`eq`;`ge`;`le`
-	// +kubebuilder:default:=eq
 	Operator *string `json:"operator,omitempty"`
-	// +kubebuilder:default:=false
-	Unique *bool `json:"unique,omitempty"`
+	Unique   *bool   `json:"unique,omitempty"`
 	// kubebuilder:validation:Minimum=0
 	// kubebuilder:validation:Maximum=255
 	Value *uint8 `json:"value"`
@@ -250,12 +246,12 @@ type RoutingpolicyPolicyStatementMatchOspf struct {
 	RouteType  *string `json:"route-type,omitempty"`
 }
 
-// RoutingpolicyPolicyParameters struct defines the resource Parameters
+// RoutingpolicyPolicyParameters are the parameter fields of a RoutingpolicyPolicy.
 type RoutingpolicyPolicyParameters struct {
 	SrlRoutingpolicyPolicy *RoutingpolicyPolicy `json:"policy,omitempty"`
 }
 
-// RoutingpolicyPolicyObservation struct defines the resource Observation
+// RoutingpolicyPolicyObservation are the observable fields of a RoutingpolicyPolicy.
 type RoutingpolicyPolicyObservation struct {
 }
 

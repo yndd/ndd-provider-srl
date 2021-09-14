@@ -45,12 +45,12 @@ type SystemName struct {
 	HostName *string `json:"host-name,omitempty"`
 }
 
-// SystemNameParameters struct defines the resource Parameters
+// SystemNameParameters are the parameter fields of a SystemName.
 type SystemNameParameters struct {
 	SrlSystemName *SystemName `json:"name,omitempty"`
 }
 
-// SystemNameObservation struct defines the resource Observation
+// SystemNameObservation are the observable fields of a SystemName.
 type SystemNameObservation struct {
 }
 

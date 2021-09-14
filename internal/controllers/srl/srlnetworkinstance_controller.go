@@ -166,207 +166,6 @@ var resourceRefPathsNetworkinstance = []*gnmi.Path{
 	{
 		Elem: []*gnmi.PathElem{
 			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "directly-connected"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "directly-connected"},
-			{Name: "te-database-install"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "directly-connected"},
-			{Name: "te-database-install"},
-			{Name: "bgp-ls"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "discovery"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "discovery"},
-			{Name: "interfaces"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "discovery"},
-			{Name: "interfaces"},
-			{Name: "interface", Key: map[string]string{"name": ""}},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "discovery"},
-			{Name: "interfaces"},
-			{Name: "interface", Key: map[string]string{"name": ""}},
-			{Name: "ipv4"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "graceful-restart"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "ipv4"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "ipv4"},
-			{Name: "fec-resolution"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "multipath"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "peers"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "peers"},
-			{Name: "peer", Key: map[string]string{"lsr-id": ""}},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "peers"},
-			{Name: "peer", Key: map[string]string{"lsr-id": ""}},
-			{Name: "ipv4"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "peers"},
-			{Name: "peer", Key: map[string]string{"lsr-id": ""}},
-			{Name: "tcp-transport"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "peers"},
-			{Name: "peer", Key: map[string]string{"lsr-id": ""}},
-			{Name: "tcp-transport"},
-			{Name: "authentication"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "peers"},
-			{Name: "tcp-transport"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "peers"},
-			{Name: "tcp-transport"},
-			{Name: "authentication"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "trace-options"},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "trace-options"},
-			{Name: "interface", Key: map[string]string{"name": ""}},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
-			{Name: "protocols"},
-			{Name: "ldp"},
-			{Name: "trace-options"},
-			{Name: "peer", Key: map[string]string{"lsr-id": ""}},
-		},
-	},
-	{
-		Elem: []*gnmi.PathElem{
-			{Name: "network-instance", Key: map[string]string{"name": ""}},
 			{Name: "traffic-engineering"},
 		},
 	},
@@ -431,7 +230,10 @@ var resourceRefPathsNetworkinstance = []*gnmi.Path{
 		},
 	},
 }
+
+/*
 var dependencyNetworkinstance = []*parser.LeafRefGnmi{}
+*/
 var localleafRefNetworkinstance = []*parser.LeafRefGnmi{
 	{
 		LocalPath: &gnmi.Path{
@@ -503,95 +305,7 @@ var localleafRefNetworkinstance = []*parser.LeafRefGnmi{
 		},
 	},
 }
-var externalLeafRefNetworkinstance = []*parser.LeafRefGnmi{
-	{
-		LocalPath: &gnmi.Path{
-			Elem: []*gnmi.PathElem{
-				{Name: "network-instance"},
-				{Name: "interface", Key: map[string]string{"name": ""}},
-			},
-		},
-		RemotePath: &gnmi.Path{
-			Elem: []*gnmi.PathElem{
-				{Name: "interface", Key: map[string]string{"name": ""}},
-				{Name: "subinterface", Key: map[string]string{"index": ""}},
-			},
-		},
-	},
-	{
-		LocalPath: &gnmi.Path{
-			Elem: []*gnmi.PathElem{
-				{Name: "network-instance"},
-				{Name: "vxlan-interface", Key: map[string]string{"name": ""}},
-			},
-		},
-		RemotePath: &gnmi.Path{
-			Elem: []*gnmi.PathElem{
-				{Name: "tunnel-interface", Key: map[string]string{"name": ""}},
-				{Name: "vxlan-interface", Key: map[string]string{"index": ""}},
-			},
-		},
-	},
-	{
-		LocalPath: &gnmi.Path{
-			Elem: []*gnmi.PathElem{
-				{Name: "network-instance"},
-				{Name: "protocols"},
-				{Name: "ldp"},
-				{Name: "dynamic-label-block"},
-			},
-		},
-		RemotePath: &gnmi.Path{
-			Elem: []*gnmi.PathElem{
-				{Name: "system"},
-				{Name: "mpls"},
-				{Name: "label-ranges"},
-				{Name: "dynamic", Key: map[string]string{"name": ""}},
-			},
-		},
-	},
-	{
-		LocalPath: &gnmi.Path{
-			Elem: []*gnmi.PathElem{
-				{Name: "network-instance"},
-				{Name: "protocols"},
-				{Name: "ldp"},
-				{Name: "peers"},
-				{Name: "peer", Key: map[string]string{"lsr-id label-space-id": ""}},
-				{Name: "tcp-transport"},
-				{Name: "authentication"},
-				{Name: "keychain"},
-			},
-		},
-		RemotePath: &gnmi.Path{
-			Elem: []*gnmi.PathElem{
-				{Name: "system"},
-				{Name: "authentication"},
-				{Name: "keychain", Key: map[string]string{"name": ""}},
-			},
-		},
-	},
-	{
-		LocalPath: &gnmi.Path{
-			Elem: []*gnmi.PathElem{
-				{Name: "network-instance"},
-				{Name: "protocols"},
-				{Name: "ldp"},
-				{Name: "peers"},
-				{Name: "tcp-transport"},
-				{Name: "authentication"},
-				{Name: "keychain"},
-			},
-		},
-		RemotePath: &gnmi.Path{
-			Elem: []*gnmi.PathElem{
-				{Name: "system"},
-				{Name: "authentication"},
-				{Name: "keychain", Key: map[string]string{"name": ""}},
-			},
-		},
-	},
-}
+var externalLeafRefNetworkinstance = []*parser.LeafRefGnmi{}
 
 // SetupNetworkinstance adds a controller that reconciles Networkinstances.
 func SetupNetworkinstance(mgr ctrl.Manager, o controller.Options, l logging.Logger, poll time.Duration, namespace string) (string, chan cevent.GenericEvent, error) {
@@ -723,15 +437,29 @@ func (v *validatorNetworkinstance) ValidateParentDependency(ctx context.Context,
 		ResolvedLeafRefs: resultleafRefValidation}, nil
 }
 
+/*
+func (v *validatorNetworkinstance) ValidateParentDependency(ctx context.Context, mg resource.Managed, cfg []byte) (managed.ValidateParentDependencyObservation, error) {
+	log := v.log.WithValues("resource", mg.GetName())
+	log.Debug("ValidateParentDependency...")
+
+	// we initialize a global list for finer information on the resolution
+	resultleafRefValidation := make([]*parser.ResolvedLeafRefGnmi, 0)
+	log.Debug("ValidateParentDependency success", "resultParentValidation", resultleafRefValidation)
+	return managed.ValidateParentDependencyObservation{
+		Success: true,
+		ResolvedLeafRefs: resultleafRefValidation}, nil
+}
+*/
+
 // ValidateResourceIndexes validates if the indexes of a resource got changed
 // if so we need to delete the original resource, because it will be dangling if we dont delete it
 func (v *validatorNetworkinstance) ValidateResourceIndexes(ctx context.Context, mg resource.Managed) (managed.ValidateResourceIndexesObservation, error) {
-	log := v.log.WithValues("resosurce", mg.GetName())
+	log := v.log.WithValues("resource", mg.GetName())
 
 	// json unmarshal the resource
 	o, ok := mg.(*srlv1.SrlNetworkinstance)
 	if !ok {
-		return managed.ValidateResourceIndexesObservation{}, errors.New(errUnexpectedInterface)
+		return managed.ValidateResourceIndexesObservation{}, errors.New(errUnexpectedNetworkinstance)
 	}
 	log.Debug("ValidateResourceIndexes", "Spec", o.Spec)
 

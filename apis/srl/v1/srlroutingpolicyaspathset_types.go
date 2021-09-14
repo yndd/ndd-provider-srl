@@ -40,15 +40,15 @@ type RoutingpolicyAspathset struct {
 	// kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Name *string `json:"name,omitempty"`
+	Name *string `json:"name"`
 }
 
-// RoutingpolicyAspathsetParameters struct defines the resource Parameters
+// RoutingpolicyAspathsetParameters are the parameter fields of a RoutingpolicyAspathset.
 type RoutingpolicyAspathsetParameters struct {
 	SrlRoutingpolicyAspathset *RoutingpolicyAspathset `json:"as-path-set,omitempty"`
 }
 
-// RoutingpolicyAspathsetObservation struct defines the resource Observation
+// RoutingpolicyAspathsetObservation are the observable fields of a RoutingpolicyAspathset.
 type RoutingpolicyAspathsetObservation struct {
 }
 

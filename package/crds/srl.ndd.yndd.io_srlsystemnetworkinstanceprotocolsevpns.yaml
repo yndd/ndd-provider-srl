@@ -78,8 +78,8 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: SystemNetworkinstanceProtocolsEvpnParameters struct defines
-                  the resource Parameters
+                description: SystemNetworkinstanceProtocolsEvpnParameters are the
+                  parameter fields of a SystemNetworkinstanceProtocolsEvpn.
                 properties:
                   evpn:
                     description: SystemNetworkinstanceProtocolsEvpn struct
@@ -93,12 +93,10 @@ spec:
                               struct
                             properties:
                               activation-timer:
-                                default: 3
                                 description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=100
                                 format: int32
                                 type: integer
                               boot-timer:
-                                default: 10
                                 description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=6000
                                 format: int32
                                 type: integer
@@ -126,8 +124,8 @@ spec:
               observed state of a SystemNetworkinstanceProtocolsEvpn.
             properties:
               atNetworkNode:
-                description: SystemNetworkinstanceProtocolsEvpnObservation struct
-                  defines the resource Observation
+                description: SystemNetworkinstanceProtocolsEvpnObservation are the
+                  observable fields of a SystemNetworkinstanceProtocolsEvpn.
                 type: object
               conditions:
                 description: Conditions of the resource.

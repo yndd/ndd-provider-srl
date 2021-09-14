@@ -26,9 +26,9 @@ import (
 
 const (
 	// DeviceMatch is the matching string for device registration
-	DeviceMatch                    = "srl_nokia"
+	DeviceMatch = "srl_nokia"
 	// DeviceTypeSRL defines the device type the provider supports
-	DeviceTypeSRL nddv1.DeviceType = "nokia-srl"
+	DeviceType nddv1.DeviceType = "nokia-srl"
 )
 
 // RegistrationParameters are the parameter fields of a Registration.

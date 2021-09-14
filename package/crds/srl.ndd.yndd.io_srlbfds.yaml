@@ -76,7 +76,7 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: BfdParameters struct defines the resource Parameters
+                description: BfdParameters are the parameter fields of a Bfd.
                 properties:
                   bfd:
                     description: Bfd struct
@@ -89,19 +89,16 @@ spec:
                               description: BfdMicroBfdSessionsLagInterface struct
                               properties:
                                 admin-state:
-                                  default: disable
                                   enum:
                                   - disable
                                   - enable
                                   type: string
                                 desired-minimum-transmit-interval:
-                                  default: 1000000
                                   description: kubebuilder:validation:Minimum=10000
                                     kubebuilder:validation:Maximum=100000000
                                   format: int32
                                   type: integer
                                 detection-multiplier:
-                                  default: 3
                                   description: kubebuilder:validation:Minimum=3 kubebuilder:validation:Maximum=20
                                   type: integer
                                 local-address:
@@ -113,11 +110,12 @@ spec:
                                   pattern: (([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))
                                   type: string
                                 required-minimum-receive:
-                                  default: 1000000
                                   description: kubebuilder:validation:Minimum=10000
                                     kubebuilder:validation:Maximum=100000000
                                   format: int32
                                   type: integer
+                              required:
+                              - name
                               type: object
                             type: array
                         type: object
@@ -126,18 +124,15 @@ spec:
                           description: BfdSubinterface struct
                           properties:
                             admin-state:
-                              default: disable
                               enum:
                               - disable
                               - enable
                               type: string
                             desired-minimum-transmit-interval:
-                              default: 1000000
                               description: kubebuilder:validation:Minimum=10000 kubebuilder:validation:Maximum=100000000
                               format: int32
                               type: integer
                             detection-multiplier:
-                              default: 3
                               description: kubebuilder:validation:Minimum=3 kubebuilder:validation:Maximum=20
                               type: integer
                             id:
@@ -145,15 +140,15 @@ spec:
                               pattern: (system0\.0|lo(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|ethernet-([1-9](\d){0,1}(/[abcd])?(/[1-9](\d){0,1})?/(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8])))\.([0]|[1-9](\d){0,3})|irb(0|1[0-9][0-9]|2([0-4][0-9]|5[0-5])|[1-9][0-9]|[1-9])\.(0|[1-9](\d){0,3})|lag(([1-9](\d){0,1})|(1[0-1]\d)|(12[0-8]))\.(0|[1-9](\d){0,3}))
                               type: string
                             minimum-echo-receive-interval:
-                              default: 0
                               description: kubebuilder:validation:Minimum=0 kubebuilder:validation:Maximum=0
                               format: int32
                               type: integer
                             required-minimum-receive:
-                              default: 1000000
                               description: kubebuilder:validation:Minimum=10000 kubebuilder:validation:Maximum=100000000
                               format: int32
                               type: integer
+                          required:
+                          - id
                           type: object
                         type: array
                     type: object
@@ -177,7 +172,7 @@ spec:
             description: A BfdStatus represents the observed state of a Bfd.
             properties:
               atNetworkNode:
-                description: BfdObservation struct defines the resource Observation
+                description: BfdObservation are the observable fields of a Bfd.
                 type: object
               conditions:
                 description: Conditions of the resource.

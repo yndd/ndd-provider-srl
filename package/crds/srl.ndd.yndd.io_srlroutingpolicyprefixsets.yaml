@@ -78,8 +78,8 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: RoutingpolicyPrefixsetParameters struct defines the resource
-                  Parameters
+                description: RoutingpolicyPrefixsetParameters are the parameter fields
+                  of a RoutingpolicyPrefixset.
                 properties:
                   prefix-set:
                     description: RoutingpolicyPrefixset struct
@@ -100,6 +100,8 @@ spec:
                               type: string
                           type: object
                         type: array
+                    required:
+                    - name
                     type: object
                 type: object
               networkNodeRef:
@@ -122,8 +124,8 @@ spec:
               of a RoutingpolicyPrefixset.
             properties:
               atNetworkNode:
-                description: RoutingpolicyPrefixsetObservation struct defines the
-                  resource Observation
+                description: RoutingpolicyPrefixsetObservation are the observable
+                  fields of a RoutingpolicyPrefixset.
                 type: object
               conditions:
                 description: Conditions of the resource.

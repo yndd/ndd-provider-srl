@@ -78,8 +78,8 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: TunnelinterfaceVxlaninterfaceParameters struct defines
-                  the resource Parameters
+                description: TunnelinterfaceVxlaninterfaceParameters are the parameter
+                  fields of a TunnelinterfaceVxlaninterface.
                 properties:
                   tunnel-interface-name:
                     type: string
@@ -102,7 +102,6 @@ spec:
                                     struct
                                   properties:
                                     admin-state:
-                                      default: enable
                                       enum:
                                       - disable
                                       - enable
@@ -113,7 +112,6 @@ spec:
                                           struct
                                         properties:
                                           admin-state:
-                                            default: enable
                                             enum:
                                             - disable
                                             - enable
@@ -135,6 +133,8 @@ spec:
                                               kubebuilder:validation:Maximum=16777215
                                             format: int32
                                             type: integer
+                                        required:
+                                        - index
                                         type: object
                                       type: array
                                     esi:
@@ -145,6 +145,8 @@ spec:
                                         kubebuilder:validation:MaxLength=255
                                       pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
                                       type: string
+                                  required:
+                                  - name
                                   type: object
                                 type: array
                             type: object
@@ -153,11 +155,9 @@ spec:
                               struct
                             properties:
                               source-mac:
-                                default: use-system-mac
                                 type: string
                             type: object
                           source-ip:
-                            default: use-system-ipv4-address
                             type: string
                         type: object
                       index:
@@ -177,6 +177,7 @@ spec:
                       type:
                         type: string
                     required:
+                    - index
                     - type
                     type: object
                 required:
@@ -202,8 +203,8 @@ spec:
               state of a TunnelinterfaceVxlaninterface.
             properties:
               atNetworkNode:
-                description: TunnelinterfaceVxlaninterfaceObservation struct defines
-                  the resource Observation
+                description: TunnelinterfaceVxlaninterfaceObservation are the observable
+                  fields of a TunnelinterfaceVxlaninterface.
                 type: object
               conditions:
                 description: Conditions of the resource.

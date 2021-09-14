@@ -39,29 +39,26 @@ type NetworkinstanceStaticroutes struct {
 // NetworkinstanceStaticroutesRoute struct
 type NetworkinstanceStaticroutesRoute struct {
 	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
 	AdminState *string `json:"admin-state,omitempty"`
 	// kubebuilder:validation:Minimum=0
 	// kubebuilder:validation:Maximum=4294967295
-	// +kubebuilder:default:=1
 	Metric       *uint32 `json:"metric,omitempty"`
 	NextHopGroup *string `json:"next-hop-group,omitempty"`
 	// kubebuilder:validation:Minimum=0
 	// kubebuilder:validation:Maximum=255
-	// +kubebuilder:default:=5
 	Preference *uint8 `json:"preference,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
-	Prefix *string `json:"prefix,omitempty"`
+	Prefix *string `json:"prefix"`
 }
 
-// NetworkinstanceStaticroutesParameters struct defines the resource Parameters
+// NetworkinstanceStaticroutesParameters are the parameter fields of a NetworkinstanceStaticroutes.
 type NetworkinstanceStaticroutesParameters struct {
 	NetworkInstanceName            *string                      `json:"network-instance-name"`
 	SrlNetworkinstanceStaticroutes *NetworkinstanceStaticroutes `json:"static-routes,omitempty"`
 }
 
-// NetworkinstanceStaticroutesObservation struct defines the resource Observation
+// NetworkinstanceStaticroutesObservation are the observable fields of a NetworkinstanceStaticroutes.
 type NetworkinstanceStaticroutesObservation struct {
 }
 

@@ -43,19 +43,17 @@ type SystemNtp struct {
 type SystemNtpServer struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))`
-	Address *string `json:"address,omitempty"`
-	// +kubebuilder:default:=false
-	Iburst *bool `json:"iburst,omitempty"`
-	// +kubebuilder:default:=false
-	Prefer *bool `json:"prefer,omitempty"`
+	Address *string `json:"address"`
+	Iburst  *bool   `json:"iburst,omitempty"`
+	Prefer  *bool   `json:"prefer,omitempty"`
 }
 
-// SystemNtpParameters struct defines the resource Parameters
+// SystemNtpParameters are the parameter fields of a SystemNtp.
 type SystemNtpParameters struct {
 	SrlSystemNtp *SystemNtp `json:"ntp,omitempty"`
 }
 
-// SystemNtpObservation struct defines the resource Observation
+// SystemNtpObservation are the observable fields of a SystemNtp.
 type SystemNtpObservation struct {
 }
 

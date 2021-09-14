@@ -79,7 +79,7 @@ spec:
                 type: string
               forNetworkNode:
                 description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiParameters
-                  struct defines the resource Parameters
+                  are the parameter fields of a SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi.
                 properties:
                   bgp-instance-id:
                     type: string
@@ -88,7 +88,6 @@ spec:
                       struct
                     properties:
                       admin-state:
-                        default: disable
                         enum:
                         - disable
                         - enable
@@ -110,7 +109,6 @@ spec:
                                       struct
                                     properties:
                                       ac-df:
-                                        default: true
                                         type: boolean
                                     type: object
                                 type: object
@@ -123,21 +121,17 @@ spec:
                                       struct
                                     properties:
                                       ac-df:
-                                        default: true
                                         type: boolean
                                       non-revertive:
-                                        default: false
                                         type: boolean
                                     type: object
                                   preference-value:
-                                    default: 32767
                                     description: kubebuilder:validation:Minimum=0
                                       kubebuilder:validation:Maximum=65535
                                     format: int32
                                     type: integer
                                 type: object
                               type:
-                                default: default
                                 enum:
                                 - default
                                 - preference
@@ -161,7 +155,6 @@ spec:
                       interface:
                         type: string
                       multi-homing-mode:
-                        default: all-active
                         enum:
                         - all-active
                         - single-active
@@ -179,17 +172,17 @@ spec:
                               struct
                             properties:
                               originating-ip:
-                                default: use-system-ipv4-address
                                 enum:
                                 - use-system-ipv4-address
                                 type: string
                             type: object
                           next-hop:
-                            default: use-system-ipv4-address
                             enum:
                             - use-system-ipv4-address
                             type: string
                         type: object
+                    required:
+                    - name
                     type: object
                 required:
                 - bgp-instance-id
@@ -215,7 +208,7 @@ spec:
             properties:
               atNetworkNode:
                 description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiObservation
-                  struct defines the resource Observation
+                  are the observable fields of a SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi.
                 type: object
               conditions:
                 description: Conditions of the resource.

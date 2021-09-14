@@ -33,21 +33,18 @@ const (
 
 // NetworkinstanceProtocolsLinux struct
 type NetworkinstanceProtocolsLinux struct {
-	// +kubebuilder:default:=true
 	ExportNeighbors *bool `json:"export-neighbors,omitempty"`
-	// +kubebuilder:default:=false
-	ExportRoutes *bool `json:"export-routes,omitempty"`
-	// +kubebuilder:default:=false
-	ImportRoutes *bool `json:"import-routes,omitempty"`
+	ExportRoutes    *bool `json:"export-routes,omitempty"`
+	ImportRoutes    *bool `json:"import-routes,omitempty"`
 }
 
-// NetworkinstanceProtocolsLinuxParameters struct defines the resource Parameters
+// NetworkinstanceProtocolsLinuxParameters are the parameter fields of a NetworkinstanceProtocolsLinux.
 type NetworkinstanceProtocolsLinuxParameters struct {
 	NetworkInstanceName              *string                        `json:"network-instance-name"`
 	SrlNetworkinstanceProtocolsLinux *NetworkinstanceProtocolsLinux `json:"linux,omitempty"`
 }
 
-// NetworkinstanceProtocolsLinuxObservation struct defines the resource Observation
+// NetworkinstanceProtocolsLinuxObservation are the observable fields of a NetworkinstanceProtocolsLinux.
 type NetworkinstanceProtocolsLinuxObservation struct {
 }
 

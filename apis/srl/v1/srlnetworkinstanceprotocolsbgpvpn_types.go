@@ -41,7 +41,7 @@ type NetworkinstanceProtocolsBgpvpnBgpInstance struct {
 	ExportPolicy *string `json:"export-policy,omitempty"`
 	// kubebuilder:validation:Minimum=1
 	// kubebuilder:validation:Maximum=2
-	Id                 *uint8                                                       `json:"id,omitempty"`
+	Id                 *uint8                                                       `json:"id"`
 	ImportPolicy       *string                                                      `json:"import-policy,omitempty"`
 	RouteDistinguisher *NetworkinstanceProtocolsBgpvpnBgpInstanceRouteDistinguisher `json:"route-distinguisher,omitempty"`
 	RouteTarget        *NetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget        `json:"route-target,omitempty"`
@@ -64,13 +64,13 @@ type NetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget struct {
 	ImportRt *string `json:"import-rt,omitempty"`
 }
 
-// NetworkinstanceProtocolsBgpvpnParameters struct defines the resource Parameters
+// NetworkinstanceProtocolsBgpvpnParameters are the parameter fields of a NetworkinstanceProtocolsBgpvpn.
 type NetworkinstanceProtocolsBgpvpnParameters struct {
 	NetworkInstanceName               *string                         `json:"network-instance-name"`
 	SrlNetworkinstanceProtocolsBgpvpn *NetworkinstanceProtocolsBgpvpn `json:"bgp-vpn,omitempty"`
 }
 
-// NetworkinstanceProtocolsBgpvpnObservation struct defines the resource Observation
+// NetworkinstanceProtocolsBgpvpnObservation are the observable fields of a NetworkinstanceProtocolsBgpvpn.
 type NetworkinstanceProtocolsBgpvpnObservation struct {
 }
 

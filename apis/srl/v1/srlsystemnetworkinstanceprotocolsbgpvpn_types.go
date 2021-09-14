@@ -40,7 +40,7 @@ type SystemNetworkinstanceProtocolsBgpvpn struct {
 type SystemNetworkinstanceProtocolsBgpvpnBgpInstance struct {
 	// kubebuilder:validation:Minimum=1
 	// kubebuilder:validation:Maximum=2
-	Id                 *uint8                                                             `json:"id,omitempty"`
+	Id                 *uint8                                                             `json:"id"`
 	RouteDistinguisher *SystemNetworkinstanceProtocolsBgpvpnBgpInstanceRouteDistinguisher `json:"route-distinguisher,omitempty"`
 	RouteTarget        *SystemNetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget        `json:"route-target,omitempty"`
 }
@@ -53,12 +53,12 @@ type SystemNetworkinstanceProtocolsBgpvpnBgpInstanceRouteDistinguisher struct {
 type SystemNetworkinstanceProtocolsBgpvpnBgpInstanceRouteTarget struct {
 }
 
-// SystemNetworkinstanceProtocolsBgpvpnParameters struct defines the resource Parameters
+// SystemNetworkinstanceProtocolsBgpvpnParameters are the parameter fields of a SystemNetworkinstanceProtocolsBgpvpn.
 type SystemNetworkinstanceProtocolsBgpvpnParameters struct {
 	SrlSystemNetworkinstanceProtocolsBgpvpn *SystemNetworkinstanceProtocolsBgpvpn `json:"bgp-vpn,omitempty"`
 }
 
-// SystemNetworkinstanceProtocolsBgpvpnObservation struct defines the resource Observation
+// SystemNetworkinstanceProtocolsBgpvpnObservation are the observable fields of a SystemNetworkinstanceProtocolsBgpvpn.
 type SystemNetworkinstanceProtocolsBgpvpnObservation struct {
 }
 

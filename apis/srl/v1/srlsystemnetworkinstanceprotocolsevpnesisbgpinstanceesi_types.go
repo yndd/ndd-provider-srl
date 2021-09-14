@@ -34,7 +34,6 @@ const (
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct {
 	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=disable
 	AdminState *string                                                         `json:"admin-state,omitempty"`
 	DfElection *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElection `json:"df-election,omitempty"`
 	// +kubebuilder:validation:Required
@@ -42,13 +41,12 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi struct {
 	Esi       *string `json:"esi,omitempty"`
 	Interface *string `json:"interface,omitempty"`
 	// +kubebuilder:validation:Enum=`all-active`;`single-active`
-	// +kubebuilder:default:=all-active
 	MultiHomingMode *string `json:"multi-homing-mode,omitempty"`
 	// kubebuilder:validation:MinLength=1
 	// kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Name   *string                                                     `json:"name,omitempty"`
+	Name   *string                                                     `json:"name"`
 	Routes *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes `json:"routes,omitempty"`
 }
 
@@ -64,7 +62,6 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithm str
 	DefaultAlg    *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmDefaultAlg    `json:"default-alg,omitempty"`
 	PreferenceAlg *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlg `json:"preference-alg,omitempty"`
 	// +kubebuilder:validation:Enum=`default`;`preference`
-	// +kubebuilder:default:=default
 	Type *string `json:"type,omitempty"`
 }
 
@@ -75,7 +72,6 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmDefa
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmDefaultAlgCapabilities struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmDefaultAlgCapabilities struct {
-	// +kubebuilder:default:=true
 	AcDf *bool `json:"ac-df,omitempty"`
 }
 
@@ -84,15 +80,12 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPref
 	Capabilities *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlgCapabilities `json:"capabilities,omitempty"`
 	// kubebuilder:validation:Minimum=0
 	// kubebuilder:validation:Maximum=65535
-	// +kubebuilder:default:=32767
 	PreferenceValue *uint32 `json:"preference-value,omitempty"`
 }
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlgCapabilities struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionAlgorithmPreferenceAlgCapabilities struct {
-	// +kubebuilder:default:=true
-	AcDf *bool `json:"ac-df,omitempty"`
-	// +kubebuilder:default:=false
+	AcDf         *bool `json:"ac-df,omitempty"`
 	NonRevertive *bool `json:"non-revertive,omitempty"`
 }
 
@@ -107,24 +100,22 @@ type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiDfElectionTimers struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutes struct {
 	Esi *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEthernetSegment `json:"esi,omitempty"`
 	// +kubebuilder:validation:Enum=`use-system-ipv4-address`
-	// +kubebuilder:default:=use-system-ipv4-address
 	NextHop *string `json:"next-hop,omitempty"`
 }
 
 // SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEthernetSegment struct
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiRoutesEthernetSegment struct {
 	// +kubebuilder:validation:Enum=`use-system-ipv4-address`
-	// +kubebuilder:default:=use-system-ipv4-address
 	OriginatingIp *string `json:"originating-ip,omitempty"`
 }
 
-// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiParameters struct defines the resource Parameters
+// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiParameters are the parameter fields of a SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi.
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiParameters struct {
 	BgpInstanceId                                           *string                                               `json:"bgp-instance-id"`
 	SrlSystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi *SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi `json:"ethernet-segment,omitempty"`
 }
 
-// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiObservation struct defines the resource Observation
+// SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiObservation are the observable fields of a SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsi.
 type SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceEsiObservation struct {
 }
 

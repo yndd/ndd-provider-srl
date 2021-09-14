@@ -78,20 +78,17 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: NetworkinstanceProtocolsLinuxParameters struct defines
-                  the resource Parameters
+                description: NetworkinstanceProtocolsLinuxParameters are the parameter
+                  fields of a NetworkinstanceProtocolsLinux.
                 properties:
                   linux:
                     description: NetworkinstanceProtocolsLinux struct
                     properties:
                       export-neighbors:
-                        default: true
                         type: boolean
                       export-routes:
-                        default: false
                         type: boolean
                       import-routes:
-                        default: false
                         type: boolean
                     type: object
                   network-instance-name:
@@ -119,8 +116,8 @@ spec:
               state of a NetworkinstanceProtocolsLinux.
             properties:
               atNetworkNode:
-                description: NetworkinstanceProtocolsLinuxObservation struct defines
-                  the resource Observation
+                description: NetworkinstanceProtocolsLinuxObservation are the observable
+                  fields of a NetworkinstanceProtocolsLinux.
                 type: object
               conditions:
                 description: Conditions of the resource.

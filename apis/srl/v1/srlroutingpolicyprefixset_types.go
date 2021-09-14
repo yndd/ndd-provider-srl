@@ -37,7 +37,7 @@ type RoutingpolicyPrefixset struct {
 	// kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="[A-Za-z0-9 !@#$^&()|+=`~.,'/_:;?-]*"
-	Name   *string                         `json:"name,omitempty"`
+	Name   *string                         `json:"name"`
 	Prefix []*RoutingpolicyPrefixsetPrefix `json:"prefix,omitempty"`
 }
 
@@ -51,12 +51,12 @@ type RoutingpolicyPrefixsetPrefix struct {
 	MaskLengthRange *string `json:"mask-length-range,omitempty"`
 }
 
-// RoutingpolicyPrefixsetParameters struct defines the resource Parameters
+// RoutingpolicyPrefixsetParameters are the parameter fields of a RoutingpolicyPrefixset.
 type RoutingpolicyPrefixsetParameters struct {
 	SrlRoutingpolicyPrefixset *RoutingpolicyPrefixset `json:"prefix-set,omitempty"`
 }
 
-// RoutingpolicyPrefixsetObservation struct defines the resource Observation
+// RoutingpolicyPrefixsetObservation are the observable fields of a RoutingpolicyPrefixset.
 type RoutingpolicyPrefixsetObservation struct {
 }
 

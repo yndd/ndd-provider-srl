@@ -79,7 +79,7 @@ spec:
                 type: string
               forNetworkNode:
                 description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceParameters
-                  struct defines the resource Parameters
+                  are the parameter fields of a SystemNetworkinstanceProtocolsEvpnEsisBgpinstance.
                 properties:
                   bgp-instance:
                     description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstance
@@ -87,6 +87,8 @@ spec:
                     properties:
                       id:
                         type: string
+                    required:
+                    - id
                     type: object
                 type: object
               networkNodeRef:
@@ -110,7 +112,7 @@ spec:
             properties:
               atNetworkNode:
                 description: SystemNetworkinstanceProtocolsEvpnEsisBgpinstanceObservation
-                  struct defines the resource Observation
+                  are the observable fields of a SystemNetworkinstanceProtocolsEvpnEsisBgpinstance.
                 type: object
               conditions:
                 description: Conditions of the resource.

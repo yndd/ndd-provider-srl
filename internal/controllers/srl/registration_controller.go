@@ -296,7 +296,7 @@ func (e *externalRegistration) Observe(ctx context.Context, mg resource.Managed)
 	path := []*gnmi.Path{
 		{
 			Elem: []*gnmi.PathElem{
-				{Name: nddv1.RegisterPathElemName, Key: map[string]string{nddv1.RegisterPathElemKey: string(srlv1.DeviceTypeSRL)}},
+				{Name: nddv1.RegisterPathElemName, Key: map[string]string{nddv1.RegisterPathElemKey: string(srlv1.DeviceType)}},
 			},
 		},
 	}
@@ -322,12 +322,12 @@ func (e *externalRegistration) Observe(ctx context.Context, mg resource.Managed)
 		log.Debug("Observing response", "Response", rsp)
 		if deviceType, ok := rsp.GetNotification()[0].GetUpdate()[0].GetPath().GetElem()[0].GetKey()[nddv1.RegisterPathElemKey]; ok {
 			log.Debug("Observing response", "Data", deviceType)
-			if nddv1.DeviceType(deviceType) != srlv1.DeviceTypeSRL {
+			if nddv1.DeviceType(deviceType) != srlv1.DeviceType {
 				return managed.ExternalObservation{
+					Ready:            true,
 					ResourceExists:   false,
 					ResourceUpToDate: false,
 					ResourceHasData:  false,
-					Ready:            true,
 				}, nil
 			}
 		}
@@ -377,7 +377,7 @@ func (e *externalRegistration) Create(ctx context.Context, mg resource.Managed) 
 
 	path := &gnmi.Path{
 		Elem: []*gnmi.PathElem{
-			{Name: nddv1.RegisterPathElemName, Key: map[string]string{nddv1.RegisterPathElemKey: string(srlv1.DeviceTypeSRL)}},
+			{Name: nddv1.RegisterPathElemName, Key: map[string]string{nddv1.RegisterPathElemKey: string(srlv1.DeviceType)}},
 		},
 	}
 	d, err := json.Marshal(o.Spec.ForNetworkNode)
@@ -427,7 +427,7 @@ func (e *externalRegistration) Update(ctx context.Context, mg resource.Managed, 
 
 	path := &gnmi.Path{
 		Elem: []*gnmi.PathElem{
-			{Name: nddv1.RegisterPathElemName, Key: map[string]string{nddv1.RegisterPathElemKey: string(srlv1.DeviceTypeSRL)}},
+			{Name: nddv1.RegisterPathElemName, Key: map[string]string{nddv1.RegisterPathElemKey: string(srlv1.DeviceType)}},
 		},
 	}
 	d, err := json.Marshal(o.Spec.ForNetworkNode)
@@ -476,7 +476,7 @@ func (e *externalRegistration) Delete(ctx context.Context, mg resource.Managed) 
 
 	path := &gnmi.Path{
 		Elem: []*gnmi.PathElem{
-			{Name: nddv1.RegisterPathElemName, Key: map[string]string{nddv1.RegisterPathElemKey: string(srlv1.DeviceTypeSRL)}},
+			{Name: nddv1.RegisterPathElemName, Key: map[string]string{nddv1.RegisterPathElemKey: string(srlv1.DeviceType)}},
 		},
 	}
 	paths := make([]*gnmi.Path, 0)

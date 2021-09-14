@@ -39,16 +39,14 @@ type NetworkinstanceAggregateroutes struct {
 // NetworkinstanceAggregateroutesRoute struct
 type NetworkinstanceAggregateroutesRoute struct {
 	// +kubebuilder:validation:Enum=`disable`;`enable`
-	// +kubebuilder:default:=enable
 	AdminState   *string                                         `json:"admin-state,omitempty"`
 	Aggregator   *NetworkinstanceAggregateroutesRouteAggregator  `json:"aggregator,omitempty"`
 	Communities  *NetworkinstanceAggregateroutesRouteCommunities `json:"communities,omitempty"`
 	GenerateIcmp *bool                                           `json:"generate-icmp,omitempty"`
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))|((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))`
-	Prefix *string `json:"prefix,omitempty"`
-	// +kubebuilder:default:=false
-	SummaryOnly *bool `json:"summary-only,omitempty"`
+	Prefix      *string `json:"prefix"`
+	SummaryOnly *bool   `json:"summary-only,omitempty"`
 }
 
 // NetworkinstanceAggregateroutesRouteAggregator struct
@@ -68,13 +66,13 @@ type NetworkinstanceAggregateroutesRouteCommunities struct {
 	Add *string `json:"add,omitempty"`
 }
 
-// NetworkinstanceAggregateroutesParameters struct defines the resource Parameters
+// NetworkinstanceAggregateroutesParameters are the parameter fields of a NetworkinstanceAggregateroutes.
 type NetworkinstanceAggregateroutesParameters struct {
 	NetworkInstanceName               *string                         `json:"network-instance-name"`
 	SrlNetworkinstanceAggregateroutes *NetworkinstanceAggregateroutes `json:"aggregate-routes,omitempty"`
 }
 
-// NetworkinstanceAggregateroutesObservation struct defines the resource Observation
+// NetworkinstanceAggregateroutesObservation are the observable fields of a NetworkinstanceAggregateroutes.
 type NetworkinstanceAggregateroutesObservation struct {
 }
 

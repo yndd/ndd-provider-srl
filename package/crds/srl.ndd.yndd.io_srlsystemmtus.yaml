@@ -78,7 +78,7 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: SystemMtuSpec struct
+                description: SystemMtuParameters struct
                 properties:
                   system-mtu:
                     description: SystemMtu struct
@@ -122,7 +122,7 @@ spec:
             description: A SystemMtuStatus represents the observed state of a SystemMtu.
             properties:
               atNetworkNode:
-                description: SystemMtuStatus struct
+                description: SystemMtuObservation struct
                 type: object
               conditions:
                 description: Conditions of the resource.

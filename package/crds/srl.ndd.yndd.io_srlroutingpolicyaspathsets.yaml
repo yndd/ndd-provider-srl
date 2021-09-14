@@ -78,8 +78,8 @@ spec:
                 - Delete
                 type: string
               forNetworkNode:
-                description: RoutingpolicyAspathsetParameters struct defines the resource
-                  Parameters
+                description: RoutingpolicyAspathsetParameters are the parameter fields
+                  of a RoutingpolicyAspathset.
                 properties:
                   as-path-set:
                     description: RoutingpolicyAspathset struct
@@ -91,6 +91,8 @@ spec:
                         description: kubebuilder:validation:MinLength=1 kubebuilder:validation:MaxLength=255
                         pattern: '[A-Za-z0-9 !@#$^&()|+=`~.,''/_:;?-]*'
                         type: string
+                    required:
+                    - name
                     type: object
                 type: object
               networkNodeRef:
@@ -113,8 +115,8 @@ spec:
               of a RoutingpolicyAspathset.
             properties:
               atNetworkNode:
-                description: RoutingpolicyAspathsetObservation struct defines the
-                  resource Observation
+                description: RoutingpolicyAspathsetObservation are the observable
+                  fields of a RoutingpolicyAspathset.
                 type: object
               conditions:
                 description: Conditions of the resource.
